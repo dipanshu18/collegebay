@@ -6,7 +6,7 @@ export function FAQ() {
       {/*<!-- Component: Icon accordion --> */}
       <section className="w-full divide-y divide-slate-200 rounded">
         <details className="group p-4" open>
-          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-white transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
+          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-slate-900 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6  shrink-0  stroke-violet-500  "
@@ -45,14 +45,14 @@ export function FAQ() {
               />
             </svg>
           </summary>
-          <p className="mt-4 text-white">
+          <p className="mt-4 text-slate-900">
             The components in Wind UI are designed to work in the latest, stable
             releases of all major browsers, including Chrome, Firefox, Safari,
             and Edge.
           </p>
         </details>
         <details className="group p-4">
-          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-white transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
+          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-slate-900 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6  shrink-0  stroke-violet-500  "
@@ -91,12 +91,12 @@ export function FAQ() {
               />
             </svg>
           </summary>
-          <p className="mt-4 text-white">
+          <p className="mt-4 text-slate-900">
             All components are easily customizable to match your own project.
           </p>
         </details>
         <details className="group p-4">
-          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-white transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
+          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-slate-900 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6  shrink-0  stroke-violet-500  "
@@ -135,13 +135,13 @@ export function FAQ() {
               />
             </svg>
           </summary>
-          <p className="mt-4 text-white">
+          <p className="mt-4 text-slate-900">
             WindUI is not an open source project yet, but we don't guarantee
             that it won't become in the future.
           </p>
         </details>
         <details className="group p-4">
-          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-white transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
+          <summary className="relative flex cursor-pointer list-none gap-4 pr-8 font-medium text-slate-900 transition-colors duration-300 focus-visible:outline-none group-hover:text-slate-400  [&::-webkit-details-marker]:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6  shrink-0  stroke-violet-500  "
@@ -180,7 +180,7 @@ export function FAQ() {
               />
             </svg>
           </summary>
-          <p className="mt-4 text-white">
+          <p className="mt-4 text-slate-900">
             You can help our team improve WindUI by giving us feedback on our
             discord channel.
           </p>

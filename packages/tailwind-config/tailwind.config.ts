@@ -11,8 +11,8 @@ const config: Omit<Config, "content"> = {
   },
   plugins: [require("daisyui")],
   daisyui: {
-    themes: ["dracula"],
-    darkTheme: "dracula",
+    themes: ["winter"],
+    darkTheme: "winter",
   },
 };
 export default config;

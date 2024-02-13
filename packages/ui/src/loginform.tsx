@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SecondaryBtn } from "./secondaryBtn";
+import { PrimaryBtn } from "./primaryBtn";
 
 type LoginType = "user" | "admin";
 
@@ -43,7 +44,7 @@ export function LoginForm({ type }: { type: LoginType }) {
               </label>
             </div>
             <div className="form-control mt-6">
-              <SecondaryBtn text="Login" />
+              <PrimaryBtn text="Login" />
             </div>
           </form>
         </div>

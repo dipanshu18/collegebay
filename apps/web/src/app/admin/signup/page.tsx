@@ -1,3 +1,4 @@
+import { PrimaryBtn } from "@repo/ui/primaryBtn";
 import { SecondaryBtn } from "@repo/ui/secondaryBtn";
 import Link from "next/link";
 
@@ -41,7 +42,7 @@ export default function AdminSignup() {
               </label>
             </div>
             <div className="form-control mt-6">
-              <SecondaryBtn text="Signup" />
+              <PrimaryBtn text="Signup" />
             </div>
           </form>
         </div>

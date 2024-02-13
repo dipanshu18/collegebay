@@ -10,22 +10,23 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@repo/ui": "*",
     "next": "^14.0.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@repo/ui": "*"
+    "react-icons": "^5.0.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.4",
+    "@repo/eslint-config": "*",
+    "@repo/tailwind-config": "*",
+    "@repo/typescript-config": "*",
     "@types/node": "^20.10.6",
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
     "autoprefixer": "^10.4.16",
-    "@repo/eslint-config": "*",
     "postcss": "^8.4.33",
-    "@repo/tailwind-config": "*",
     "tailwindcss": "^3.4.0",
-    "@repo/typescript-config": "*",
     "typescript": "^5.3.3"
   }
 }

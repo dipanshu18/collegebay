@@ -10,7 +10,10 @@
     "./secondaryBtn": "./src/secondaryBtn.tsx",
     "./navbar": "./src/navbar.tsx",
     "./faq": "./src/faqs.tsx",
-    "./loginform": "./src/loginform.tsx"
+    "./loginform": "./src/loginform.tsx",
+    "./postscard": "./src/postscard.tsx",
+    "./requestscard": "./src/requestscard.tsx",
+    "./imagecarousel": "./src/imagecarousel.tsx"
   },
   "license": "MIT",
   "scripts": {
@@ -36,6 +39,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@glidejs/glide": "^3.6.0",
     "react-icons": "^5.0.1"
   }
 }

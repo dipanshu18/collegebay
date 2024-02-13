@@ -16,8 +16,9 @@ const user = "jvrjvl";
 
 const navContent = user
   ? [
-      { item: "Requested Items", link: "/" },
-      { item: "Create Listing", link: "/" },
+      { item: "Requested Items", link: "/requests" },
+      { item: "Create Listing", link: "/create-post" },
+      { item: "Create Request", link: "/create-request" },
     ]
   : [];
 
