@@ -33,4 +33,4 @@ This includes the following packages/apps:
 Each package/app is in [TypeScript](https://www.typescriptlang.org/).
 
 ## Idea/Mockup
-![collegebay_mockup](https://github.com/dipanshu18/collegebay/assets/88198352/4623741c-e12b-4a30-a97c-c36d60e0b035)
+![collegebay_mockup](https://github.com/dipanshu18/collegebay/assets/88198352/69d58617-cdf1-4756-80e4-e1f3753a2197)
