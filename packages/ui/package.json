@@ -13,7 +13,8 @@
     "./loginform": "./src/loginform.tsx",
     "./postscard": "./src/postscard.tsx",
     "./requestscard": "./src/requestscard.tsx",
-    "./imagecarousel": "./src/imagecarousel.tsx"
+    "./imagecarousel": "./src/imagecarousel.tsx",
+    "./admintable": "./src/admintable.tsx"
   },
   "license": "MIT",
   "scripts": {

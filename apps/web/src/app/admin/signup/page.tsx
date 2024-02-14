@@ -1,13 +1,12 @@
 import { PrimaryBtn } from "@repo/ui/primaryBtn";
-import { SecondaryBtn } from "@repo/ui/secondaryBtn";
 import Link from "next/link";
 
 export default function AdminSignup() {
   return (
     <div className="hero py-24">
-      <div className="hero-content flex-col lg:flex-row-reverse gap-20">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">New here, join us!</h1>
+      <div className="hero-content flex-col">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold mb-5">New here, join us!</h1>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body">
