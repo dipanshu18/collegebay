@@ -12,7 +12,7 @@ export default function RequestItem() {
             a id nisi.
           </p>
         </div>
-        <div className="card shrink-0 w-full max-w-xl shadow-2xl bg-base-100">
+        <div className="card shrink-0 w-full max-w-xl shadow-2xl bg-base-100 transition-all hover:scale-105">
           <form className="card-body">
             <div className="form-control">
               <label className="label">
@@ -32,17 +32,23 @@ export default function RequestItem() {
               <textarea
                 className="textarea textarea-bordered"
                 placeholder="item description(features, condition, ...)"
+                required
               ></textarea>
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Images upload</span>
+                <span className="label-text">Image upload</span>
               </label>
               <input
                 type="file"
                 className="file-input file-input-bordered w-full"
               />
             </div>
+            <small className="font-medium text-rose-600">
+              NOTE: You won't be able to update{" "}
+              <strong className="text-rose-700">item request </strong>
+              after creating your request
+            </small>
             <div className="form-control mt-6">
               <PrimaryBtn text="Request" />
             </div>

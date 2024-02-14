@@ -1,11 +1,11 @@
 import { PrimaryBtn } from "@repo/ui/primaryBtn";
 
-export default function PostItem() {
+export default function EditPostDetails() {
   return (
     <div className="hero py-12">
       <div className="hero-content flex-col">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Create post!</h1>
+          <h1 className="text-2xl font-bold">Edit Post Details!</h1>
           <p className="py-6">
             Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
@@ -32,6 +32,7 @@ export default function PostItem() {
               <textarea
                 className="textarea textarea-bordered"
                 placeholder="item description(features, condition, ...)"
+                required
               ></textarea>
             </div>
             <div className="form-control">
@@ -45,22 +46,8 @@ export default function PostItem() {
                 required
               />
             </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Images upload</span>
-              </label>
-              <input
-                type="file"
-                multiple={true}
-                className="file-input file-input-bordered w-full"
-              />
-              <small className="text-rose-700">
-                <strong>NOTE:</strong> You won't be able to update images after
-                creating post
-              </small>
-            </div>
             <div className="form-control mt-6">
-              <PrimaryBtn text="Post" />
+              <PrimaryBtn text="Update" />
             </div>
           </form>
         </div>

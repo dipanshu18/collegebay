@@ -42,7 +42,9 @@ export default function Profile() {
             </label>
           </div>
           <div className="flex mt-6 gap-5">
-            <PrimaryBtn text="Update" />
+            <Link href="/profile/:id">
+              <PrimaryBtn text="Update" />
+            </Link>
             <Link href="/">
               <SecondaryBtn text="Delete account" />
             </Link>

@@ -1,12 +1,13 @@
 import Link from "next/link";
 
 import { PrimaryBtn } from "./primaryBtn";
+import { SecondaryBtn } from "./secondaryBtn";
 
 type requestType = "self" | "other";
 
 export function RequestsCard({ type }: { type: requestType }) {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-96 bg-base-100 shadow-xl transition-all hover:scale-105">
       <figure>
         <img
           src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
@@ -24,9 +25,16 @@ export function RequestsCard({ type }: { type: requestType }) {
         )}
 
         <div className="card-actions justify-end">
-          <Link href={type === "self" ? "/user-requests" : "/requests"}>
-            <PrimaryBtn text={type === "self" ? "Edit details" : "Message"} />
-          </Link>
+          {type === "other" && (
+            <Link href="/requests">
+              <PrimaryBtn text="Message" />
+            </Link>
+          )}
+          {type === "self" && (
+            <Link href="/user-requests">
+              <SecondaryBtn text="Delete" />
+            </Link>
+          )}
         </div>
       </div>
     </div>

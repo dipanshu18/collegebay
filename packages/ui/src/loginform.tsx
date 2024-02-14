@@ -7,9 +7,9 @@ type LoginType = "user" | "admin";
 export function LoginForm({ type }: { type: LoginType }) {
   return (
     <div className="hero py-24">
-      <div className="hero-content flex-col lg:flex-row-reverse gap-20">
-        <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">Hey, welcome back!</h1>
+      <div className="hero-content flex-col">
+        <div className="text-center">
+          <h1 className="text-5xl font-bold my-5">Hey, welcome back!</h1>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <form className="card-body">

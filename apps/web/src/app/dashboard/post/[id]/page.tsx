@@ -3,7 +3,7 @@ import { SecondaryBtn } from "@repo/ui/secondaryBtn";
 
 export default function PostDetails() {
   return (
-    <div className="py-12 max-w-7xl mx-auto">
+    <div className="py-12 max-w-5xl mx-auto">
       <div className="">
         <ImageCarousel />
       </div>

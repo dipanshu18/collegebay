@@ -1,12 +1,13 @@
 import Link from "next/link";
 
 import { PrimaryBtn } from "./primaryBtn";
+import { SecondaryBtn } from "./secondaryBtn";
 
 type postType = "self" | "other";
 
 export function PostsCard({ type }: { type: postType }) {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl">
+    <div className="card w-96 bg-base-100 shadow-xl transition-all hover:scale-105">
       <figure>
         <img
           src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
@@ -27,11 +28,18 @@ export function PostsCard({ type }: { type: postType }) {
           </p>
         </div>
         <div className="card-actions justify-end">
-          <Link href={type === "self" ? "/user-posts" : "dashboard/post/:id"}>
+          <Link
+            href={type === "self" ? "/user-posts/:id" : "dashboard/post/:id"}
+          >
             <PrimaryBtn
               text={type === "self" ? "Edit details" : "See details"}
             />
           </Link>
+          {type === "self" && (
+            <Link href="/user-posts">
+              <SecondaryBtn text="Sold" />
+            </Link>
+          )}
         </div>
       </div>
     </div>

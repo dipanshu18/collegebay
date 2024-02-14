@@ -139,7 +139,7 @@ export function Navbar({
         </Link>
       </div>
 
-      <div className="navbar-end invisible lg:visible">
+      <div className="navbar-end invisible xl:visible">
         {user && user ? (
           <div className="flex gap-4">
             <div className="flex-none">
