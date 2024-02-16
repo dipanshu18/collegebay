@@ -29,8 +29,10 @@ This includes the following packages/apps:
 - `ui`: a stub React component library with Tailwind CSS shared by both `web` and `docs` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@repo/database`: prisma orm config and schema
 
 Each package/app is in [TypeScript](https://www.typescriptlang.org/).
 
 ## Idea/Mockup
-![collegebay_mockup](https://github.com/dipanshu18/collegebay/assets/88198352/69d58617-cdf1-4756-80e4-e1f3753a2197)
+![collegebay_mockup](https://github.com/dipanshu18/collegebay/assets/88198352/1f2e4d34-5246-4a53-aa8a-b680818f2a81)
+
