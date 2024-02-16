@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env.*local"],
+  "globalDependencies": ["**/.env.*local", ".env"],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
@@ -9,10 +9,17 @@
     "lint": {},
     "type-check": {},
     "dev": {
+      "dependsOn": ["^build", "^db:generate"],
       "cache": false,
       "persistent": true
     },
     "clean": {
+      "cache": false
+    },
+    "db:generate": {
+      "cache": false
+    },
+    "db:push": {
       "cache": false
     }
   }

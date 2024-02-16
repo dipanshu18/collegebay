@@ -34,14 +34,16 @@ export function LoginForm({ type }: { type: LoginType }) {
                 className="input input-bordered"
                 required
               />
-              <label className="label">
-                <Link
-                  href={type === "admin" ? "/admin/signup" : "/signup"}
-                  className="label-text-alt link link-hover"
-                >
-                  Not have an account? Create one
-                </Link>
-              </label>
+              {type !== "admin" && (
+                <label className="label">
+                  <Link
+                    href="/signup"
+                    className="label-text-alt link link-hover"
+                  >
+                    Not have an account? Create one
+                  </Link>
+                </label>
+              )}
             </div>
             <div className="form-control mt-6">
               <PrimaryBtn text="Login" />

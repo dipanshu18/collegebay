@@ -107,7 +107,7 @@ export function Navbar({
                 className="text-center my-2"
                 onClick={() => setShowing(!showing)}
               >
-                <SecondaryBtn text="Login" />
+                <PrimaryBtn text="Login" />
               </Link>
             )}
           </ul>
@@ -194,7 +194,7 @@ export function Navbar({
           </div>
         ) : (
           <Link href="/login" onClick={() => setShowing(!showing)}>
-            <SecondaryBtn text="Login" />
+            <PrimaryBtn text="Login" />
           </Link>
         )}
       </div>
