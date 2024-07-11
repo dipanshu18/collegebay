@@ -7,7 +7,7 @@ export default function UserRequests() {
         Your Requested Items
       </h1>
 
-      <div className="flex gap-10 flex-wrap items-center justify-center m-10">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 p-5">
         <RequestsCard type="self" />
         <RequestsCard type="self" />
         <RequestsCard type="self" />

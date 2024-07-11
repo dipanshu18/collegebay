@@ -1,15 +1,14 @@
 import { PrimaryBtn } from "@repo/ui/primaryBtn";
-import { SecondaryBtn } from "@repo/ui/secondaryBtn";
 import Link from "next/link";
 
 export default function UserSignup() {
   return (
-    <div className="hero py-24">
+    <div className="hero mt-10">
       <div className="hero-content flex-col">
         <div className="text-center">
           <h1 className="text-5xl font-bold mb-5">New here, join us!</h1>
         </div>
-        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+        <div className="card shrink-0 w-full max-w-2xl shadow-2xl bg-base-100">
           <form className="card-body">
             <div className="form-control">
               <label className="label">

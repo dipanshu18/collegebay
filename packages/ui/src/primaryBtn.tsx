@@ -3,5 +3,5 @@ interface ButtonType {
 }
 
 export function PrimaryBtn({ text }: ButtonType) {
-  return <button className="btn btn-primary">{text}</button>;
+  return <button className="btn btn-primary w-full">{text}</button>;
 }

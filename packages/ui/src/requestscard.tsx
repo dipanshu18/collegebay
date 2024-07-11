@@ -7,10 +7,10 @@ type requestType = "self" | "other";
 
 export function RequestsCard({ type }: { type: requestType }) {
   return (
-    <div className="card w-96 bg-base-100 shadow-xl transition-all hover:scale-105">
+    <div className="card w-full bg-base-100 shadow-xl transition-all hover:scale-105">
       <figure>
         <img
-          src="https://daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
+          src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"
           alt="Shoes"
         />
       </figure>

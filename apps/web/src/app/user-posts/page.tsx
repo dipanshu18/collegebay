@@ -7,7 +7,7 @@ export default function UserPosts() {
         Your Posted Items
       </h1>
 
-      <div className="flex gap-10 flex-wrap items-center justify-center m-10">
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-10 p-5">
         <PostsCard type="self" />
         <PostsCard type="self" />
         <PostsCard type="self" />

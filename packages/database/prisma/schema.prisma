@@ -34,7 +34,7 @@ model Post {
   name        String
   description String
   price       Int
-  // images String[]
+  images      String[]
   status      Status    @default(PENDING)
   available   Available @default(AVAILABLE)
   user        User      @relation(fields: [userId], references: [id])
@@ -47,7 +47,7 @@ model Request {
   id          String   @id @default(uuid())
   name        String
   description String
-  // image String
+  image       String
   status      Status   @default(PENDING)
   user        User     @relation(fields: [userId], references: [id])
   userId      String   @unique

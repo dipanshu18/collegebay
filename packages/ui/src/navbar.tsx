@@ -59,61 +59,68 @@ export function Navbar({
             {navItems &&
               navItems.map((itemContent, index) => {
                 return (
-                  <Link
-                    key={index}
-                    href={itemContent.link}
-                    onClick={() => setShowing(!showing)}
-                    className="btn btn-ghost text-md hover:text-primary"
-                  >
-                    {itemContent.item}
-                  </Link>
+                  <li key={index}>
+                    <Link
+                      href={itemContent.link}
+                      onClick={() => setShowing(!showing)}
+                      className="hover:text-primary"
+                    >
+                      {itemContent.item}
+                    </Link>
+                  </li>
                 );
               })}
 
             {user && user ? (
               <>
-                <Link
-                  href="/profile"
-                  className="btn btn-ghost text-md hover:text-primary"
-                  onClick={() => setShowing(!showing)}
-                >
-                  Profile
-                </Link>
-                <Link
-                  href="/user-posts"
-                  className="btn btn-ghost text-md hover:text-primary"
-                  onClick={() => setShowing(!showing)}
-                >
-                  Your listings
-                </Link>
-                <Link
-                  href="/user-requests"
-                  className="btn btn-ghost text-md hover:text-primary"
-                  onClick={() => setShowing(!showing)}
-                >
-                  Your requests
-                </Link>
-                <Link
-                  href="/"
-                  className="text-center my-2"
-                  onClick={() => setShowing(!showing)}
-                >
-                  <PrimaryBtn text="Logout" />
-                </Link>
+                <li>
+                  <Link
+                    href="/profile"
+                    className="hover:text-primary"
+                    onClick={() => setShowing(!showing)}
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/user-posts"
+                    className="hover:text-primary"
+                    onClick={() => setShowing(!showing)}
+                  >
+                    Your listings
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/user-requests"
+                    className="hover:text-primary"
+                    onClick={() => setShowing(!showing)}
+                  >
+                    Your requests
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/" onClick={() => setShowing(!showing)}>
+                    Logout
+                  </Link>
+                </li>
               </>
             ) : (
-              <Link
-                href="/login"
-                className="text-center my-2"
-                onClick={() => setShowing(!showing)}
-              >
-                <PrimaryBtn text="Login" />
-              </Link>
+              <li>
+                <Link
+                  href="/login"
+                  className="text-center my-2 w-full"
+                  onClick={() => setShowing(!showing)}
+                >
+                  Login
+                </Link>
+              </li>
             )}
           </ul>
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden xl:flex gap-5">
           {navItems &&
             navItems.map((itemContent, index) => {
               return (
@@ -121,7 +128,7 @@ export function Navbar({
                   key={index}
                   href={itemContent.link}
                   onClick={() => setShowing(!showing)}
-                  className="btn btn-ghost text-md hover:text-primary"
+                  className="hover:text-primary"
                 >
                   {itemContent.item}
                 </Link>

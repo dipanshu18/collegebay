@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "This is a web app whose main focus is to provide an online marketplace for college students to buy and sell college-related materials. The platform is designed to make it easy for students to find what they need, sell what they don't, and connect with other students in the same college or university.",
 };
 
-const user = "null";
+const user = "r";
 
 const navContent = user
   ? [
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto p-4">
           <Navbar navItems={navContent} user={user} />
 
           {children}
