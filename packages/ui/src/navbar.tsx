@@ -92,15 +92,6 @@ export function Navbar({
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/user-requests"
-                    className="hover:text-primary"
-                    onClick={() => setShowing(!showing)}
-                  >
-                    Your requests
-                  </Link>
-                </li>
-                <li>
                   <Link href="/" onClick={() => setShowing(!showing)}>
                     Logout
                   </Link>
@@ -181,14 +172,6 @@ export function Navbar({
                       onClick={() => setShowing(!showing)}
                     >
                       Your listings
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/user-requests"
-                      onClick={() => setShowing(!showing)}
-                    >
-                      Your requests
                     </Link>
                   </li>
                 </ul>

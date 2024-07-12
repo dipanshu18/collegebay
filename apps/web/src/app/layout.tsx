@@ -13,14 +13,10 @@ export const metadata: Metadata = {
     "This is a web app whose main focus is to provide an online marketplace for college students to buy and sell college-related materials. The platform is designed to make it easy for students to find what they need, sell what they don't, and connect with other students in the same college or university.",
 };
 
-const user = "r";
+const user = "";
 
 const navContent = user
-  ? [
-      { item: "Requested Items", link: "/requests" },
-      { item: "Create Listing", link: "/create-post" },
-      { item: "Create Request", link: "/create-request" },
-    ]
+  ? [{ item: "Create Listing", link: "/create-post" }]
   : [];
 
 export default function RootLayout({
