@@ -7,7 +7,7 @@ type postType = "self" | "other";
 
 export function PostsCard({ type }: { type: postType }) {
   return (
-    <div className="card w-full bg-base-100 shadow-xl transition-all hover:scale-105">
+    <div className="card w-full bg-base-100 shadow-xl">
       <figure>
         <img
           src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg"

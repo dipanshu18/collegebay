@@ -11,6 +11,7 @@
     "./navbar": "./src/navbar.tsx",
     "./faq": "./src/faqs.tsx",
     "./loginform": "./src/loginform.tsx",
+    "./filter": "./src/filter.tsx",
     "./postscard": "./src/postscard.tsx",
     "./requestscard": "./src/requestscard.tsx",
     "./imagecarousel": "./src/imagecarousel.tsx",

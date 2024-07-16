@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     "This is a web app whose main focus is to provide an online marketplace for college students to buy and sell college-related materials. The platform is designed to make it easy for students to find what they need, sell what they don't, and connect with other students in the same college or university.",
 };
 
-const user = "";
+const user = "pre";
 
 const navContent = user
   ? [{ item: "Create Listing", link: "/create-post" }]
