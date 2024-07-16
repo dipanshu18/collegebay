@@ -24,8 +24,7 @@ This includes the following packages/apps:
 
 ### Apps and Packages
 
-- `docs`: a Next.js app with Tailwind CSS
-- `web`: another Next.js app with Tailwind CSS
+- `web`: a Next.js app with Tailwind CSS
 - `ui`: a stub React component library with Tailwind CSS shared by both `web` and `docs` applications
 - `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
 - `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
