@@ -1,31 +1,28 @@
-import dotenv from "dotenv";
-dotenv.config();
-const PORT = process.env.PORT;
-
-import colors from "colors";
-
-import express from "express";
+import express, { type Request, Response, NextFunction } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import colors from "colors";
 
-export async function init() {
-  const app = express();
+import { authRouter } from "./routers/auth.router";
 
-  app.use(express.json());
-  app.use(cookieParser());
-  app.use(
-    cors({
-      origin: ["http://localhost:5173"],
-      allowedHeaders: ["*"],
-      credentials: true,
-    })
-  );
+export const app = express();
 
-  app.use((req) => {
-    console.log(colors.bgGreen("LOG:"), req.method, req.path);
-  });
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000"],
+  })
+);
 
-  app.listen(PORT, () => {
-    console.log(colors.bold.cyan(`Server started on port: ${PORT}`));
-  });
-}
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log(colors.bgGreen("LOG:"), req.method, req.path);
+  next();
+});
+
+app.get("/", (req: Request, res: Response) => {
+  return res.json({ status: "working..." });
+});
+
+app.use("/api/v1/auth", authRouter);

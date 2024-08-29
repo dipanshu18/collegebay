@@ -6,3 +6,51 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id       String    @id @default(uuid())
+  name     String
+  email    String    @unique
+  password String
+  college  String
+  phoneNo  String
+  image    String
+  role     Role      @default(USER)
+  posts    Post[]
+  requests Request[]
+  upVotes  UpVote[]
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  price       String
+  images      String[]
+  isApproved  Boolean  @default(false)
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model Request {
+  id          String   @id @default(uuid())
+  title       String
+  description String
+  image       String
+  upVotes     UpVote[]
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+}
+
+model UpVote {
+  id        String  @id @default(uuid())
+  request   Request @relation(fields: [requestId], references: [id])
+  requestId String  @unique
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String  @unique
+}
+
+enum Role {
+  ADMIN
+  USER
+}
