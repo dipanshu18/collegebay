@@ -1,15 +1,19 @@
 import Image from "next/image";
+import { cookies } from "next/headers";
+import Link from "next/link";
+
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "./ui/sheet";
 import { MenuIcon } from "lucide-react";
-import Link from "next/link";
 import { Button } from "./ui/button";
-import { cookies } from "next/headers";
 import LogoutBtn from "./LogoutBtn";
 
 function Logo() {
@@ -31,6 +35,36 @@ function Logo() {
   );
 }
 
+const authRoutes: { title: string; link: string }[] = [
+  {
+    title: "Login",
+    link: "/login",
+  },
+  {
+    title: "Signup",
+    link: "/signup",
+  },
+];
+
+const homeRoutes: { title: string; link: string }[] = [
+  {
+    title: "Others Request",
+    link: "/others-request",
+  },
+  {
+    title: "Post",
+    link: "/post",
+  },
+  {
+    title: "Request",
+    link: "/request",
+  },
+  {
+    title: "Profile",
+    link: "/profile",
+  },
+];
+
 function ActionButtons() {
   const session = cookies().get("session")?.value;
 
@@ -38,24 +72,35 @@ function ActionButtons() {
     <>
       <div className="md:hidden">
         <Sheet>
-          <SheetTrigger>
+          <SheetTrigger asChild>
             <MenuIcon />
           </SheetTrigger>
           <SheetContent>
             <SheetHeader>
+              <VisuallyHidden>
+                <SheetTitle>Nav Content</SheetTitle>
+              </VisuallyHidden>
               <SheetDescription>
-                <div className="flex flex-col space-y-4 items-start mt-10 w-full text-black text-lg">
+                <div className="flex flex-col space-y-4 items-start mt-10 w-full text-black dark:text-white text-lg">
                   {session ? (
                     <>
-                      <Link href={"/"}>Post</Link>
-                      <Link href={"/"}>Request</Link>
-                      <Link href={"/"}>Profile</Link>
-                      <LogoutBtn />
+                      {homeRoutes.map((item, idx) => (
+                        <SheetClose asChild key={idx}>
+                          <Link href={item.link}>{item.title}</Link>
+                        </SheetClose>
+                      ))}
+
+                      <SheetClose asChild>
+                        <LogoutBtn />
+                      </SheetClose>
                     </>
                   ) : (
                     <>
-                      <Link href={"/login"}>Login</Link>
-                      <Link href={"/signup"}>Signup</Link>
+                      {authRoutes.map((item, idx) => (
+                        <SheetClose asChild key={idx}>
+                          <Link href={item.link}>{item.title}</Link>
+                        </SheetClose>
+                      ))}
                     </>
                   )}
                 </div>
@@ -65,12 +110,18 @@ function ActionButtons() {
         </Sheet>
       </div>
 
-      <div className="hidden md:flex md:items-center md:space-x-5">
+      <div className="hidden md:flex md:items-center gap-5 md:space-x-5">
         {session ? (
           <>
-            <Link href={"/"}>Post</Link>
-            <Link href={"/"}>Request</Link>
-            <Link href={"/"}>Profile</Link>
+            {homeRoutes.map((item, idx) => (
+              <Link
+                href={item.link}
+                key={idx}
+                className="w-full hover:text-slate-600 dark:hover:text-slate-300 transition-all duration-500 whitespace-nowrap"
+              >
+                {item.title}
+              </Link>
+            ))}
             <LogoutBtn />
           </>
         ) : (
@@ -90,7 +141,7 @@ function ActionButtons() {
 
 export default function Navbar() {
   return (
-    <nav className="sticky top-0 backdrop-blur flex justify-between items-center border mt-5 shadow rounded-md px-10 py-4">
+    <nav className="sticky top-0 z-50 backdrop-blur flex justify-between items-center border mt-5 shadow rounded-md px-5 py-3">
       <Logo />
       <ActionButtons />
     </nav>

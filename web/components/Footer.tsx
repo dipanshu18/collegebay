@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 import { CardDescription } from "./ui/card";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Footer() {
   const session = cookies().get("session")?.value;
@@ -23,11 +24,14 @@ export default function Footer() {
           CollegeBay
         </Link>
       </div>
-      <div>
+      <div className="flex flex-col space-y-2">
+        <div className="md:ml-auto">
+          <ThemeToggle />
+        </div>
         <h1>©️ All copyrights reserved 2024.</h1>
-        <CardDescription>
+        <CardDescription className="dark:text-white">
           Reach out to us at:{" "}
-          <span className="text-slate-700 underline">
+          <span className="text-slate-700 dark:text-slate-300 underline">
             dipanshu.torawane@vit.edu.in
           </span>
         </CardDescription>

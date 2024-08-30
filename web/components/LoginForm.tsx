@@ -18,6 +18,7 @@ import Spinner from "./Spinner";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(login)}
-        className="md:w-full md:max-w-lg max-w-md md:mx-auto space-y-4 m-5 p-5 border rounded-md shadow"
+        className="md:w-full md:max-w-lg max-w-md md:mx-auto space-y-4 my-5 p-5 border rounded-md shadow"
       >
         <FormField
           control={form.control}
@@ -70,11 +71,22 @@ export default function LoginForm() {
           render={({ field }) => {
             return (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel
+                  className={cn(
+                    form.formState.errors.email && "dark:text-red-400"
+                  )}
+                >
+                  Email
+                </FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your edu email" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="your edu email"
+                    className="dark:bg-inherit"
+                    {...field}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="dark:text-red-400" />
               </FormItem>
             );
           }}
@@ -85,15 +97,22 @@ export default function LoginForm() {
           render={({ field }) => {
             return (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel
+                  className={cn(
+                    form.formState.errors.password && "dark:text-red-400"
+                  )}
+                >
+                  Password
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="password"
                     placeholder="your password"
+                    className="dark:bg-inherit"
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="dark:text-red-400" />
               </FormItem>
             );
           }}

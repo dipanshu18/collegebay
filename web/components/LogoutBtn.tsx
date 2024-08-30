@@ -33,5 +33,9 @@ export default function LogoutBtn() {
     }
   }
 
-  return <Button onClick={logout}>Logout</Button>;
+  return (
+    <Button onClick={logout} className="w-full">
+      Logout
+    </Button>
+  );
 }

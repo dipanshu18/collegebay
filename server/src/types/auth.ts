@@ -12,7 +12,7 @@ export const Signup = z.object({
     .string()
     .email({ message: "Please provide a valid @vit.edu.in email" })
     .regex(emailPattern, {
-      message: "Email must be in the format firstname.lastname@vit.edu.in",
+      message: "Email must be a valid registered @vit.edu.in",
     }),
   name: z
     .string()
@@ -23,11 +23,11 @@ export const Signup = z.object({
     .max(10, { message: "Password must be maximum 10 characters long" })
     .regex(passwordPattern, {
       message:
-        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
+        "Password must contain at least one uppercase('A-Z') letter, one lowercase('a-z') letter, one digit(0-9), and one special character",
     }),
   college: z
     .string()
-    .min(8, { message: "College name must be minimum 8 characters long" }),
+    .min(5, { message: "College name must be minimum 5 characters long" }),
   phoneNo: z
     .string()
     .min(10, { message: "Phone no. must be minimum 10 digits" })
@@ -40,7 +40,7 @@ export const Login = z.object({
     .string()
     .email({ message: "Please provide a valid @vit.edu.in email" })
     .regex(emailPattern, {
-      message: "Email must be in the format firstname.lastname@vit.edu.in",
+      message: "Email must be a valid registered @vit.edu.in",
     }),
   password: z.string(),
 });
