@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/types";
+import { LoginSchema } from "@/types/zodSchema";
 import Spinner from "./Spinner";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
@@ -44,7 +44,7 @@ export default function LoginForm() {
       if (response.status === 200) {
         const data = await response.data;
 
-        toast(data.msg);
+        toast.success(data.msg);
 
         router.replace("/home");
         router.refresh();
@@ -54,7 +54,7 @@ export default function LoginForm() {
       console.log(error);
 
       if (error instanceof AxiosError) {
-        return toast(error.response?.data.msg);
+        return toast.error(error.response?.data.msg);
       }
     }
   }

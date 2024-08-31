@@ -12,15 +12,15 @@ export async function authMiddleware(
 ) {
   const token = req.cookies["session"];
   if (!token) {
-    return res.status(411).json({ msg: "Unauthorized!" });
+    return res.status(401).json({ msg: "Unauthorized!" });
   }
 
   const decoded = jwt.verify(token, SECRET) as JwtPayload;
 
   if (!decoded) {
-    return res.status(411).json({ msg: "Invalid token!" });
+    return res.status(401).json({ msg: "Invalid token!" });
   }
 
-  req.body.user = decoded.sub;
+  req.body.user = decoded;
   next();
 }

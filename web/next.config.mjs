@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "plus.unsplash.com",
+        hostname: "dzgbuobd25m4d.cloudfront.net",
       },
     ],
   },

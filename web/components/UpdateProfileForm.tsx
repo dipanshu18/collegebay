@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdateProfileSchema } from "@/types";
+import { UpdateProfileSchema } from "@/types/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,15 +18,20 @@ import { Button } from "./ui/button";
 import { User } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
+import { UserProfile } from "@/types/index";
 
-export default function UpdateProfileForm() {
+export default function UpdateProfileForm({ user }: { user: UserProfile }) {
   const form = useForm<z.infer<typeof UpdateProfileSchema>>({
     resolver: zodResolver(UpdateProfileSchema),
     mode: "onChange",
-    defaultValues: {},
+    defaultValues: {
+      ...user,
+    },
   });
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    user ? `https://dzgbuobd25m4d.cloudfront.net/${user.image}` : null
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,9 +69,8 @@ export default function UpdateProfileForm() {
                     <Image
                       src={imagePreview}
                       alt="Selected Image"
-                      width={100}
-                      height={100}
-                      quality={100}
+                      width={200}
+                      height={200}
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
@@ -78,8 +82,7 @@ export default function UpdateProfileForm() {
                     id="profile"
                     type="file"
                     className="dark:bg-inherit"
-                    accept="image/*"
-                    {...field}
+                    accept="image/jpeg"
                     onChange={(e) => {
                       field.onChange(e);
                       handleImageChange(e);

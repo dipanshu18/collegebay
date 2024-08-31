@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
-import { cn } from "@/lib/utils";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -22,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <div className="container mx-auto">
+        <div className="container mx-auto min-h-screen flex flex-col justify-between">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -32,7 +31,7 @@ export default function RootLayout({
             <Navbar />
             {children}
             <Footer />
-            <Toaster />
+            <Toaster visibleToasts={10} richColors />
           </ThemeProvider>
         </div>
       </body>

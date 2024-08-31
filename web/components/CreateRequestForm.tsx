@@ -1,6 +1,6 @@
 "use client";
 
-import { CreateRequestSchema } from "@/types";
+import { CreateRequestSchema } from "@/types/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
@@ -108,7 +108,7 @@ export default function CreateRequestForm() {
                   <Input
                     className="w-full dark:bg-inherit"
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg"
                     {...field}
                   />
                 </FormControl>

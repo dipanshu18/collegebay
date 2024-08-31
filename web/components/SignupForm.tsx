@@ -23,12 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { SignupSchema } from "@/types";
+import { SignupSchema } from "@/types/zodSchema";
 import Spinner from "./Spinner";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
@@ -43,7 +43,6 @@ export default function SignupForm() {
       password: "",
       college: "Vidyalankar Institute of Technology, Mumbai",
       phoneNo: "",
-      image: "",
     },
   });
 
@@ -52,6 +51,7 @@ export default function SignupForm() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      form.setValue("image", file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -62,28 +62,40 @@ export default function SignupForm() {
 
   async function signup(values: z.infer<typeof SignupSchema>) {
     try {
+      const formData = new FormData();
+      formData.append("email", values.email);
+      formData.append("name", values.name);
+      formData.append("password", values.password);
+      formData.append("college", values.college);
+      formData.append("phoneNo", values.phoneNo);
+      if (values.image) {
+        formData.append("image", values.image);
+      }
+
       const response = await axios.post(
         "http://localhost:5000/api/v1/auth/signup",
-        values,
+        formData,
         {
           withCredentials: true,
         }
       );
 
       if (response.status === 201) {
-        const data = await response.data;
-
-        toast(data.msg);
-
+        const data = response.data;
+        toast.success(data.msg);
         router.replace("/home");
         router.refresh();
-        return;
       }
     } catch (error) {
-      console.log(error);
-
       if (error instanceof AxiosError) {
-        return toast(error.response?.data.msg);
+        const errorData = error.response?.data.msg;
+        if (errorData) {
+          if (typeof errorData === "object") {
+            Object.entries(errorData).forEach(async ([field, message]) => {
+              toast.error(`${field}: ${message}`);
+            });
+          }
+        }
       }
     }
   }
@@ -97,157 +109,191 @@ export default function SignupForm() {
         <FormField
           control={form.control}
           name="image"
-          render={({ field }) => {
-            return (
-              <FormItem className="flex flex-wrap justify-center md: md:flex-nowrap items-center whitespace-nowrap gap-5">
-                <FormLabel
-                  htmlFor="profile"
-                  className={cn(
-                    "flex items-center justify-center h-32 w-32 flex-shrink-0 border rounded-full",
-                    imagePreview ? "p-0" : "p-5"
-                  )}
-                >
-                  {imagePreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <Image
-                      src={imagePreview}
-                      alt="Selected Image"
-                      width={100}
-                      height={100}
-                      quality={100}
-                      className="w-full h-full rounded-full object-cover"
-                    />
-                  ) : (
-                    <User size={50} />
-                  )}
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    id="profile"
-                    type="file"
-                    className="dark:bg-inherit"
-                    accept="image/*"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      handleImageChange(e);
-                    }}
+          render={({ field }) => (
+            <FormItem className="flex flex-wrap justify-center flex-col md:flex-nowrap items-center whitespace-nowrap gap-5">
+              <FormLabel
+                htmlFor="image"
+                className={cn(
+                  "flex items-center justify-center h-32 w-32 flex-shrink-0 border rounded-full",
+                  imagePreview ? "p-0" : "p-5",
+                  form.formState.errors.image && "dark:text-red-400"
+                )}
+              >
+                {imagePreview ? (
+                  <Image
+                    src={imagePreview}
+                    alt="Selected Image"
+                    width={100}
+                    height={100}
+                    quality={100}
+                    className="w-full h-full rounded-full object-cover"
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+                ) : (
+                  <User size={50} />
+                )}
+              </FormLabel>
+              <FormControl>
+                <Input
+                  id="image"
+                  type="file"
+                  className="dark:bg-inherit"
+                  accept="image/jpeg"
+                  onChange={(e) => {
+                    field.onChange(e.target.files && e.target.files[0]);
+                    handleImageChange(e);
+                  }}
+                />
+              </FormControl>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
+
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Full Name</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="your full name"
-                    className="dark:bg-inherit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel
+                className={cn(
+                  form.formState.errors.name && "dark:text-red-400"
+                )}
+              >
+                Full Name
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="your full name"
+                  className="dark:bg-inherit"
+                  onChange={field.onChange}
+                  value={field.value}
+                  name={field.name}
+                  ref={field.ref}
+                  disabled={field.disabled}
+                />
+              </FormControl>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input
-                    type="email"
-                    placeholder="your edu email"
-                    className="dark:bg-inherit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel
+                className={cn(
+                  form.formState.errors.email && "dark:text-red-400"
+                )}
+              >
+                Email
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="email"
+                  placeholder="your edu email"
+                  className="dark:bg-inherit"
+                  onChange={field.onChange}
+                  value={field.value}
+                  name={field.name}
+                  ref={field.ref}
+                  disabled={field.disabled}
+                />
+              </FormControl>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
           name="password"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="your password"
-                    className="dark:bg-inherit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel
+                className={cn(
+                  form.formState.errors.password && "dark:text-red-400"
+                )}
+              >
+                Password
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="your password"
+                  className="dark:bg-inherit"
+                  onChange={field.onChange}
+                  value={field.value}
+                  name={field.name}
+                  ref={field.ref}
+                  disabled={field.disabled}
+                />
+              </FormControl>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
           name="phoneNo"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Phone No.</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="your phone no."
-                    className="dark:bg-inherit"
-                    {...field}
-                  />
-                </FormControl>
-                <FormDescription className="dark:text-slate-200">
-                  Please don{`'`}t include +91- or +91
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel
+                className={cn(
+                  form.formState.errors.phoneNo && "dark:text-red-400"
+                )}
+              >
+                Phone No.
+              </FormLabel>
+              <FormControl>
+                <Input
+                  type="text"
+                  placeholder="your phone no."
+                  className="dark:bg-inherit"
+                  onChange={field.onChange}
+                  value={field.value}
+                  name={field.name}
+                  ref={field.ref}
+                  disabled={field.disabled}
+                />
+              </FormControl>
+              <FormDescription className="dark:text-slate-200">
+                Please don{`'`}t include +91- or +91
+              </FormDescription>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
         <FormField
           control={form.control}
           name="college"
-          render={({ field }) => {
-            return (
-              <FormItem className="flex flex-col space-y-2 min-w-0">
-                <FormLabel>College</FormLabel>
-                <FormControl>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger className="dark:bg-inherit">
-                      <SelectValue placeholder="your college" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Vidyalankar Institute of Technology, Mumbai">
-                        Vidyalankar Institute of Technology, Mumbai
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
+          render={({ field }) => (
+            <FormItem className="flex flex-col space-y-2 min-w-0">
+              <FormLabel
+                className={cn(
+                  form.formState.errors.college && "dark:text-red-400"
+                )}
+              >
+                College
+              </FormLabel>
+              <FormControl>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger className="dark:bg-inherit">
+                    <SelectValue placeholder="your college" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Vidyalankar Institute of Technology, Mumbai">
+                      Vidyalankar Institute of Technology, Mumbai
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage className="dark:text-red-400" />
+            </FormItem>
+          )}
         />
         <Button
           disabled={form.formState.isSubmitting}

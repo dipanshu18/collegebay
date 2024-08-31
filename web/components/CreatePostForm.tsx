@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreatePostSchema } from "@/types";
+import { CreatePostSchema } from "@/types/zodSchema";
 import { z } from "zod";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -139,7 +139,7 @@ export default function CreatePostForm() {
                 <FormControl>
                   <Input
                     type="file"
-                    accept="image/*"
+                    accept="image/jpeg"
                     multiple
                     maxLength={4}
                     className="w-full dark:bg-inherit"

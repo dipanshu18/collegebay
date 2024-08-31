@@ -18,7 +18,7 @@ export default function LogoutBtn() {
       if (response.status === 200) {
         const data = await response.data;
 
-        toast(data.msg);
+        toast.success(data.msg);
 
         router.replace("/home");
         router.refresh();
@@ -28,7 +28,7 @@ export default function LogoutBtn() {
       console.log(error);
 
       if (error instanceof AxiosError) {
-        return toast(error.response?.data.msg);
+        return toast.error(error.response?.data.msg);
       }
     }
   }

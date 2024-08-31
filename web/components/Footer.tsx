@@ -24,7 +24,7 @@ export default function Footer() {
           CollegeBay
         </Link>
       </div>
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-2 ">
         <div className="md:ml-auto">
           <ThemeToggle />
         </div>

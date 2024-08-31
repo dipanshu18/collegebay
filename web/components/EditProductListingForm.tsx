@@ -1,6 +1,6 @@
 "use client";
 
-import { UpdatePostSchema } from "@/types";
+import { UpdatePostSchema } from "@/types/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -54,7 +54,7 @@ export default function EditProductListingForm() {
                     type="file"
                     multiple
                     minLength={4}
-                    accept="image/*"
+                    accept="image/jpeg"
                     {...field}
                   />
                 </FormControl>

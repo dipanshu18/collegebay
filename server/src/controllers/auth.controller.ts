@@ -5,14 +5,18 @@ const SECRET = process.env.SECRET as string;
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { Login, Signup } from "../types/auth";
 import { PrismaClient } from "@prisma/client";
+import { client } from "../utils/s3";
 
 const userModel = new PrismaClient().user;
 
 export async function signup(req: Request, res: Response) {
-  const result = Signup.safeParse(req.body);
+  console.log(req.file);
+  const result = Signup.safeParse({ ...req.body, image: req.file?.buffer });
 
   if (!result.success) {
     // Extract error messages from Zod's error object
@@ -54,6 +58,21 @@ export async function signup(req: Request, res: Response) {
         .json({ msg: "Account already exists. Please login!" });
     }
 
+    const key = `profile/${email}/${crypto.randomUUID()}.jpg`;
+    const command = new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET!,
+      Key: key,
+      ContentType: "image/jpeg",
+    });
+
+    const url = await getSignedUrl(client, command);
+
+    await fetch(url, {
+      method: "PUT",
+      body: image,
+      headers: { "Content-Type": "image/jpeg" },
+    });
+
     const hashPass = await bcrypt.hash(password, 10);
 
     const newUser = await userModel.create({
@@ -63,7 +82,7 @@ export async function signup(req: Request, res: Response) {
         password: hashPass,
         college,
         phoneNo,
-        image,
+        image: key,
       },
     });
 
