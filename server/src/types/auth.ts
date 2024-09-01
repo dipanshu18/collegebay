@@ -4,7 +4,7 @@ import { z } from "zod";
 const emailPattern = /^[a-zA-Z]+\.[a-zA-Z]+@vit\.edu\.in$/;
 
 // Password pattern: at least 1 uppercase letter, 1 lowercase letter, 1 digit, 1 special character, and 6-10 characters long
-const passwordPattern =
+export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/;
 
 // Custom file validation (e.g., checking file type and size)
@@ -35,10 +35,9 @@ export const Signup = z.object({
   college: z
     .string()
     .min(5, { message: "College name must be minimum 5 characters long" }),
-  phoneNo: z
-    .string()
-    .min(10, { message: "Phone no. must be minimum 10 digits" })
-    .max(10, { message: "Phone no. must be maximum 10 digits" }),
+  phoneNo: z.coerce.string().refine((val) => /^\d{10}$/.test(val), {
+    message: "Phone no. must be exactly 10 digits and contain only numbers",
+  }),
   image: fileValidationSchema,
 });
 

@@ -37,6 +37,7 @@ export const config = {
     "/home/:path*",
     "/post",
     "/request",
+    "/profile",
     "/profile/your-posts/:path*",
     "/others-request",
     "/login",

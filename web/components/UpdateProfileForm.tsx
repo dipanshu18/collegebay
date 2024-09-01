@@ -19,8 +19,19 @@ import { User } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
 import { UserProfile } from "@/types/index";
+import { useRouter } from "next/navigation";
+import axios, { AxiosError } from "axios";
+import { toast } from "sonner";
 
-export default function UpdateProfileForm({ user }: { user: UserProfile }) {
+export default function UpdateProfileForm({
+  user,
+  setOpen,
+}: {
+  user: UserProfile;
+  setOpen: (value: boolean) => void;
+}) {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof UpdateProfileSchema>>({
     resolver: zodResolver(UpdateProfileSchema),
     mode: "onChange",
@@ -45,7 +56,28 @@ export default function UpdateProfileForm({ user }: { user: UserProfile }) {
   };
 
   async function updateProfile(values: z.infer<typeof UpdateProfileSchema>) {
-    console.log(values);
+    try {
+      const response = await axios.put(
+        "http://localhost:5000/api/v1/user",
+        values,
+        { withCredentials: true }
+      );
+
+      if (response.status === 200) {
+        const data = await response.data;
+
+        toast.success(data.msg);
+        setOpen(false);
+        router.replace("/profile");
+        return router.refresh();
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorData = await error.response?.data.msg;
+
+        return toast.error(JSON.stringify(errorData));
+      }
+    }
   }
 
   return (
@@ -161,7 +193,11 @@ export default function UpdateProfileForm({ user }: { user: UserProfile }) {
             );
           }}
         />
-        <Button className="w-full" type="submit">
+        <Button
+          disabled={form.formState.isSubmitting}
+          className="w-full"
+          type="submit"
+        >
           Save Changes
         </Button>
       </form>

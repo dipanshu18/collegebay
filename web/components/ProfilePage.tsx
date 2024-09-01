@@ -2,7 +2,7 @@
 
 import { UserProfile } from "@/types";
 import axios, { AxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -24,10 +24,16 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import Spinner from "./Spinner";
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<UserProfile | undefined>(undefined);
+
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   async function fetchUser() {
     try {
@@ -63,14 +69,41 @@ export default function ProfilePage() {
     );
   }
 
+  async function deleteUser(e: FormEvent) {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const response = await axios.delete("http://localhost:5000/api/v1/user", {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        const data = await response.data.msg;
+
+        toast.success(data);
+        router.replace("/login");
+        return router.refresh();
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorData = await error.response?.data.msg;
+
+        toast.error(errorData);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="space-y-10">
-      {user ? (
+      {!loading ? (
         <>
           <div className="max-w-2xl mx-auto mt-5 border shadow rounded-md p-5">
             <div className="w-full flex justify-center items-center">
               <Image
-                src={`https://dzgbuobd25m4d.cloudfront.net/${user.image}`}
+                src={`https://dzgbuobd25m4d.cloudfront.net/${user?.image}`}
                 alt="User profile photo"
                 width={300}
                 height={300}
@@ -79,21 +112,22 @@ export default function ProfilePage() {
             </div>
             <div className="text-left col-span-2 py-5 w-full space-y-5">
               <p className="text-lg font-extrabold">
-                <span className="font-extralight">Name:</span> {user.name}
+                <span className="font-extralight">Name:</span> {user?.name}
               </p>
               <p className="text-lg font-extrabold overflow-x-auto">
-                <span className="font-extralight">Email:</span> {user.email}
+                <span className="font-extralight">Email:</span> {user?.email}
               </p>
               <p className="text-lg font-extrabold">
-                <span className="font-extralight">College:</span> {user.college}
+                <span className="font-extralight">College:</span>{" "}
+                {user?.college}
               </p>
               <p className="text-lg font-extrabold">
                 <span className="font-extralight">Phone no:</span>{" "}
-                {user.phoneNo}
+                {user?.phoneNo}
               </p>
             </div>
             <div className="flex justify-between gap-5">
-              <Dialog>
+              <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
                 <DialogTrigger asChild>
                   <Button className="dark:bg-slate-600" variant="outline">
                     Edit Profile
@@ -108,11 +142,33 @@ export default function ProfilePage() {
                       re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <UpdateProfileForm user={user!} />
+                  <UpdateProfileForm user={user!} setOpen={setUpdateOpen} />
                 </DialogContent>
               </Dialog>
 
-              <Button variant="destructive">Delete Profile</Button>
+              <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="destructive">
+                    {loading && <Spinner />} Delete Profile
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px] dark:bg-black">
+                  <DialogHeader>
+                    <DialogTitle>
+                      Are you sure you want to delete your account
+                    </DialogTitle>
+                    <DialogDescription className="flex gap-5">
+                      <p>We are sad you are leaving us 😔</p>
+                      <Button onClick={deleteUser} variant="destructive">
+                        Yes 🥺
+                      </Button>
+                      <Button onClick={() => setDeleteOpen(false)}>
+                        No 😄
+                      </Button>
+                    </DialogDescription>
+                  </DialogHeader>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -224,11 +280,7 @@ export default function ProfilePage() {
           </div>
         </>
       ) : (
-        <div className="my-10">
-          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold">
-            Unauthorized
-          </h1>
-        </div>
+        <Spinner />
       )}
     </div>
   );
