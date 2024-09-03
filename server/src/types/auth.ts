@@ -8,8 +8,8 @@ export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/;
 
 // Custom file validation (e.g., checking file type and size)
-const fileValidationSchema = z
-  .instanceof(Buffer)
+export const fileValidationSchema = z
+  .instanceof(Buffer, { message: "Please provide a image" })
   .refine((file) => file?.buffer.byteLength <= 5 * 1024 * 1024, {
     message: "File size should not exceed 5MB.",
   });

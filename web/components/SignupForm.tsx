@@ -94,6 +94,8 @@ export default function SignupForm() {
             Object.entries(errorData).forEach(async ([field, message]) => {
               toast.error(`${field}: ${message}`);
             });
+          } else {
+            toast.error(errorData);
           }
         }
       }

@@ -4,8 +4,9 @@ import cookieParser from "cookie-parser";
 import colors from "colors";
 
 import { authRouter } from "./routers/auth.router";
-import { userRouter } from "./routers/user.router";
 import { authMiddleware } from "./middlewares/auth.middleware";
+import { userRouter } from "./routers/user.router";
+import { requestRouter } from "./routers/request.router";
 
 export const app = express();
 
@@ -30,3 +31,4 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/user", authMiddleware, userRouter);
+app.use("/api/v1/requests", authMiddleware, requestRouter);

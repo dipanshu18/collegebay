@@ -26,9 +26,11 @@ import { toast } from "sonner";
 export default function UpdateProfileForm({
   user,
   setOpen,
+  refetch,
 }: {
   user: UserProfile;
   setOpen: (value: boolean) => void;
+  refetch: () => Promise<string | number | undefined>;
 }) {
   const router = useRouter();
 
@@ -56,10 +58,33 @@ export default function UpdateProfileForm({
   };
 
   async function updateProfile(values: z.infer<typeof UpdateProfileSchema>) {
+    const modifiedData = Object.keys(form.formState.dirtyFields).reduce(
+      (acc, key) => {
+        const typedKey = key as keyof z.infer<typeof UpdateProfileSchema>;
+
+        if (form.formState.dirtyFields[typedKey]) {
+          if (typedKey === "image") {
+            const imageValue = values.image;
+            if (typeof imageValue === "string" || imageValue instanceof File) {
+              acc[typedKey] = imageValue;
+            }
+          } else {
+            acc[typedKey] = values[typedKey];
+          }
+        }
+        return acc;
+      },
+      {} as Partial<z.infer<typeof UpdateProfileSchema>>
+    );
+
+    if (Object.keys(modifiedData).length === 0) {
+      return toast.error("Nothing to update");
+    }
+
     try {
       const response = await axios.put(
         "http://localhost:5000/api/v1/user",
-        values,
+        modifiedData,
         { withCredentials: true }
       );
 
@@ -68,8 +93,8 @@ export default function UpdateProfileForm({
 
         toast.success(data.msg);
         setOpen(false);
-        router.replace("/profile");
-        return router.refresh();
+        refetch();
+        router.refresh();
       }
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -83,12 +108,13 @@ export default function UpdateProfileForm({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(updateProfile)} className="space-y-5">
+        {/* Image Upload Field */}
         <FormField
           control={form.control}
           name="image"
           render={({ field }) => {
             return (
-              <FormItem className="flex flex-wrap justify-center md: md:flex-nowrap items-center whitespace-nowrap gap-5">
+              <FormItem className="flex flex-wrap justify-center md:flex-nowrap items-center whitespace-nowrap gap-5">
                 <FormLabel
                   htmlFor="profile"
                   className={cn(
@@ -97,7 +123,6 @@ export default function UpdateProfileForm({
                   )}
                 >
                   {imagePreview ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <Image
                       src={imagePreview}
                       alt="Selected Image"
@@ -126,6 +151,7 @@ export default function UpdateProfileForm({
             );
           }}
         />
+        {/* Other Form Fields */}
         <FormField
           name="name"
           control={form.control}
@@ -193,13 +219,16 @@ export default function UpdateProfileForm({
             );
           }}
         />
-        <Button
-          disabled={form.formState.isSubmitting}
-          className="w-full"
-          type="submit"
-        >
-          Save Changes
-        </Button>
+        {/* Save Changes Button */}
+        {form.formState.isDirty && (
+          <Button
+            disabled={form.formState.isSubmitting}
+            className="w-full"
+            type="submit"
+          >
+            Save Changes
+          </Button>
+        )}
       </form>
     </Form>
   );

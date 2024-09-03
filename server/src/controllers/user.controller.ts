@@ -6,7 +6,7 @@ import { Request, Response } from "express";
 import { UpdateUserSchema } from "../types/user";
 import { z } from "zod";
 import bcrypt from "bcrypt";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { client } from "../utils/s3";
 
@@ -141,6 +141,14 @@ export async function deleteUser(req: Request, res: Response) {
     if (requests.length > 0) {
       return res.status(400).json({ msg: "Delete all your requests first" });
     }
+
+    const command = new DeleteObjectCommand({
+      Bucket: process.env.AWS_BUCKET!,
+      Key: user.image,
+    });
+    const url = await getSignedUrl(client, command);
+
+    await fetch(url, { method: "DELETE" });
 
     const deletedUser = await db.user.delete({ where: { id } });
 

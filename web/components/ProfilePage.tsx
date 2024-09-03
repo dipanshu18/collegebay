@@ -25,12 +25,15 @@ import Image from "next/image";
 import Link from "next/link";
 import Spinner from "./Spinner";
 import { useRouter } from "next/navigation";
+import { UserRequest } from "@/app/(dashboard)/others-request/RequestsPage";
+import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<UserProfile | undefined>(undefined);
+  const [requests, setRequests] = useState<UserRequest[]>([]);
 
   const [updateOpen, setUpdateOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
@@ -57,8 +60,56 @@ export default function ProfilePage() {
     }
   }
 
+  async function fetchRequests() {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/requests/user",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        setRequests(response.data.requests);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function deleteRequest(requestId: string) {
+    try {
+      setLoading(true);
+      const response = await axios.delete(
+        `http://localhost:5000/api/v1/requests/${requestId}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.data.msg;
+        toast.success(data);
+        fetchRequests();
+        router.refresh();
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.msg);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchUser();
+    fetchRequests();
   }, []);
 
   if (loading) {
@@ -83,6 +134,7 @@ export default function ProfilePage() {
 
         toast.success(data);
         router.replace("/login");
+        setDeleteOpen(false);
         return router.refresh();
       }
     } catch (error) {
@@ -142,15 +194,17 @@ export default function ProfilePage() {
                       re done.
                     </DialogDescription>
                   </DialogHeader>
-                  <UpdateProfileForm user={user!} setOpen={setUpdateOpen} />
+                  <UpdateProfileForm
+                    user={user!}
+                    setOpen={setUpdateOpen}
+                    refetch={fetchUser}
+                  />
                 </DialogContent>
               </Dialog>
 
               <Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="destructive">
-                    {loading && <Spinner />} Delete Profile
-                  </Button>
+                  <Button variant="destructive">Delete Profile</Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px] dark:bg-black">
                   <DialogHeader>
@@ -159,8 +213,12 @@ export default function ProfilePage() {
                     </DialogTitle>
                     <DialogDescription className="flex gap-5">
                       <p>We are sad you are leaving us 😔</p>
-                      <Button onClick={deleteUser} variant="destructive">
-                        Yes 🥺
+                      <Button
+                        disabled={loading}
+                        onClick={deleteUser}
+                        variant="destructive"
+                      >
+                        {loading && <Spinner />} Yes 🥺
                       </Button>
                       <Button onClick={() => setDeleteOpen(false)}>
                         No 😄
@@ -252,28 +310,46 @@ export default function ProfilePage() {
               </div>
               <div className="my-10">
                 <h1 className="text-xl font-semibold">Your Requests</h1>
-                <div className="py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-                  <Card className="space-y-2 dark:bg-inherit dark:border-slate-200">
-                    <CardHeader>
-                      <Image
-                        src={"/Logo.png"}
-                        width={50}
-                        height={50}
-                        alt="Product image"
-                        className="w-full object-cover h-52"
-                      />
-                    </CardHeader>
-                    <CardTitle className="px-6">Product title</CardTitle>
-                    <CardDescription className="px-6">
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Voluptatem magnam, quod sit sapiente similique quaerat ad
-                      neque qui illo fugit eos veritatis distinctio deleniti
-                      labore obcaecati voluptates. Sed, necessitatibus maxime.
-                    </CardDescription>
-                    <CardFooter>
-                      <Button variant="destructive">Delete Request</Button>
-                    </CardFooter>
-                  </Card>
+                <div
+                  className={cn(
+                    requests.length > 0 &&
+                      "py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full"
+                  )}
+                >
+                  {requests.length > 0 ? (
+                    requests.map((request) => (
+                      <Card
+                        className="space-y-2 dark:bg-inherit dark:border-slate-200"
+                        key={request.id}
+                      >
+                        <CardHeader>
+                          <Image
+                            src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
+                            width={500}
+                            height={500}
+                            alt="Product image"
+                            className="w-full object-cover h-52"
+                          />
+                        </CardHeader>
+                        <CardTitle className="px-6">{request.title}</CardTitle>
+                        <CardDescription className="px-6">
+                          {request.description}
+                        </CardDescription>
+                        <CardFooter>
+                          <Button
+                            onClick={() => deleteRequest(request.id)}
+                            variant="destructive"
+                          >
+                            Delete Request
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    ))
+                  ) : (
+                    <h1 className="text-xl py-5 font-medium">
+                      You have not created any requests 🙂
+                    </h1>
+                  )}
                 </div>
               </div>
             </div>

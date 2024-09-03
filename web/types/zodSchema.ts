@@ -75,13 +75,7 @@ export const CreateRequestSchema = z.object({
   description: z
     .string()
     .min(5, { message: "Description must be minimum 5 characters long" }),
-  image: z
-    .any()
-    .refine((file) => file?.size <= 300000, `Max image size is 3MB.`)
-    .refine(
-      (file) => ["image/jpeg"].includes(file?.type),
-      "Only .jpg, and .jpeg formats are supported."
-    ),
+  image: fileValidationSchema,
 });
 
 export const UpdateProfileSchema = z.object({
