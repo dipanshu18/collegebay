@@ -60,12 +60,9 @@ export const CreatePostSchema = z.object({
     .min(5, { message: "Description must be minimum 5 characters long" }),
   price: z.string(),
   images: z
-    .any()
-    .refine((files) => files?.[0]?.size <= 300000, `Max image size is 3MB.`)
-    .refine(
-      (files) => ["image/jpeg"].includes(files?.[0]?.type),
-      "Only .jpg, and .jpeg formats are supported."
-    ),
+    .array(fileValidationSchema)
+    .min(1, { message: "At least one image is required." })
+    .max(4, { message: "You can upload a maximum of 4 images." }),
 });
 
 export const CreateRequestSchema = z.object({
@@ -137,14 +134,17 @@ export const UpdatePostSchema = z.object({
       },
       { message: "Title must be minimum 4 characters long" }
     ),
-  description: z.string().refine(
-    (value) => {
-      if (value === undefined || value === null) return true;
+  description: z
+    .string()
+    .optional()
+    .refine(
+      (value) => {
+        if (value === undefined || value === null) return true;
 
-      return value.length >= 5;
-    },
-    { message: "Description must be minimum 4 characters long" }
-  ),
+        return value.length >= 5;
+      },
+      { message: "Description must be minimum 4 characters long" }
+    ),
   price: z
     .string()
     .optional()
@@ -154,10 +154,19 @@ export const UpdatePostSchema = z.object({
       return value.length >= 1;
     }),
   images: z
-    .any()
-    .refine((files) => files?.[0]?.size <= 300000, `Max image size is 3MB.`)
+    .array(fileValidationSchema)
+    .optional()
     .refine(
-      (files) => ["image/jpeg"].includes(files?.[0]?.type),
-      "Only .jpg, and .jpeg formats are supported."
+      (value) => {
+        if (
+          (value && value?.length < 1) ||
+          value === undefined ||
+          value === null
+        )
+          return true;
+
+        return value.length >= 1 || value.length <= 5;
+      },
+      { message: "You can upload a maximum of 4 images." }
     ),
 });

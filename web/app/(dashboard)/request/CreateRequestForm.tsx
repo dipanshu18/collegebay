@@ -10,17 +10,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
+} from "@/components/ui/form";
 import { z } from "zod";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
+import Spinner from "@/components/Spinner";
 
 export default function CreateRequestForm() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function CreateRequestForm() {
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -70,6 +72,11 @@ export default function CreateRequestForm() {
 
         form.reset();
         setImagePreview(null);
+
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+
         router.refresh();
       }
     } catch (error) {
@@ -180,6 +187,7 @@ export default function CreateRequestForm() {
                       field.onChange(e.target.files && e.target.files[0]);
                       handleImageChange(e);
                     }}
+                    ref={fileInputRef}
                   />
                 </FormControl>
                 <FormMessage className="dark:text-red-400" />
@@ -188,8 +196,11 @@ export default function CreateRequestForm() {
           }}
         />
 
-        <Button disabled={form.formState.isSubmitting} className="w-full">
-          Create Request
+        <Button
+          disabled={form.formState.isSubmitting}
+          className="w-full flex gap-2"
+        >
+          {form.formState.isSubmitting && <Spinner />} Create Request
         </Button>
       </form>
     </Form>

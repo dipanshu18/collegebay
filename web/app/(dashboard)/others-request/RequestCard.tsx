@@ -90,8 +90,7 @@ export default function RequestCard({
           <DialogContent className="sm:max-w-[500px] dark:bg-black">
             <DialogHeader>
               <DialogTitle>
-                <span className="font-extralight">Contact</span>{" "}
-                {request.user.name}
+                <span className="font-light">Contact</span> {request.user.name}
               </DialogTitle>
               <DialogDescription>
                 <div className="space-y-5 md:p-10 text-wrap">

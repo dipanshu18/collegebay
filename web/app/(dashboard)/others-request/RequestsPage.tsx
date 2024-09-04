@@ -28,11 +28,8 @@ export interface UserRequest {
 export default function RequestsPage() {
   const [requests, setRequests] = useState<UserRequest[]>([]);
 
-  const [loading, setLoading] = useState(false);
-
   async function fetchRequests() {
     try {
-      setLoading(true);
       const response = await axios.get(
         "http://localhost:5000/api/v1/requests",
         {
@@ -47,8 +44,6 @@ export default function RequestsPage() {
       if (error instanceof AxiosError) {
         toast.error(error.response?.data.msg);
       }
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -56,14 +51,13 @@ export default function RequestsPage() {
     fetchRequests();
   }, []);
 
-  if (loading) {
-    return <Spinner />;
-  }
-
-  return (
-    requests &&
+  return requests.length > 0 ? (
     requests.map((request) => (
       <RequestCard key={request.id} request={request} refetch={fetchRequests} />
     ))
+  ) : (
+    <h1 className="mt-10 text-xl col-span-3">
+      No requests created by others yet 🙂
+    </h1>
   );
 }

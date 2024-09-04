@@ -11,8 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Button } from "./ui/button";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import UpdateProfileForm from "./UpdateProfileForm";
 import {
   Card,
@@ -20,19 +20,21 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./ui/card";
+} from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import Spinner from "./Spinner";
+import Spinner from "@/components/Spinner";
 import { useRouter } from "next/navigation";
 import { UserRequest } from "@/app/(dashboard)/others-request/RequestsPage";
 import { cn } from "@/lib/utils";
+import { Post } from "@/app/(dashboard)/home/PostPage";
 
 export default function ProfilePage() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<UserProfile | undefined>(undefined);
+  const [posts, setPosts] = useState<Post[] | []>([]);
   const [requests, setRequests] = useState<UserRequest[]>([]);
 
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -54,6 +56,29 @@ export default function ProfilePage() {
       if (e instanceof AxiosError) {
         const error = await e.response?.data.msg;
         return toast.error(error);
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function fetchPosts() {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        "http://localhost:5000/api/v1/posts/user",
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.data.posts;
+        setPosts(data);
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data.msg);
       }
     } finally {
       setLoading(false);
@@ -109,6 +134,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetchUser();
+    fetchPosts();
     fetchRequests();
   }, []);
 
@@ -159,6 +185,8 @@ export default function ProfilePage() {
                 alt="User profile photo"
                 width={300}
                 height={300}
+                priority
+                quality={100}
                 className="w-52 h-52 object-cover rounded-full border dark:border-slate-100"
               />
             </div>
@@ -233,87 +261,48 @@ export default function ProfilePage() {
           <div className="text-left">
             <div className="my-10">
               <div>
-                <h1 className="text-xl font-semibold">Your Posts</h1>
+                <h1 className="text-2xl font-semibold">Your Posts</h1>
                 <div className="py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
-                  <Card className="space-y-2 w-full dark:bg-inherit dark:border-slate-200">
-                    <CardHeader>
-                      <Image
-                        src={"/Logo.png"}
-                        width={100}
-                        height={100}
-                        alt="Product image"
-                        className="w-full object-cover h-52"
-                      />
-                    </CardHeader>
-                    <CardTitle className="px-6">Product title</CardTitle>
-                    <CardDescription className="px-6">
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Voluptatem magnam, quod sit sapiente similique quaerat ad
-                      neque qui illo fugit eos veritatis distinctio deleniti
-                      labore obcaecati voluptates. Sed, necessitatibus maxime.
-                    </CardDescription>
-                    <CardFooter>
-                      <Link href={"/profile/your-posts/:id"}>
-                        <Button>More details</Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
-
-                  <Card className="space-y-2 dark:bg-inherit dark:border-slate-200">
-                    <CardHeader>
-                      <Image
-                        src={"/Logo.png"}
-                        width={50}
-                        height={50}
-                        alt="Product image"
-                        className="w-full object-cover h-52"
-                      />
-                    </CardHeader>
-                    <CardTitle className="px-6">Product title</CardTitle>
-                    <CardDescription className="px-6">
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Voluptatem magnam, quod sit sapiente similique quaerat ad
-                      neque qui illo fugit eos veritatis distinctio deleniti
-                      labore obcaecati voluptates. Sed, necessitatibus maxime.
-                    </CardDescription>
-                    <CardFooter>
-                      <Link href={"/profile/your-posts/:id"}>
-                        <Button>More details</Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
-
-                  <Card className="space-y-2 dark:bg-inherit dark:border-slate-200">
-                    <CardHeader>
-                      <Image
-                        src={"/Logo.png"}
-                        width={50}
-                        height={50}
-                        alt="Product image"
-                        className="w-full object-cover h-52"
-                      />
-                    </CardHeader>
-                    <CardTitle className="px-6">Product title</CardTitle>
-                    <CardDescription className="px-6">
-                      Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                      Voluptatem magnam, quod sit sapiente similique quaerat ad
-                      neque qui illo fugit eos veritatis distinctio deleniti
-                      labore obcaecati voluptates. Sed, necessitatibus maxime.
-                    </CardDescription>
-                    <CardFooter>
-                      <Link href={"/profile/your-posts/:id"}>
-                        <Button>More details</Button>
-                      </Link>
-                    </CardFooter>
-                  </Card>
+                  {posts.length > 0 ? (
+                    posts.map((post) => (
+                      <Card
+                        key={post.id}
+                        className="space-y-2 w-full dark:bg-inherit dark:border-slate-200"
+                      >
+                        <CardHeader>
+                          <Image
+                            src={`https://dzgbuobd25m4d.cloudfront.net/${post.images[0]}`}
+                            width={500}
+                            height={500}
+                            alt="Product image"
+                            priority
+                            quality={100}
+                            className="w-full object-cover h-52"
+                          />
+                        </CardHeader>
+                        <CardTitle className="px-6">{post.title}</CardTitle>
+                        <CardDescription className="px-6">
+                          {post.description}
+                        </CardDescription>
+                        <CardFooter>
+                          <Link href={`/profile/your-posts/${post.id}`}>
+                            <Button>More details</Button>
+                          </Link>
+                        </CardFooter>
+                      </Card>
+                    ))
+                  ) : (
+                    <h1 className="col-span-2 text-xl font-medium">
+                      You have not created any posts yet
+                    </h1>
+                  )}
                 </div>
               </div>
               <div className="my-10">
-                <h1 className="text-xl font-semibold">Your Requests</h1>
+                <h1 className="text-2xl font-semibold">Your Requests</h1>
                 <div
                   className={cn(
-                    requests.length > 0 &&
-                      "py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full"
+                    "py-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 w-full"
                   )}
                 >
                   {requests.length > 0 ? (
@@ -328,6 +317,8 @@ export default function ProfilePage() {
                             width={500}
                             height={500}
                             alt="Product image"
+                            priority
+                            quality={100}
                             className="w-full object-cover h-52"
                           />
                         </CardHeader>
@@ -346,8 +337,8 @@ export default function ProfilePage() {
                       </Card>
                     ))
                   ) : (
-                    <h1 className="text-xl py-5 font-medium">
-                      You have not created any requests 🙂
+                    <h1 className="text-xl font-medium col-span-2">
+                      You have not created any requests
                     </h1>
                   )}
                 </div>

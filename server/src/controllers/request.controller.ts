@@ -37,7 +37,7 @@ export async function getAllRequests(req: Request, res: Response) {
       },
     });
 
-    if (requests.length < 0) {
+    if (requests.length < 1) {
       return res.status(404).json({ msg: "No requests found" });
     }
 
@@ -57,7 +57,7 @@ export async function getUserRequests(req: Request, res: Response) {
       },
     });
 
-    if (requests.length < 0) {
+    if (requests.length < 1) {
       return res.status(404).json({ msg: "No requests found" });
     }
 

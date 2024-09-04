@@ -30,8 +30,8 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
-            <Footer />
             <Toaster visibleToasts={10} richColors />
+            <Footer />
           </ThemeProvider>
         </div>
       </body>

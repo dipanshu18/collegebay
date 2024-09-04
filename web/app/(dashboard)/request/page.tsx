@@ -1,4 +1,4 @@
-import CreateRequestForm from "@/components/CreateRequestForm";
+import CreateRequestForm from "./CreateRequestForm";
 
 export default function Request() {
   return (

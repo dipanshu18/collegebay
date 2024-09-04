@@ -27,6 +27,7 @@ model Post {
   description String
   price       String
   images      String[]
+  isAvailable Boolean  @default(true)
   isApproved  Boolean  @default(false)
   user        User     @relation(fields: [userId], references: [id])
   userId      String

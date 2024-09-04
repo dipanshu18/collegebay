@@ -11,6 +11,8 @@ export async function authMiddleware(
   next: NextFunction
 ) {
   const token = req.cookies["session"];
+  console.log(req.cookies);
+
   if (!token) {
     return res.status(401).json({ msg: "Unauthorized!" });
   }
@@ -22,5 +24,6 @@ export async function authMiddleware(
   }
 
   req.body.user = decoded;
+
   next();
 }
