@@ -259,7 +259,7 @@ export default function SignupForm() {
                   disabled={field.disabled}
                 />
               </FormControl>
-              <FormDescription className="dark:text-slate-200">
+              <FormDescription className="dark:text-neutral-200">
                 Please don{`'`}t include +91- or +91
               </FormDescription>
               <FormMessage className="dark:text-red-400" />

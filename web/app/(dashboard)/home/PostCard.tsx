@@ -16,8 +16,8 @@ export default function PostCard({ post }: { post: Post }) {
   return (
     <Card
       className={cn(
-        "space-y-2 w-full dark:bg-inherit dark:border-slate-100",
-        !post.isAvailable && "bg-top bg-slate-100 dark:bg-slate-950"
+        "space-y-2 w-full dark:bg-inherit dark:border-neutral-100",
+        !post.isAvailable && "bg-top bg-neutral-100 dark:bg-neutral-950"
       )}
     >
       <CardHeader>
@@ -37,7 +37,7 @@ export default function PostCard({ post }: { post: Post }) {
         </div>
       </CardHeader>
       <CardTitle className="px-6">{post.title}</CardTitle>
-      <CardDescription className="px-6 dark:text-slate-200">
+      <CardDescription className="px-6 dark:text-neutral-200">
         {post.description}
         <p>
           Created{" "}

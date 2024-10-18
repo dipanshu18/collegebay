@@ -8,6 +8,8 @@ import { authMiddleware } from "./middlewares/auth.middleware";
 import { userRouter } from "./routers/user.router";
 import { requestRouter } from "./routers/request.router";
 import { postRouter } from "./routers/post.router";
+import { adminRouter } from "./routers/admin.router";
+import { adminMiddleware } from "./middlewares/admin.middleware";
 
 export const app = express();
 
@@ -31,6 +33,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/admin", adminMiddleware, adminRouter);
 app.use("/api/v1/user", authMiddleware, userRouter);
 app.use("/api/v1/requests", authMiddleware, requestRouter);
 app.use("/api/v1/posts", authMiddleware, postRouter);

@@ -117,7 +117,7 @@ function ActionButtons() {
               <Link
                 href={item.link}
                 key={idx}
-                className="w-full hover:text-slate-600 dark:hover:text-slate-300 transition-all duration-500 whitespace-nowrap"
+                className="w-full hover:text-neutral-600 dark:hover:text-neutral-300 transition-all duration-500 whitespace-nowrap"
               >
                 {item.title}
               </Link>

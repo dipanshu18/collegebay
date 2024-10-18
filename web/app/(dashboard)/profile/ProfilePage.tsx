@@ -187,7 +187,7 @@ export default function ProfilePage() {
                 height={300}
                 priority
                 quality={100}
-                className="w-52 h-52 object-cover rounded-full border dark:border-slate-100"
+                className="w-52 h-52 object-cover rounded-full border dark:border-neutral-100"
               />
             </div>
             <div className="text-left col-span-2 py-5 w-full space-y-5">
@@ -209,11 +209,9 @@ export default function ProfilePage() {
             <div className="flex justify-between gap-5">
               <Dialog open={updateOpen} onOpenChange={setUpdateOpen}>
                 <DialogTrigger asChild>
-                  <Button className="dark:bg-slate-600" variant="outline">
-                    Edit Profile
-                  </Button>
+                  <Button variant="outline">Edit Profile</Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[425px] dark:bg-black">
+                <DialogContent className="sm:max-w-[425px] dark:bg-neutral-950">
                   <DialogHeader>
                     <DialogTitle>Edit profile</DialogTitle>
                     <DialogDescription>
@@ -267,7 +265,7 @@ export default function ProfilePage() {
                     posts.map((post) => (
                       <Card
                         key={post.id}
-                        className="space-y-2 w-full dark:bg-inherit dark:border-slate-200"
+                        className="space-y-2 w-full dark:bg-inherit dark:border-neutral-200"
                       >
                         <CardHeader>
                           <Image
@@ -308,7 +306,7 @@ export default function ProfilePage() {
                   {requests.length > 0 ? (
                     requests.map((request) => (
                       <Card
-                        className="space-y-2 dark:bg-inherit dark:border-slate-200"
+                        className="space-y-2 dark:bg-inherit dark:border-neutral-200"
                         key={request.id}
                       >
                         <CardHeader>

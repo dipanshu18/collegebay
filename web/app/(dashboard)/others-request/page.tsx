@@ -1,13 +1,3 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { ChevronUp } from "lucide-react";
-import Image from "next/image";
 import RequestsPage from "./RequestsPage";
 
 export default async function OthersRequest() {

@@ -41,7 +41,7 @@ export default function PostDetailInfo({ id }: { id: string }) {
         </div>
         <div className="space-y-3 w-full my-10 col-span-2 md:col-span-1">
           <h1 className="text-2xl font-bold">{post?.title}</h1>
-          <p className="text-sm text-slate-700 dark:text-slate-200 text-wrap">
+          <p className="text-sm text-neutral-700 dark:text-neutral-200 text-wrap">
             {post?.description}
           </p>
           <p className="font-extrabold text-xl">Rs. {post?.price}</p>

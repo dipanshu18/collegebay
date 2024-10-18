@@ -112,7 +112,7 @@ export default function YourPostDetailsPage({ id }: { id: string }) {
         </div>
         <div className="space-y-3 w-full my-10">
           <h1 className="text-2xl font-bold">{post?.title}</h1>
-          <p className="text-sm text-slate-700 dark:text-slate-200 text-wrap">
+          <p className="text-sm text-neutral-700 dark:text-neutral-200 text-wrap">
             {post?.description}
           </p>
           <p className="font-extrabold text-xl">Rs. {post?.price}</p>
@@ -175,7 +175,7 @@ export default function YourPostDetailsPage({ id }: { id: string }) {
 
         <Dialog open={openSold} onOpenChange={setOpenSold}>
           <DialogTrigger asChild>
-            <Button className="w-full dark:bg-slate-600" variant="outline">
+            <Button className="w-full dark:bg-neutral-600" variant="outline">
               Sold
             </Button>
           </DialogTrigger>
@@ -212,14 +212,14 @@ export default function YourPostDetailsPage({ id }: { id: string }) {
       <div>
         <h1 className="text-lg font-extrabold">Messages for this product</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5 my-5">
-          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-slate-200">
+          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-neutral-200">
             <CardHeader className="p-0">
               <Image
                 src={"/Logo.png"}
                 alt="User profile photo"
                 width={50}
                 height={50}
-                className="object-cover border border-black dark:border-slate-200 rounded-full w-28 h-28"
+                className="object-cover border border-black dark:border-neutral-200 rounded-full w-28 h-28"
               />
             </CardHeader>
             <CardTitle className="font-normal">Messaged User Name</CardTitle>
@@ -228,14 +228,14 @@ export default function YourPostDetailsPage({ id }: { id: string }) {
             </CardFooter>
           </Card>
 
-          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-slate-200">
+          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-neutral-200">
             <CardHeader className="p-0">
               <Image
                 src={"/Logo.png"}
                 alt="User profile photo"
                 width={50}
                 height={50}
-                className="object-cover border border-black dark:border-slate-200 rounded-full w-28 h-28"
+                className="object-cover border border-black dark:border-neutral-200 rounded-full w-28 h-28"
               />
             </CardHeader>
             <CardTitle className="font-normal">Messaged User Name</CardTitle>

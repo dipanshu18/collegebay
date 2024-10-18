@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/theme-provider";
-
-const poppins = Poppins({ subsets: ["latin"], weight: "400" });
+import { TanstackProvider } from "./providers";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const metadata: Metadata = {
   title: "Collegebay",
@@ -20,19 +19,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={poppins.className}>
+      <body className="font-mono bg-white/50 dark:bg-neutral-900">
         <div className="container mx-auto min-h-screen flex flex-col justify-between">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Navbar />
-            {children}
-            <Toaster visibleToasts={10} richColors />
-            <Footer />
-          </ThemeProvider>
+          <TanstackProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <Navbar />
+              {children}
+              <Toaster visibleToasts={10} richColors />
+              <Footer />
+            </ThemeProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </TanstackProvider>
         </div>
       </body>
     </html>

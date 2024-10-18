@@ -53,7 +53,7 @@ export default function RequestCard({
   }
 
   return (
-    <Card className="space-y-2 w-full dark:bg-inherit dark:border-slate-200">
+    <Card className="space-y-2 w-full dark:bg-inherit dark:border-neutral-200">
       <CardHeader>
         <Image
           src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
@@ -83,11 +83,9 @@ export default function RequestCard({
         </Button>
         <Dialog>
           <DialogTrigger asChild>
-            <Button className="dark:bg-slate-600" variant="outline">
-              Contact
-            </Button>
+            <Button variant="outline">Contact</Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] dark:bg-black">
+          <DialogContent className="sm:max-w-[500px] dark:bg-neutral-900">
             <DialogHeader>
               <DialogTitle>
                 <span className="font-light">Contact</span> {request.user.name}

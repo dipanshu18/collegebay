@@ -31,7 +31,7 @@ export default function Footer() {
         <h1>©️ All copyrights reserved 2024.</h1>
         <CardDescription className="dark:text-white">
           Reach out to us at:{" "}
-          <span className="text-slate-700 dark:text-slate-300 underline">
+          <span className="text-neutral-700 dark:text-neutral-300 underline">
             dipanshu.torawane@vit.edu.in
           </span>
         </CardDescription>
