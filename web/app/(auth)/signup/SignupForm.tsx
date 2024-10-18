@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios, { AxiosError } from "axios";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -25,12 +24,13 @@ import {
 } from "@/components/ui/select";
 import { SignupSchema } from "@/types/zodSchema";
 import Spinner from "@/components/Spinner";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { User } from "lucide-react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useMutation } from "@tanstack/react-query";
+import { signup } from "@/api/mutations";
 
 export default function SignupForm() {
   const router = useRouter();
@@ -43,6 +43,15 @@ export default function SignupForm() {
       password: "",
       college: "Vidyalankar Institute of Technology, Mumbai",
       phoneNo: "",
+    },
+  });
+
+  const signupMutation = useMutation({
+    mutationKey: ["signupUser"],
+    mutationFn: signup,
+    onSuccess: () => {
+      router.replace("/home");
+      router.refresh();
     },
   });
 
@@ -60,52 +69,10 @@ export default function SignupForm() {
     }
   };
 
-  async function signup(values: z.infer<typeof SignupSchema>) {
-    try {
-      const formData = new FormData();
-      formData.append("email", values.email);
-      formData.append("name", values.name);
-      formData.append("password", values.password);
-      formData.append("college", values.college);
-      formData.append("phoneNo", values.phoneNo);
-      if (values.image) {
-        formData.append("image", values.image);
-      }
-
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/signup",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 201) {
-        const data = response.data;
-        toast.success(data.msg);
-        router.replace("/home");
-        router.refresh();
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorData = error.response?.data.msg;
-        if (errorData) {
-          if (typeof errorData === "object") {
-            Object.entries(errorData).forEach(async ([field, message]) => {
-              toast.error(`${field}: ${message}`);
-            });
-          } else {
-            toast.error(errorData);
-          }
-        }
-      }
-    }
-  }
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(signup)}
+        onSubmit={form.handleSubmit((values) => signupMutation.mutate(values))}
         className="md:w-full md:max-w-xl max-w-md md:mx-auto space-y-4 my-5 p-5 border rounded-md shadow"
       >
         <FormField
@@ -298,11 +265,11 @@ export default function SignupForm() {
           )}
         />
         <Button
-          disabled={form.formState.isSubmitting}
+          disabled={signupMutation.isPending}
           type="submit"
           className="w-full flex items-center gap-2"
         >
-          {form.formState.isSubmitting && <Spinner />}
+          {signupMutation.isPending && <Spinner />}
           Signup
         </Button>
       </form>

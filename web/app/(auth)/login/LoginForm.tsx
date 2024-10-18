@@ -15,10 +15,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { LoginSchema } from "@/types/zodSchema";
 import Spinner from "@/components/Spinner";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
+import { login } from "@/api/mutations";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -31,38 +31,19 @@ export default function LoginForm() {
     },
   });
 
-  async function login(values: z.infer<typeof LoginSchema>) {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/login",
-        values,
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        const data = await response.data;
-
-        toast.success(data.msg);
-
-        router.replace("/home");
-        router.refresh();
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.msg);
-      }
-    }
-  }
+  const loginMutation = useMutation({
+    mutationKey: ["loginUser"],
+    mutationFn: login,
+    onSuccess: () => {
+      router.replace("/home");
+      router.refresh();
+    },
+  });
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(login)}
+        onSubmit={form.handleSubmit((values) => loginMutation.mutate(values))}
         className="md:w-full md:max-w-lg max-w-md md:mx-auto space-y-4 my-5 p-5 border rounded-md shadow"
       >
         <FormField
@@ -118,11 +99,11 @@ export default function LoginForm() {
           }}
         />
         <Button
-          disabled={form.formState.isSubmitting}
+          disabled={loginMutation.isPending}
           type="submit"
           className="w-full flex items-center gap-2"
         >
-          {form.formState.isSubmitting && <Spinner />}
+          {loginMutation.isPending && <Spinner />}
           Login
         </Button>
       </form>

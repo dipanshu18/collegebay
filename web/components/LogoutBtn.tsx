@@ -2,39 +2,23 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "@/api/mutations";
 
 export default function LogoutBtn() {
   const router = useRouter();
 
-  async function logout() {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/auth/logout",
-        {},
-        { withCredentials: true }
-      );
-      if (response.status === 200) {
-        const data = await response.data;
-
-        toast.success(data.msg);
-
-        router.replace("/home");
-        router.refresh();
-        return;
-      }
-    } catch (error) {
-      console.log(error);
-
-      if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.msg);
-      }
-    }
-  }
+  const logoutMutation = useMutation({
+    mutationKey: ["logoutUser"],
+    mutationFn: logout,
+    onSuccess: () => {
+      router.replace("/login");
+      router.refresh();
+    },
+  });
 
   return (
-    <Button onClick={logout} className="w-full">
+    <Button onClick={() => logoutMutation.mutate()} className="w-full">
       Logout
     </Button>
   );
