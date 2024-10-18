@@ -16,7 +16,7 @@ export default function ImageCarousel({ images }: { images: string[] }) {
       }}
       className="w-full"
     >
-      <CarouselContent className="-mt-1 object-cover h-[300px] lg:h-[500px]">
+      <CarouselContent className="-mt-1 object-cover h-[300px] lg:h-[700px]">
         {images &&
           images.map((image, index) => (
             <CarouselItem

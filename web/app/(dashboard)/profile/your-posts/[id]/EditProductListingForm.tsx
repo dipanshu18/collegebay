@@ -17,11 +17,11 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Post } from "@/app/(dashboard)/home/PostPage";
 import { useState } from "react";
 import Image from "next/image";
+import { IPost } from "@/api/types";
 
-export default function EditProductListingForm({ post }: { post: Post }) {
+export default function EditProductListingForm({ post }: { post: IPost }) {
   // Initialize state with existing images and new image files
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>(

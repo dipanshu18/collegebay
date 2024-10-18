@@ -8,15 +8,15 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import { Post } from "./PostPage";
 import { formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
+import { IPost } from "@/api/types";
 
-export default function PostCard({ post }: { post: Post }) {
+export default function PostCard({ post }: { post: IPost }) {
   return (
     <Card
       className={cn(
-        "space-y-2 w-full dark:bg-inherit dark:border-neutral-100",
+        "space-y-5 w-full max-h-[600px] dark:bg-neutral-900 dark:border-neutral-100",
         !post.isAvailable && "bg-top bg-neutral-100 dark:bg-neutral-950"
       )}
     >
@@ -28,17 +28,17 @@ export default function PostCard({ post }: { post: Post }) {
           alt="Product image"
           className="w-full object-cover h-52"
         />
-        <div className="relative">
+        <div className="absolute">
           {!post.isAvailable && (
-            <div className="bg-emerald-600 absolute right-0 text-white px-4 py-2 rounded-md">
+            <div className="bg-green-600 relative -top-5 right-0 text-white px-4 py-2 rounded-md">
               Sold
             </div>
           )}
         </div>
       </CardHeader>
-      <CardTitle className="px-6">{post.title}</CardTitle>
-      <CardDescription className="px-6 dark:text-neutral-200">
-        {post.description}
+      <CardTitle className="px-6 text-3xl">{post.title}</CardTitle>
+      <CardDescription className="px-6 text-lg space-y-5  dark:text-neutral-200">
+        <p>{post.description.slice(0, 55) + "..."}</p>
         <p>
           Created{" "}
           {formatDistanceToNow(new Date(post.createdAt), {

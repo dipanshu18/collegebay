@@ -1,59 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import Spinner from "@/components/Spinner";
 import RequestCard from "./RequestCard";
-
-export interface UserRequest {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  userId: string;
-  createdAt: Date;
-  user: {
-    image: string;
-    name: string;
-    email: string;
-    college: string;
-    phoneNo: string;
-  };
-  _count: {
-    upVotes: number;
-  };
-}
+import { useQuery } from "@tanstack/react-query";
+import { fetchRequests } from "@/api/queries";
+import { IUserRequest } from "@/api/types";
 
 export default function RequestsPage() {
-  const [requests, setRequests] = useState<UserRequest[]>([]);
+  const {
+    data: requests,
+    isLoading,
+    isError,
+  } = useQuery<IUserRequest[]>({
+    queryKey: ["requests"],
+    queryFn: fetchRequests,
+  });
 
-  async function fetchRequests() {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/v1/requests",
-        {
-          withCredentials: true,
-        }
-      );
-
-      if (response.status === 200) {
-        setRequests(response.data.requests);
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.msg);
-      }
-    }
+  if (isLoading) {
+    return (
+      <div>
+        <Spinner />
+      </div>
+    );
   }
 
-  useEffect(() => {
-    fetchRequests();
-  }, []);
+  if (isError && !isLoading) {
+    return <h1>Error while fetching requests...</h1>;
+  }
 
-  return requests.length > 0 ? (
+  return requests && requests.length > 0 ? (
     requests.map((request) => (
-      <RequestCard key={request.id} request={request} refetch={fetchRequests} />
+      <RequestCard key={request.id} request={request} />
     ))
   ) : (
     <h1 className="mt-10 text-xl col-span-3">

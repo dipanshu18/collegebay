@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { XIcon } from "lucide-react";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/Spinner";
+import { useMutation } from "@tanstack/react-query";
+import { createPost } from "@/api/mutations";
 
 export default function CreatePostForm() {
   const router = useRouter();
@@ -36,6 +36,21 @@ export default function CreatePostForm() {
       description: "",
       price: "",
       images: [],
+    },
+  });
+
+  const createPostMutation = useMutation({
+    mutationKey: ["createPost"],
+    mutationFn: createPost,
+    onSuccess: () => {
+      form.reset();
+      setImagePreviews([]);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      router.refresh();
     },
   });
 
@@ -68,56 +83,12 @@ export default function CreatePostForm() {
     form.setValue("images", updatedFiles);
   };
 
-  async function createPost(values: z.infer<typeof CreatePostSchema>) {
-    const formData = new FormData();
-
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-    if (values.images.length > 0) {
-      values.images.forEach((file) => {
-        formData.append("images", file);
-      });
-    }
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/posts",
-        formData,
-        { withCredentials: true }
-      );
-
-      if (response.status === 201) {
-        const data = await response.data.msg;
-        toast.success(data);
-
-        form.reset();
-        setImagePreviews([]);
-
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-
-        router.refresh();
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorData = error.response?.data.msg;
-        if (errorData) {
-          if (typeof errorData === "object") {
-            Object.entries(errorData).forEach(async ([field, message]) => {
-              toast.error(`${field}: ${message}`);
-            });
-          }
-        }
-      }
-    }
-  }
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(createPost)}
+        onSubmit={form.handleSubmit((values) =>
+          createPostMutation.mutate(values)
+        )}
         className="text-left max-w-lg w-full mx-auto border shadow p-5 rounded-md space-y-4 mt-5"
       >
         <FormField
@@ -261,10 +232,10 @@ export default function CreatePostForm() {
         />
 
         <Button
-          disabled={form.formState.isSubmitting}
+          disabled={createPostMutation.isPending}
           className="w-full flex gap-2"
         >
-          {form.formState.isSubmitting && <Spinner />} Create Listing
+          {createPostMutation.isPending && <Spinner />} Create Listing
         </Button>
       </form>
     </Form>

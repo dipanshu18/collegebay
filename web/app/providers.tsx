@@ -10,3 +10,5 @@ export function TanstackProvider({ children }: { children: ReactNode }) {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }
+
+export { queryClient };

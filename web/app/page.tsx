@@ -12,38 +12,20 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import Footer from "@/components/Footer";
 
 const whatWeDo: { title: string; description: string }[] = [
   {
     title: "Create post/request",
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque
-                  accusantium quae placeat tempore iste dolorem, error
-                  temporibus cum delectus nesciunt sequi qui in blanditiis dicta
-                  fugit incidunt ex aliquid quam provident dolore eum magni
-                  autem vero laborum. Enim tempore facilis consequatur
-                  aspernatur consequuntur aliquam iusto obcaecati, ipsa hic,
-                  fuga nesciunt.`,
+    description: `Easily post listings for items you want to sell or submit requests for items you need. CollegeBay provides a simple and intuitive platform for college students to connect over essential goods like textbooks, electronics, and more. Whether you're selling or requesting, posting is quick and seamless, giving you access to the right audience.
+`,
   },
   {
     title: "Message seller",
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque
-                  accusantium quae placeat tempore iste dolorem, error
-                  temporibus cum delectus nesciunt sequi qui in blanditiis dicta
-                  fugit incidunt ex aliquid quam provident dolore eum magni
-                  autem vero laborum. Enim tempore facilis consequatur
-                  aspernatur consequuntur aliquam iusto obcaecati, ipsa hic,
-                  fuga nesciunt.`,
+    description: `Chat directly with sellers or buyers in real-time to negotiate deals, finalize delivery options, and discuss payment methods. With built-in messaging, you can confidently communicate with others without needing external platforms.`,
   },
   {
     title: "Admin Moderation",
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Eaque
-                  accusantium quae placeat tempore iste dolorem, error
-                  temporibus cum delectus nesciunt sequi qui in blanditiis dicta
-                  fugit incidunt ex aliquid quam provident dolore eum magni
-                  autem vero laborum. Enim tempore facilis consequatur
-                  aspernatur consequuntur aliquam iusto obcaecati, ipsa hic,
-                  fuga nesciunt.`,
+    description: `Our dedicated admin team ensures that all listings meet terms and community guidelines. By reviewing and moderating posts, CollegeBay guarantees a safe and reliable marketplace, keeping the platform free from inappropriate content or fraudulent listings.`,
   },
 ];
 

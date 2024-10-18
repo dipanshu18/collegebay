@@ -16,12 +16,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Spinner from "@/components/Spinner";
+import { useMutation } from "@tanstack/react-query";
+import { createRequest } from "@/api/mutations";
 
 export default function CreateRequestForm() {
   const router = useRouter();
@@ -32,6 +32,21 @@ export default function CreateRequestForm() {
     defaultValues: {
       title: "",
       description: "",
+    },
+  });
+
+  const createRequestMutation = useMutation({
+    mutationKey: ["createRequest"],
+    mutationFn: createRequest,
+    onSuccess: () => {
+      form.reset();
+      setImagePreview(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      router.refresh();
     },
   });
 
@@ -50,53 +65,12 @@ export default function CreateRequestForm() {
     }
   };
 
-  async function createRequest(values: z.infer<typeof CreateRequestSchema>) {
-    try {
-      const formData = new FormData();
-
-      formData.append("title", values.title);
-      formData.append("description", values.description);
-      if (values.image) {
-        formData.append("image", values.image);
-      }
-
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/requests/create",
-        formData,
-        { withCredentials: true }
-      );
-
-      if (response.status === 201) {
-        const data = await response.data.msg;
-        toast.success(data);
-
-        form.reset();
-        setImagePreview(null);
-
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-
-        router.refresh();
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorData = error.response?.data.msg;
-        if (errorData) {
-          if (typeof errorData === "object") {
-            Object.entries(errorData).forEach(async ([field, message]) => {
-              toast.error(`${field}: ${message}`);
-            });
-          }
-        }
-      }
-    }
-  }
-
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(createRequest)}
+        onSubmit={form.handleSubmit((values) =>
+          createRequestMutation.mutate(values)
+        )}
         className="text-left space-y-4 mt-5 max-w-lg mx-auto border rounded-md p-5 shadow"
       >
         <FormField
@@ -197,10 +171,10 @@ export default function CreateRequestForm() {
         />
 
         <Button
-          disabled={form.formState.isSubmitting}
+          disabled={createRequestMutation.isPending}
           className="w-full flex gap-2"
         >
-          {form.formState.isSubmitting && <Spinner />} Create Request
+          {createRequestMutation.isPending && <Spinner />} Create Request
         </Button>
       </form>
     </Form>

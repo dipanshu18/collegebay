@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-mono bg-white/50 dark:bg-neutral-900">
-        <div className="container mx-auto min-h-screen flex flex-col justify-between">
+        <div className="container mx-auto w-full min-h-screen flex flex-col justify-between">
           <TanstackProvider>
             <ThemeProvider
               attribute="class"

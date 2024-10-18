@@ -22,17 +22,31 @@ import { UserProfile } from "@/types/index";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProfile } from "@/api/mutations";
 
 export default function UpdateProfileForm({
   user,
   setOpen,
-  refetch,
 }: {
   user: UserProfile;
   setOpen: (value: boolean) => void;
-  refetch: () => Promise<string | number | undefined>;
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const updateProfileMutation = useMutation({
+    mutationKey: ["updateProfile"],
+    mutationFn: updateProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["userProfile"],
+      });
+
+      setOpen(false);
+      router.refresh();
+    },
+  });
 
   const form = useForm<z.infer<typeof UpdateProfileSchema>>({
     resolver: zodResolver(UpdateProfileSchema),
@@ -57,7 +71,9 @@ export default function UpdateProfileForm({
     }
   };
 
-  async function updateProfile(values: z.infer<typeof UpdateProfileSchema>) {
+  async function handleUpdateProfile(
+    values: z.infer<typeof UpdateProfileSchema>
+  ) {
     const modifiedData = Object.keys(form.formState.dirtyFields).reduce(
       (acc, key) => {
         const typedKey = key as keyof z.infer<typeof UpdateProfileSchema>;
@@ -81,33 +97,15 @@ export default function UpdateProfileForm({
       return toast.error("Nothing to update");
     }
 
-    try {
-      const response = await axios.put(
-        "http://localhost:5000/api/v1/user",
-        modifiedData,
-        { withCredentials: true }
-      );
-
-      if (response.status === 200) {
-        const data = await response.data;
-
-        toast.success(data.msg);
-        setOpen(false);
-        refetch();
-        router.refresh();
-      }
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        const errorData = await error.response?.data.msg;
-
-        return toast.error(JSON.stringify(errorData));
-      }
-    }
+    await updateProfileMutation.mutateAsync(modifiedData);
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(updateProfile)} className="space-y-5">
+      <form
+        onSubmit={form.handleSubmit(handleUpdateProfile)}
+        className="space-y-5"
+      >
         {/* Image Upload Field */}
         <FormField
           control={form.control}

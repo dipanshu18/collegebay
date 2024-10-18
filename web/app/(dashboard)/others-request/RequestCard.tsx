@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/card";
 
 import { ChevronUp } from "lucide-react";
-import { UserRequest } from "./RequestsPage";
 import {
   Dialog,
   DialogContent,
@@ -22,38 +21,30 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { formatDistanceToNow } from "date-fns";
-import axios, { AxiosError } from "axios";
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IUserRequest } from "@/api/types";
+import { upVoteRequest } from "@/api/mutations";
 
-export default function RequestCard({
-  request,
-  refetch,
-}: {
-  request: UserRequest;
-  refetch: () => Promise<void>;
-}) {
+export default function RequestCard({ request }: { request: IUserRequest }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
-  async function upVoteRequest(requestId: string) {
-    try {
-      await axios.post(
-        `http://localhost:5000/api/v1/requests/upvote/${requestId}`,
-        {},
-        { withCredentials: true }
-      );
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        toast.error(error.response?.data.msg);
-      }
-    } finally {
-      refetch();
+  const upVoteRequestMutation = useMutation({
+    mutationKey: ["upVoteRequest", request.id],
+    mutationFn: () => upVoteRequest(request.id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["requests"],
+      });
+
       router.refresh();
-    }
-  }
+      return;
+    },
+  });
 
   return (
-    <Card className="space-y-2 w-full dark:bg-inherit dark:border-neutral-200">
+    <Card className="space-y-5 w-full dark:bg-inherit dark:border-neutral-200">
       <CardHeader>
         <Image
           src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
@@ -65,8 +56,8 @@ export default function RequestCard({
         />
       </CardHeader>
       <CardTitle className="px-6">{request.title}</CardTitle>
-      <CardDescription className="px-6">
-        {request.description}
+      <CardDescription className="px-6 space-y-5">
+        <p>{request.description}</p>
         <p>
           Created{" "}
           {formatDistanceToNow(new Date(request.createdAt), {
@@ -76,7 +67,11 @@ export default function RequestCard({
       </CardDescription>
       <CardFooter className="gap-5">
         <Button
-          onClick={() => upVoteRequest(request.id)}
+          onClick={(e) => {
+            e.preventDefault();
+
+            upVoteRequestMutation.mutate();
+          }}
           className="flex items-center gap-2"
         >
           <ChevronUp /> {request._count.upVotes}
