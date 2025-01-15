@@ -9,8 +9,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
-import { cn } from "@/lib/utils";
-import { IPost } from "@/api/types";
+import { cn } from "@/components/lib/utils";
+import type { IPost } from "@/api/types";
 
 export default function PostCard({ post }: { post: IPost }) {
   return (
@@ -38,7 +38,7 @@ export default function PostCard({ post }: { post: IPost }) {
       </CardHeader>
       <CardTitle className="px-6 text-3xl">{post.title}</CardTitle>
       <CardDescription className="px-6 text-lg space-y-5  dark:text-neutral-200">
-        <p>{post.description.slice(0, 55) + "..."}</p>
+        <p>{`${post.description.slice(0, 55)}...`}</p>
         <p>
           Created{" "}
           {formatDistanceToNow(new Date(post.createdAt), {

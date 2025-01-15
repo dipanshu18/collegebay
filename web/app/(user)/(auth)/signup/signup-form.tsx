@@ -21,7 +21,7 @@ import { Plus, Upload } from "lucide-react";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/lib/utils";
 import { SignupSchema } from "@/types/zodSchema";
 import { signup } from "@/api/mutations";
 

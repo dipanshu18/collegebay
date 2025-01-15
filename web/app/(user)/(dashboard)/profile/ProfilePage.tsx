@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card";
 import Spinner from "@/components/Spinner";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/lib/utils";
 import {
   fetchUserPosts,
   fetchUserProfile,

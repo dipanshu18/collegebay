@@ -13,7 +13,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/lib/utils";
 import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { useState } from "react";

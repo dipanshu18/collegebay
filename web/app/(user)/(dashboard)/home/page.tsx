@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
+
 import PostPage from "./PostPage";
+
+export const metadata: Metadata = {
+  title: "Home",
+};
 
 export default function Home() {
   return (

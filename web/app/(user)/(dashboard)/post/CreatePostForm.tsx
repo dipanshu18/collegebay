@@ -16,7 +16,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/lib/utils";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { XIcon } from "lucide-react";
