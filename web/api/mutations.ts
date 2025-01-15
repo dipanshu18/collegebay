@@ -179,11 +179,22 @@ export async function updateProfile(
   }>
 ) {
   try {
-    const response = await axios.put(
-      "http://localhost:5000/api/v1/user",
-      modifiedData,
-      { withCredentials: true }
-    );
+    const formData = new FormData();
+    if (modifiedData) {
+      formData.append("name", modifiedData.name as string);
+      formData.append("password", modifiedData.password as string);
+      formData.append("phoneNo", modifiedData.phoneNo as string);
+      if (modifiedData.image) {
+        formData.append("image", modifiedData.image);
+      }
+    } else {
+      toast.error("Nothing to update");
+      return;
+    }
+
+    const response = await axios.put(`${BASE_URL}/user`, formData, {
+      withCredentials: true,
+    });
 
     if (response.status === 200) {
       const data = await response.data;
@@ -194,7 +205,7 @@ export async function updateProfile(
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
 
-      return toast.error(JSON.stringify(errorData));
+      return toast.error(errorData);
     }
   }
 }

@@ -63,6 +63,7 @@ export default function UpdateProfileForm({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      form.setValue("image", file);
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);

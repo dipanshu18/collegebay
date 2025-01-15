@@ -43,6 +43,7 @@ export async function getUser(req: Request, res: Response) {
 
 export async function updateUser(req: Request, res: Response) {
   try {
+    console.log(req.body);
     const { id } = req.body.user;
 
     if (!id) {
@@ -91,9 +92,9 @@ export async function updateUser(req: Request, res: Response) {
     }
 
     const updatedData: z.infer<typeof UpdateUserSchema> = {
-      name: dataUpdates.name ? dataUpdates.name : user.name,
+      name: dataUpdates.name ?? user.name,
       password: dataUpdates.password ? newHash : user.password,
-      phoneNo: dataUpdates.phoneNo ? dataUpdates.phoneNo : user.phoneNo,
+      phoneNo: dataUpdates.phoneNo ?? user.phoneNo,
     };
 
     const updatedUser = await db.user.update({

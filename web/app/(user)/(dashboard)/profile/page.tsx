@@ -1,4 +1,4 @@
-import ProfilePage from "@/app/(dashboard)/profile/ProfilePage";
+import ProfilePage from "./ProfilePage";
 
 export default function Profile() {
   return (

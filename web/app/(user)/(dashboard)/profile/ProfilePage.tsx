@@ -56,7 +56,6 @@ export default function ProfilePage() {
   >({
     queryFn: () => fetchUserRequests(),
     queryKey: ["userRequests"],
-    staleTime: 0,
   });
 
   const deleteUserMutation = useMutation({
@@ -73,6 +72,13 @@ export default function ProfilePage() {
   const deleteRequestMutation = useMutation({
     mutationKey: ["deleteRequest"],
     mutationFn: (requestId: string) => deleteRequest(requestId),
+    onSuccess: () => {
+      queryClient.resetQueries({
+        queryKey: ["userRequests"],
+      });
+      router.refresh();
+      return;
+    },
   });
 
   return (
@@ -249,8 +255,6 @@ export default function ProfilePage() {
                               await deleteRequestMutation.mutateAsync(
                                 request.id
                               );
-
-                              window.location.reload();
                             }}
                             variant="destructive"
                           >
