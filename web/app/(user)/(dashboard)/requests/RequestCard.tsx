@@ -23,7 +23,7 @@ import {
 import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { IUserRequest } from "@/api/types";
+import type { IUserRequest } from "@/api/types";
 import { upVoteRequest } from "@/api/mutations";
 
 export default function RequestCard({ request }: { request: IUserRequest }) {

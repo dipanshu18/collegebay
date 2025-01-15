@@ -1,6 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import type { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+
 import {
   Form,
   FormControl,
@@ -10,19 +17,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreatePostSchema } from "@/types/zodSchema";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/components/lib/utils";
-import Image from "next/image";
-import { useRef, useState } from "react";
 import { XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import Spinner from "@/components/Spinner";
-import { useMutation } from "@tanstack/react-query";
+
+import { cn } from "@/components/lib/utils";
+import { CreatePostSchema } from "@/types/zodSchema";
 import { createPost } from "@/api/mutations";
 
 export default function CreatePostForm() {
@@ -89,7 +90,7 @@ export default function CreatePostForm() {
         onSubmit={form.handleSubmit((values) =>
           createPostMutation.mutate(values)
         )}
-        className="text-left max-w-lg w-full mx-auto border shadow p-5 rounded-md space-y-4 mt-5"
+        className="text-left space-y-4 mt-5"
       >
         <FormField
           name="title"
@@ -133,6 +134,7 @@ export default function CreatePostForm() {
                 </FormLabel>
                 <FormControl>
                   <Textarea
+                    rows={10}
                     placeholder="your product description"
                     className="w-full dark:bg-inherit"
                     {...field}
@@ -235,7 +237,7 @@ export default function CreatePostForm() {
           disabled={createPostMutation.isPending}
           className="w-full flex gap-2"
         >
-          {createPostMutation.isPending && <Spinner />} Create Listing
+          {createPostMutation.isPending ? "Submitting..." : "Create post"}
         </Button>
       </form>
     </Form>

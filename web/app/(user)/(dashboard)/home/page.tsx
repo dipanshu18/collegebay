@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import PostPage from "./PostPage";
+import { Filters } from "@/components/filters";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -8,8 +9,10 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="my-5">
+    <>
+      <h1 className="text-xl font-bold">Browse Resources</h1>
+      <Filters />
       <PostPage />
-    </div>
+    </>
   );
 }

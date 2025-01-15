@@ -18,10 +18,10 @@ export function Logo() {
   return (
     <div className="flex items-center gap-2">
       <Image
-        src={"/Logo.png"}
-        alt="Logo"
-        width={100}
-        height={100}
+        src={"/logo.svg"}
+        alt="CollegeBay Logo"
+        width={40}
+        height={40}
         className="object-cover w-full h-8"
       />
       <Link

@@ -1,6 +1,6 @@
 "use client";
 
-import { Layers, HandHelping, MessagesSquare } from "lucide-react";
+import { Layers, HandHelping, MessagesSquare, Bell } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
 import { NavUser } from "@/components/nav-user";
@@ -30,13 +30,18 @@ const data = {
     },
     {
       title: "Requests",
-      url: "/others-request",
+      url: "/requests",
       icon: HandHelping,
     },
     {
       title: "Messages",
       url: "#",
       icon: MessagesSquare,
+    },
+    {
+      title: "Notifications",
+      url: "#",
+      icon: Bell,
     },
   ],
 };

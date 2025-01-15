@@ -77,7 +77,7 @@ export default function ProfilePage() {
       queryClient.resetQueries({
         queryKey: ["userRequests"],
       });
-      revalidatePath("/profile");
+      router.refresh();
       return;
     },
   });

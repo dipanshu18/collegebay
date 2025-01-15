@@ -4,7 +4,7 @@ import Spinner from "@/components/Spinner";
 import RequestCard from "./RequestCard";
 import { useQuery } from "@tanstack/react-query";
 import { fetchRequests } from "@/api/queries";
-import { IUserRequest } from "@/api/types";
+import type { IUserRequest } from "@/api/types";
 
 export default function RequestsPage() {
   const {
