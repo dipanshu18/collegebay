@@ -15,7 +15,7 @@ export default function LoginPage() {
           <Logo />
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
+          <div className="w-full max-w-lg">
             <LoginForm />
           </div>
         </div>

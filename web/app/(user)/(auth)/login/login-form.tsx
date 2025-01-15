@@ -38,22 +38,25 @@ export function LoginForm() {
       className="space-y-5"
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Login to your account</h1>
-        <p className="text-balance text-sm text-muted-foreground">
+        <h1 className="text-2xl font-bold text-primary">
+          Login to your account
+        </h1>
+        <p className="text-accent text-balance text-sm text-muted-foreground">
           Enter your email below to login to your account
         </p>
       </div>
 
       <div className="grid gap-2">
         <div className="grid gap-2">
-          <Label htmlFor="email" className="text-md">
+          <Label htmlFor="email" className="text-accent text-md">
             Email
           </Label>
           <Input
             id="email"
             type="email"
             {...form.register("email")}
-            placeholder="firstname.lastname@vit.edu.in"
+            placeholder="your edu email"
+            className="py-6"
             required
           />
           {form.formState.errors.email && (
@@ -64,7 +67,7 @@ export function LoginForm() {
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password" className="text-md">
+            <Label htmlFor="password" className="text-accent text-md">
               Password
             </Label>
             {/* <a
@@ -77,7 +80,9 @@ export function LoginForm() {
           <Input
             id="password"
             type="password"
+            placeholder="your password"
             {...form.register("password")}
+            className="py-6"
             required
           />
           {form.formState.errors.password && (
@@ -89,15 +94,18 @@ export function LoginForm() {
         <Button
           disabled={loginMutation.isPending}
           type="submit"
-          className="w-full flex items-center gap-2 mt-5"
+          className="w-full flex items-center gap-2 mt-5 bg-accent hover:bg-primary"
         >
           {loginMutation.isPending ? "Submitting..." : "Login"}
         </Button>
       </div>
 
-      <div className="text-center text-sm mt-5">
+      <div className="text-accent text-center text-sm mt-5">
         Don&apos;t have an account?{" "}
-        <Link href="/signup" className="underline underline-offset-4">
+        <Link
+          href="/signup"
+          className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
+        >
           Sign up
         </Link>
       </div>

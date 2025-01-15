@@ -1,9 +1,12 @@
 "use client";
 
-import { UserProfile } from "@/types";
-import axios, { AxiosError } from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import { toast } from "sonner";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -12,8 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import UpdateProfileForm from "./UpdateProfileForm";
 import {
   Card,
   CardDescription,
@@ -21,20 +22,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
 import Spinner from "@/components/Spinner";
-import { useRouter } from "next/navigation";
+
 import { cn } from "@/lib/utils";
-import { QueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import {
   fetchUserPosts,
   fetchUserProfile,
   fetchUserRequests,
 } from "@/api/queries";
-import { IPost, IUserProfile, IUserRequest } from "@/api/types";
+import type { IPost, IUserProfile, IUserRequest } from "@/api/types";
 import { deleteRequest, deleteUser } from "@/api/mutations";
 import { queryClient } from "@/app/providers";
+
+import UpdateProfileForm from "./UpdateProfileForm";
+import { revalidatePath } from "next/cache";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function ProfilePage() {
       queryClient.resetQueries({
         queryKey: ["userRequests"],
       });
-      router.refresh();
+      revalidatePath("/profile");
       return;
     },
   });
@@ -128,7 +129,7 @@ export default function ProfilePage() {
                         re done.
                       </DialogDescription>
                     </DialogHeader>
-                    <UpdateProfileForm user={user!} setOpen={setUpdateOpen} />
+                    <UpdateProfileForm user={user} setOpen={setUpdateOpen} />
                   </DialogContent>
                 </Dialog>
 
@@ -195,7 +196,7 @@ export default function ProfilePage() {
                         </CardHeader>
                         <CardTitle className="px-6">{post.title}</CardTitle>
                         <CardDescription className="px-6">
-                          {post.description.slice(0, 55) + "..."}
+                          {`${post.description.slice(0, 55)}...`}
                         </CardDescription>
                         <CardFooter>
                           <Link href={`/profile/your-posts/${post.id}`}>

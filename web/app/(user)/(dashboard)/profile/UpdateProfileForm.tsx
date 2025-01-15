@@ -3,7 +3,7 @@
 import { UpdateProfileSchema } from "@/types/zodSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import {
   Form,
   FormControl,
@@ -18,9 +18,8 @@ import { Button } from "@/components/ui/button";
 import { User } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
-import { UserProfile } from "@/types/index";
+import type { UserProfile } from "@/types/index";
 import { useRouter } from "next/navigation";
-import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateProfile } from "@/api/mutations";
@@ -29,7 +28,7 @@ export default function UpdateProfileForm({
   user,
   setOpen,
 }: {
-  user: UserProfile;
+  user: UserProfile | undefined;
   setOpen: (value: boolean) => void;
 }) {
   const router = useRouter();

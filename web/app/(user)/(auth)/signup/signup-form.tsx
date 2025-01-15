@@ -68,8 +68,8 @@ export function SignupForm() {
       className="space-y-2"
     >
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-2xl font-bold">Create your account</h1>
-        <p className="text-balance text-sm text-muted-foreground">
+        <h1 className="text-2xl text-primary font-bold">Create your account</h1>
+        <p className="text-accent text-balance text-sm text-muted-foreground">
           Enter your details below to create your account
         </p>
       </div>
@@ -93,12 +93,12 @@ export function SignupForm() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <Upload className="h-12 w-12 text-muted-foreground" />
+                <Upload className="h-12 w-12 text-muted-foreground text-accent" />
               )}
             </div>
             <Button
               size="icon"
-              className="absolute bottom-0 right-0 rounded-full h-8 w-8"
+              className="bg-accent hover:bg-primary absolute bottom-0 right-0 rounded-full h-8 w-8"
               onClick={(e) => {
                 e.preventDefault();
                 document.getElementById("image-input")?.click();
@@ -114,19 +114,24 @@ export function SignupForm() {
             className="hidden"
             onChange={handleImageChange}
           />
-          <Label className="text-sm">
+          <Label className="text-sm text-accent">
             Click <span className="mx-1 font-bold">+</span> to upload
           </Label>
         </div>
 
         <div className="grid gap-2">
-          <Label className={cn(form.formState.errors.name && "text-red-500")}>
+          <Label
+            className={cn(
+              "text-primary",
+              form.formState.errors.name && "text-red-500"
+            )}
+          >
             Full Name
           </Label>
           <Input
             type="text"
             placeholder="your full name"
-            className=""
+            className="py-6"
             {...form.register("name")}
           />
           {form.formState.errors.name && (
@@ -136,13 +141,18 @@ export function SignupForm() {
           )}
         </div>
         <div className="grid gap-2">
-          <Label className={cn(form.formState.errors.email && "text-red-500")}>
+          <Label
+            className={cn(
+              "text-primary",
+              form.formState.errors.email && "text-red-500"
+            )}
+          >
             Email
           </Label>
           <Input
             type="email"
             placeholder="your edu email"
-            className=""
+            className="py-6"
             {...form.register("email")}
           />
           {form.formState.errors.email && (
@@ -153,14 +163,17 @@ export function SignupForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(form.formState.errors.password && "text-red-500")}
+            className={cn(
+              "text-primary",
+              form.formState.errors.password && "text-red-500"
+            )}
           >
             Password
           </Label>
           <Input
             type="password"
             placeholder="your password"
-            className=""
+            className="py-6"
             {...form.register("password")}
           />
           {form.formState.errors.password && (
@@ -171,7 +184,10 @@ export function SignupForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(form.formState.errors.phoneNo && "text-red-500")}
+            className={cn(
+              "text-primary",
+              form.formState.errors.phoneNo && "text-red-500"
+            )}
           >
             Phone No.{" "}
             <span className="text-info text-sm">
@@ -181,7 +197,7 @@ export function SignupForm() {
           <Input
             type="text"
             placeholder="your phone no."
-            className=""
+            className="py-6"
             {...form.register("phoneNo")}
           />
           {form.formState.errors.phoneNo && (
@@ -192,7 +208,10 @@ export function SignupForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(form.formState.errors.college && "text-red-500")}
+            className={cn(
+              "text-primary",
+              form.formState.errors.college && "text-red-500"
+            )}
           >
             College
           </Label>
@@ -201,7 +220,7 @@ export function SignupForm() {
             {...form.register("college")}
             defaultValue={form.formState.defaultValues?.college}
           >
-            <SelectTrigger className="">
+            <SelectTrigger className="py-6">
               <SelectValue placeholder="your college" />
             </SelectTrigger>
             <SelectContent>
@@ -220,15 +239,18 @@ export function SignupForm() {
         <Button
           disabled={signupMutation.isPending}
           type="submit"
-          className="w-full flex items-center gap-2 mt-2"
+          className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary"
         >
           {signupMutation.isPending ? "Submitting..." : "Signup"}
         </Button>
       </div>
 
-      <div className="text-center text-sm mt-5">
+      <div className="text-accent text-center text-sm mt-5">
         Already have an account?{" "}
-        <Link href="/login" className="underline underline-offset-4">
+        <Link
+          href="/login"
+          className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
+        >
           Login
         </Link>
       </div>
