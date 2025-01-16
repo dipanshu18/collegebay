@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import RequestsPage from "./RequestsPage";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
+import RequestsPage from "./RequestsPage";
 import CreateRequestForm from "./CreateRequestForm";
 
 export default async function OthersRequest() {
@@ -24,8 +33,8 @@ export default async function OthersRequest() {
         </div>
 
         <Dialog>
-          <DialogTrigger className="h-full">
-            <Button className="h-full px-8 text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
+          <DialogTrigger>
+            <Button className="px-6 text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
               <Plus className="mr-2" /> Create Request
             </Button>
           </DialogTrigger>
@@ -43,6 +52,23 @@ export default async function OthersRequest() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5">
         <RequestsPage />
       </div>
+
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious href="#" />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationEllipsis />
+          </PaginationItem>
+          <PaginationItem>
+            <PaginationNext href="#" />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </>
   );
 }

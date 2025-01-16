@@ -35,7 +35,6 @@ import { deleteRequest, deleteUser } from "@/api/mutations";
 import { queryClient } from "@/app/providers";
 
 import UpdateProfileForm from "./UpdateProfileForm";
-import { revalidatePath } from "next/cache";
 
 export default function ProfilePage() {
   const router = useRouter();

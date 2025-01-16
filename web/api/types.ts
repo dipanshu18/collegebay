@@ -18,6 +18,8 @@ export interface IUserProfile {
   email: string;
   college: string;
   phoneNo: string;
+  posts: IPost[];
+  requests: IUserRequest[];
 }
 
 export interface IUserRequest {

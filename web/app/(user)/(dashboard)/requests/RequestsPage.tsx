@@ -1,10 +1,11 @@
 "use client";
 
-import Spinner from "@/components/Spinner";
-import RequestCard from "./RequestCard";
 import { useQuery } from "@tanstack/react-query";
+
 import { fetchRequests } from "@/api/queries";
 import type { IUserRequest } from "@/api/types";
+import { RequestCard } from "@/components/request-card";
+import Spinner from "@/components/Spinner";
 
 export default function RequestsPage() {
   const {

@@ -2,9 +2,9 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 import { UpdateUserSchema } from "../types/user";
-import { z } from "zod";
+import type { z } from "zod";
 import bcrypt from "bcrypt";
 import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
@@ -22,15 +22,18 @@ export async function getUser(req: Request, res: Response) {
 
     const user = await db.user.findUnique({
       where: { id },
-      select: {
-        password: false,
-        role: false,
-        college: true,
-        email: true,
-        image: true,
-        phoneNo: true,
-        name: true,
-        id: true,
+      include: {
+        posts: true,
+        requests: {
+          include: {
+            _count: {
+              select: {
+                upVotes: true,
+              },
+            },
+            user: true,
+          },
+        },
       },
     });
 

@@ -1,10 +1,11 @@
 "use client";
 
-import PostCard from "./PostCard";
-import Spinner from "@/components/Spinner";
 import { useQuery } from "@tanstack/react-query";
+
 import { fetchPosts } from "@/api/queries";
 import type { IPost } from "@/api/types";
+import { PostCard } from "@/components/post-card";
+import Spinner from "@/components/Spinner";
 
 export default function PostPage() {
   const {

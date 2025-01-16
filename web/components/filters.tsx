@@ -45,8 +45,8 @@ export function Filters() {
       </div>
 
       <Dialog>
-        <DialogTrigger className="max-w-sm w-full h-full text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
-          <Button className="max-w-sm w-full h-full bg-primary hover:bg-accent transition-all duration-300">
+        <DialogTrigger className="">
+          <Button className="bg-primary hover:bg-accent transition-all duration-300">
             Create Post
           </Button>
         </DialogTrigger>

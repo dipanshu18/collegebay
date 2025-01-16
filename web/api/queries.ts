@@ -1,7 +1,11 @@
+"use server";
+
 import axios, { AxiosError } from "axios";
+import { cookies } from "next/headers";
 import { toast } from "sonner";
 
 const BASE_URL = "http://localhost:5000/api/v1";
+const session = cookies().get("session")?.value;
 
 export async function fetchPosts() {
   try {
@@ -58,6 +62,9 @@ export async function fetchRequests() {
 export async function fetchUserProfile() {
   try {
     const response = await axios.get(`${BASE_URL}/user`, {
+      headers: {
+        Cookie: `session=${session}`,
+      },
       withCredentials: true,
     });
 
