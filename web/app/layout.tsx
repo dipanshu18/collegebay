@@ -3,8 +3,6 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 
 import { Toaster } from "sonner";
-import Providers from "./providers";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const roboto = Roboto({
   weight: ["100", "300", "400", "500", "700", "900"],
@@ -28,12 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`antialiased ${roboto.className}`}>
-      <body className="bg-white/15 dark:bg-neutral-900">
-        <Providers>
-          {children}
-          <Toaster visibleToasts={10} richColors />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </Providers>
+      <body className="">
+        {children}
+        <Toaster visibleToasts={10} richColors position="top-right" />
       </body>
     </html>
   );

@@ -10,19 +10,34 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import PostPage from "./PostPage";
 import { Filters } from "@/components/filters";
+import { fetchPosts } from "@/actions/user";
+import type { IPost } from "@/actions/types";
+import { PostCard } from "@/components/post-card";
 
 export const metadata: Metadata = {
   title: "Home",
 };
 
-export default function Home() {
+export default async function Home() {
+  const posts = (await fetchPosts()) as IPost[];
+
   return (
     <>
       <h1 className="text-xl font-bold">Browse Resources</h1>
       <Filters />
-      <PostPage />
+
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {posts && posts.length > 0 ? (
+          posts.map((post) => (
+            <>
+              <PostCard key={post.id} post={post} />
+            </>
+          ))
+        ) : (
+          <h1 className="col-span-3 text-xl">No resource listed yet</h1>
+        )}
+      </div>
 
       <Pagination>
         <PaginationContent>

@@ -10,7 +10,7 @@ const upload = multer();
 const userRouter = express.Router();
 
 userRouter.get("/", getUser);
-userRouter.put("/", upload.single("image"), updateUser);
+userRouter.put("/", updateUser);
 userRouter.delete("/", deleteUser);
 
 export { userRouter };

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
-import { LoginForm } from "./login-form";
-import { Logo } from "@/components/Navbar";
+import { LoginForm } from "@/components/login-form";
+import { Logo } from "@/components/navbar";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -22,8 +23,10 @@ export default function LoginPage() {
       </div>
       <div className="lg:bg-light flex justify-center items-center">
         <div className="relative hidden lg:block p-5 h-1/2 w-1/2 m-auto">
-          <img
+          <Image
             src="/login.svg"
+            width={100}
+            height={100}
             alt="Login user welcome logo"
             className="absolute inset-0 h-full w-full object-cover"
           />

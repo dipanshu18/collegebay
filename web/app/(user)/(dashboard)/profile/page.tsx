@@ -3,14 +3,34 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { fetchUserProfile } from "@/api/queries";
-import type { IUserProfile } from "@/api/types";
+import { fetchUserProfile } from "@/actions/user";
+import type { IUserProfile } from "@/actions/types";
 import { Mail, Phone, School, SquarePen } from "lucide-react";
 import { PostCard } from "@/components/post-card";
 import { RequestCard } from "@/components/request-card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { UpdateProfileForm } from "@/components/update-profile-form";
+import { toast } from "sonner";
+
+async function profile() {
+  const response = await fetchUserProfile();
+
+  if (response?.error) return toast(response.error);
+
+  if (response?.success) {
+    return response.success;
+  }
+}
 
 export default async function Profile() {
-  const userProfile = (await fetchUserProfile()) as IUserProfile;
+  const userProfile = (await profile()) as IUserProfile;
 
   return (
     <>
@@ -37,9 +57,18 @@ export default async function Profile() {
         </div>
 
         <div className="w-full flex flex-col items-center mt-20 sm:mt-0 sm:items-end sm:pr-5 sm:pt-5">
-          <Button className="px-8 bg-primary text-white hover:bg-accent transition-all duration-300">
-            <SquarePen className="mr-2" /> Edit profile
-          </Button>
+          <Dialog>
+            <DialogTrigger className="flex py-2 rounded-md px-8 bg-primary text-white hover:bg-accent transition-all duration-300">
+              <SquarePen className="mr-2" /> Edit profile
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Update your profile</DialogTitle>
+
+                <UpdateProfileForm user={userProfile} />
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
@@ -69,27 +98,21 @@ export default async function Profile() {
         </TabsList>
         <TabsContent
           value="posts"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
         >
-          <div className="mt-6">
-            {userProfile.posts.map((item) => (
-              <PostCard key={item.id} post={item} />
-            ))}
-          </div>
+          {userProfile.posts.map((item) => (
+            <PostCard key={item.id} post={item} />
+          ))}
         </TabsContent>
         <TabsContent
           value="requests"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
         >
-          <div className="mt-6">
-            {userProfile.requests.map((item) => (
-              <RequestCard key={item.id} request={item} />
-            ))}
-          </div>
+          {userProfile.requests.map((item) => (
+            <RequestCard key={item.id} request={item} />
+          ))}
         </TabsContent>
       </Tabs>
-
-      {/* <ProfilePage /> */}
     </>
   );
 }

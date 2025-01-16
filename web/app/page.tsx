@@ -23,8 +23,8 @@ import {
   Clipboard,
 } from "lucide-react";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 const features: {
   icon: React.ReactNode;
@@ -277,7 +277,7 @@ export default function Landing() {
                   key={idx}
                   className="relative pl-6 before:absolute before:left-0 before:top-2 before:z-10 before:h-5 before:w-5 before:-translate-x-1/2 before:rounded-full before:bg-primary before:ring-2 before:ring-white"
                 >
-                  <Card className="flex flex-col flex-1 gap-2 bg-neutral-200 hover:shadow-xl transition-all duration-300 border-none">
+                  <Card className="flex flex-col flex-1 gap-2 bg-neutral-50 hover:shadow-xl transition-all duration-300 border-none">
                     <CardHeader className="space-y-3">
                       <p className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-light font-bold">
                         {idx + 1}.

@@ -1,16 +1,20 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
+
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LoginSchema } from "@/types/zodSchema";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
-import { login } from "@/api/mutations";
-import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
+import { LoginSchema } from "@/types/zodSchema";
+import { toast } from "sonner";
+import axios, { AxiosError } from "axios";
+
+const BASE_URL = "http://localhost:5000/api/v1";
 
 export function LoginForm() {
   const router = useRouter();
@@ -23,21 +27,30 @@ export function LoginForm() {
     },
   });
 
-  const loginMutation = useMutation({
-    mutationKey: ["loginUser"],
-    mutationFn: login,
-    onSuccess: () => {
-      router.replace("/home");
-      router.refresh();
-    },
-  });
+  async function handleLogin(values: z.infer<typeof LoginSchema>) {
+    try {
+      const response = await axios.post(`${BASE_URL}/auth/login`, values, {
+        withCredentials: true,
+      });
+
+      if (response.status === 200) {
+        const data = await response.data;
+        toast(data.msg);
+        router.replace("/home");
+      }
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data.msg;
+        return toast(errorData);
+      }
+    }
+  }
 
   return (
-    <form
-      onSubmit={form.handleSubmit((values) => loginMutation.mutate(values))}
-      className="space-y-5"
-    >
-      <div className="flex flex-col items-center gap-2 text-center">
+    <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-5">
+      <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl font-bold text-primary">
           Login to your account
         </h1>
@@ -92,11 +105,11 @@ export function LoginForm() {
           )}
         </div>
         <Button
-          disabled={loginMutation.isPending}
+          disabled={form.formState.isSubmitting}
           type="submit"
           className="w-full flex items-center gap-2 mt-5 bg-accent hover:bg-primary"
         >
-          {loginMutation.isPending ? "Submitting..." : "Login"}
+          {form.formState.isSubmitting ? "Submitting..." : "Login"}
         </Button>
       </div>
 

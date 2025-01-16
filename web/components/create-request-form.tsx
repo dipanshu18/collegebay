@@ -1,32 +1,23 @@
 "use client";
 
 import Image from "next/image";
+import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { useMutation } from "@tanstack/react-query";
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/components/lib/utils";
-import { createRequest } from "@/api/mutations";
+import { createRequest } from "@/actions/user";
 import { CreateRequestSchema } from "@/types/zodSchema";
-import { Label } from "@/components/ui/label";
-import { revalidatePath } from "next/cache";
 
-export default function CreateRequestForm() {
+export function CreateRequestForm() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof CreateRequestSchema>>({
@@ -35,22 +26,6 @@ export default function CreateRequestForm() {
     defaultValues: {
       title: "",
       description: "",
-    },
-  });
-
-  const createRequestMutation = useMutation({
-    mutationKey: ["createRequest"],
-    mutationFn: createRequest,
-    onSuccess: () => {
-      form.reset();
-      setImagePreview(null);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
-      router.refresh();
-      revalidatePath("/requests", "page");
     },
   });
 
@@ -69,12 +44,33 @@ export default function CreateRequestForm() {
     }
   };
 
+  async function handleCreateRequest(
+    values: z.infer<typeof CreateRequestSchema>
+  ) {
+    const formData = new FormData();
+
+    formData.append("image", values.image);
+    formData.append("title", values.title);
+    formData.append("description", values.description);
+
+    const response = await createRequest(formData);
+
+    if (response?.success) {
+      form.reset();
+      setImagePreview(null);
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+
+      router.refresh();
+    }
+  }
+
   return (
     <form
-      onSubmit={form.handleSubmit((values) =>
-        createRequestMutation.mutate(values)
-      )}
-      className="space-y-4 mt-5"
+      onSubmit={form.handleSubmit(handleCreateRequest)}
+      className="text-left space-y-4"
     >
       <div className="grid gap-2">
         <Label
@@ -142,10 +138,10 @@ export default function CreateRequestForm() {
       </div>
 
       <Button
-        disabled={createRequestMutation.isPending}
+        disabled={form.formState.isSubmitting}
         className="w-full flex gap-2"
       >
-        {createRequestMutation.isPending ? "Submitting..." : "Create request"}
+        {form.formState.isSubmitting ? "Submitting..." : "Create request"}
       </Button>
     </form>
   );

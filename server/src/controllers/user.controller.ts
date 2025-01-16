@@ -22,8 +22,14 @@ export async function getUser(req: Request, res: Response) {
 
     const user = await db.user.findUnique({
       where: { id },
-      include: {
+      select: {
+        id: true,
+        image: true,
+        email: true,
+        name: true,
         posts: true,
+        phoneNo: true,
+        college: true,
         requests: {
           include: {
             _count: {
@@ -31,7 +37,16 @@ export async function getUser(req: Request, res: Response) {
                 upVotes: true,
               },
             },
-            user: true,
+            user: {
+              select: {
+                id: true,
+                image: true,
+                email: true,
+                phoneNo: true,
+                college: true,
+                name: true,
+              },
+            },
           },
         },
       },
@@ -108,6 +123,8 @@ export async function updateUser(req: Request, res: Response) {
         phoneNo: updatedData.phoneNo,
       },
     });
+
+    console.log(updatedData);
 
     if (updatedUser) {
       return res.status(200).json({ msg: "Profile updated" });

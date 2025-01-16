@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import type { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,12 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Upload } from "lucide-react";
-import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
 
 import { cn } from "@/components/lib/utils";
 import { SignupSchema } from "@/types/zodSchema";
-import { signup } from "@/api/mutations";
+import { toast } from "sonner";
+import axios, { AxiosError } from "axios";
+
+const BASE_URL = "http://localhost:5000/api/v1";
 
 export function SignupForm() {
   const router = useRouter();
@@ -36,15 +38,6 @@ export function SignupForm() {
       password: "",
       college: "Vidyalankar Institute of Technology, Mumbai",
       phoneNo: "",
-    },
-  });
-
-  const signupMutation = useMutation({
-    mutationKey: ["signupUser"],
-    mutationFn: signup,
-    onSuccess: () => {
-      router.replace("/home");
-      router.refresh();
     },
   });
 
@@ -62,12 +55,48 @@ export function SignupForm() {
     }
   };
 
+  async function handleSigup(values: z.infer<typeof SignupSchema>) {
+    try {
+      const formData = new FormData();
+      formData.append("email", values.email);
+      formData.append("name", values.name);
+      formData.append("password", values.password);
+      formData.append("college", values.college);
+      formData.append("phoneNo", values.phoneNo);
+      if (values.image) {
+        formData.append("image", values.image);
+      }
+
+      const response = await axios.post(`${BASE_URL}/auth/signup`, formData, {
+        withCredentials: true,
+      });
+
+      if (response.status === 201) {
+        const data = response.data;
+        toast(data.msg);
+        return router.replace("/home");
+      }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data.msg;
+        console.log(errorData);
+        if (errorData) {
+          if (typeof errorData === "object") {
+            // biome-ignore lint/complexity/noForEach: <explanation>
+            Object.entries(errorData).forEach(async ([field, message]) => {
+              toast.error(`${field}: ${message}`);
+            });
+          } else {
+            return toast.error(errorData);
+          }
+        }
+      }
+    }
+  }
+
   return (
-    <form
-      onSubmit={form.handleSubmit((values) => signupMutation.mutate(values))}
-      className="space-y-2"
-    >
-      <div className="flex flex-col items-center gap-2 text-center">
+    <form onSubmit={form.handleSubmit(handleSigup)}>
+      <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl text-primary font-bold">Create your account</h1>
         <p className="text-accent text-balance text-sm text-muted-foreground">
           Enter your details below to create your account
@@ -75,7 +104,7 @@ export function SignupForm() {
       </div>
 
       <div className="grid gap-3">
-        <div className="flex flex-col items-center gap-4 p-4">
+        <div className="flex flex-col items-center gap-2 p-4">
           <div className="relative">
             <div
               className={cn(
@@ -114,9 +143,6 @@ export function SignupForm() {
             className="hidden"
             onChange={handleImageChange}
           />
-          <Label className="text-sm text-accent">
-            Click <span className="mx-1 font-bold">+</span> to upload
-          </Label>
         </div>
 
         <div className="grid gap-2">
@@ -237,11 +263,11 @@ export function SignupForm() {
           )}
         </div>
         <Button
-          disabled={signupMutation.isPending}
+          disabled={form.formState.isSubmitting}
           type="submit"
           className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary"
         >
-          {signupMutation.isPending ? "Submitting..." : "Signup"}
+          {form.formState.isSubmitting ? "Submitting..." : "Signup"}
         </Button>
       </div>
 

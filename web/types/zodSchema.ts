@@ -93,7 +93,7 @@ export const UpdateProfileSchema = z.object({
     .optional()
     .refine(
       (value) => {
-        if (value === undefined || value === null) return true;
+        if (!value) return true;
         return (
           value.length >= 6 &&
           value.length <= 10 &&

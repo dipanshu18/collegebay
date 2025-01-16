@@ -130,7 +130,7 @@ function ActionButtons() {
   );
 }
 
-export default function Navbar() {
+export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 backdrop-blur px-5 py-5 w-full bg-light">
       <div className="max-w-5xl mx-auto w-full flex justify-between items-center">

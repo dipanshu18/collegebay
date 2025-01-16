@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 
-import { SignupForm } from "./signup-form";
-import { Logo } from "@/components/Navbar";
+import { SignupForm } from "@/components/signup-form";
+import { Logo } from "@/components/navbar";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Signup",
@@ -22,10 +23,12 @@ export default function SignupPage() {
       </div>
       <div className="lg:bg-light flex justify-center items-center">
         <div className="relative hidden lg:block p-5 h-1/2 w-1/2 m-auto">
-          <img
+          <Image
             src="/signup.svg"
+            width={100}
+            height={100}
             alt="Signup user welcome logo"
-            className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+            className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
       </div>

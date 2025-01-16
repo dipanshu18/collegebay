@@ -1,36 +1,33 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import type { FormEvent } from "react";
+import { formatDistanceToNow } from "date-fns";
 
+import { ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
-import { ChevronUp } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
-import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import type { IUserRequest } from "@/api/types";
-import { upVoteRequest } from "@/api/mutations";
+import type { IUserRequest } from "@/actions/types";
+import { upVoteRequest } from "@/actions/user";
+import { toast } from "sonner";
 
 export function RequestCard({ request }: { request: IUserRequest }) {
   const router = useRouter();
-  const queryClient = useQueryClient();
 
-  const upVoteRequestMutation = useMutation({
-    mutationKey: ["upVoteRequest", request.id],
-    mutationFn: () => upVoteRequest(request.id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["requests"],
-      });
+  async function handleUpVote(e: FormEvent) {
+    e.preventDefault();
 
-      router.refresh();
-      return;
-    },
-  });
+    const response = await upVoteRequest(request.id);
+
+    if (response?.error) return toast.error(response.error);
+
+    router.refresh();
+  }
 
   return (
-    <Card className="space-y-2 max-w-sm w-full border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
+    <Card className="space-y-2 flex flex-col w-full max-w-sm mx-auto md:mx-0 border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
       <Image
         src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
         width={1080}
@@ -40,22 +37,17 @@ export function RequestCard({ request }: { request: IUserRequest }) {
         alt="Product image"
         className="w-full object-contain h-52 bg-white"
       />
-      <CardTitle className="px-6 flex items-center justify-between">
-        <div>{request.title} </div>
-        <Button
-          onClick={(e) => {
-            e.preventDefault();
-
-            upVoteRequestMutation.mutate();
-          }}
-          className="flex items-center gap-2"
-        >
-          <ChevronUp /> {request._count.upVotes}
-        </Button>
-      </CardTitle>
-      <CardDescription className="px-6 space-y-5">
-        <p>{request.description}</p>
-      </CardDescription>
+      <div className="flex-1">
+        <CardTitle className="px-6 flex items-center justify-between">
+          <div>{request.title} </div>
+          <Button onClick={handleUpVote} className="flex items-center gap-2">
+            <ChevronUp /> {request._count.upVotes}
+          </Button>
+        </CardTitle>
+        <CardDescription className="px-6 space-y-5">
+          {request.description}
+        </CardDescription>
+      </div>
       <div className="p-5 pt-0 space-y-2">
         <div className="flex max-w-sm items-center gap-5">
           <div className="flex w-16 h-16 rounded-full">

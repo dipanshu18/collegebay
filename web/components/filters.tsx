@@ -17,12 +17,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreatePostForm from "@/app/(user)/(dashboard)/home/CreatePostForm";
-import { Button } from "./ui/button";
+import { CreatePostForm } from "@/components/create-post-form";
 
 export function Filters() {
   return (
-    <div className="flex items-center justify-between gap-5">
+    <div className="flex flex-col md:flex-row items-center justify-between gap-5">
       <div className="relative w-full">
         <Input
           type="text"
@@ -31,7 +30,7 @@ export function Filters() {
         />
         <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" />
       </div>
-      <div className="max-w-sm w-full">
+      <div className="md:max-w-sm w-full">
         <Select>
           <SelectTrigger className="py-6">
             <SelectValue placeholder="Category" />
@@ -45,17 +44,13 @@ export function Filters() {
       </div>
 
       <Dialog>
-        <DialogTrigger className="">
-          <Button className="bg-primary hover:bg-accent transition-all duration-300">
-            Create Post
-          </Button>
+        <DialogTrigger className="rounded-md w-full py-3 md:max-w-xs h-full text-white bg-primary hover:bg-accent transition-all duration-300">
+          Create Post
         </DialogTrigger>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Create a post</DialogTitle>
-            <DialogDescription>
-              <CreatePostForm />
-            </DialogDescription>
+            <DialogTitle className="mb-2">Create a post</DialogTitle>
+            <CreatePostForm />
           </DialogHeader>
         </DialogContent>
       </Dialog>
