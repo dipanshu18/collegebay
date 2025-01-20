@@ -63,11 +63,12 @@ export default async function UserPostDetails({
           <DialogContent className="sm:max-w-[425px] dark:bg-black">
             <DialogHeader>
               <DialogTitle>Delete your post</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to delete your product listing?
-                <form action={() => deletePost.bind(null, params.id)}>
-                  <ConfirmButton />
-                </form>
+              <DialogDescription className="space-y-2">
+                <span>
+                  Are you sure you want to delete your product listing?
+                </span>
+
+                <ConfirmButton postId={params.id} type="delete" />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -82,11 +83,11 @@ export default async function UserPostDetails({
           <DialogContent className="sm:max-w-[425px] dark:bg-black">
             <DialogHeader>
               <DialogTitle>Set your post as Sold</DialogTitle>
-              <DialogDescription>
-                Are you sure you want to set your product listing as sold?
-                <form action={() => postSold.bind(null, params.id)}>
-                  <ConfirmButton />
-                </form>
+              <DialogDescription className="space-y-2">
+                <span>
+                  Are you sure you want to set your product listing as sold?
+                </span>
+                <ConfirmButton postId={params.id} type="sold" />
               </DialogDescription>
             </DialogHeader>
           </DialogContent>

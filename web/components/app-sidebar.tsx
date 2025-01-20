@@ -30,12 +30,12 @@ const data = {
     },
     {
       title: "Messages",
-      url: "#",
+      url: "/messages",
       icon: MessagesSquare,
     },
     {
       title: "Notifications",
-      url: "#",
+      url: "/notifications",
       icon: Bell,
     },
   ],

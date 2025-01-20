@@ -26,13 +26,13 @@ export function Filters() {
         <Input
           type="text"
           placeholder="Search resources..."
-          className="h-12 pl-4 pr-12 text-base bg-white border border-border/40 rounded-md shadow-sm placeholder:text-muted-foreground/60 focus-visible:ring-1 focus-visible:ring-offset-0"
+          className="h-10 pl-4 pr-12 text-base bg-white border border-border/40 rounded-md placeholder:text-muted-foreground/60 focus-visible:ring-1 focus-visible:ring-offset-0"
         />
         <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground/60" />
       </div>
       <div className="md:max-w-sm w-full">
         <Select>
-          <SelectTrigger className="py-6">
+          <SelectTrigger className="py-4">
             <SelectValue placeholder="Category" />
           </SelectTrigger>
           <SelectContent>
@@ -44,7 +44,7 @@ export function Filters() {
       </div>
 
       <Dialog>
-        <DialogTrigger className="rounded-md w-full py-3 md:max-w-xs h-full text-white bg-primary hover:bg-accent transition-all duration-300">
+        <DialogTrigger className="rounded-md w-full py-2 md:max-w-xs text-white bg-primary hover:bg-accent transition-all duration-300">
           Create Post
         </DialogTrigger>
         <DialogContent>

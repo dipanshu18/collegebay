@@ -50,7 +50,7 @@ export function CreatePostForm() {
 
   return (
     <form className="text-left" onSubmit={form.handleSubmit(handleCreatePost)}>
-      <div className="grid gap-2">
+      <div className="grid gap-5">
         <div className="grid gap-2">
           <Label className={cn(form.formState.errors.images && "text-red-500")}>
             Product Images (Select upto 4 images)
@@ -60,7 +60,7 @@ export function CreatePostForm() {
             accept="image/jpeg"
             multiple
             maxLength={4}
-            className="w-full dark:bg-inherit mt-4"
+            className="w-full dark:bg-inherit"
             onChange={(e) => {
               const files = Array.from(e.target.files || []);
               form.setValue("images", files, { shouldValidate: true });

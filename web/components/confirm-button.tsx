@@ -4,16 +4,30 @@ import { useFormStatus } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 
-export function ConfirmButton() {
+import { deletePost, postSold } from "@/actions/user";
+
+export function ConfirmButton({
+  postId,
+  type,
+}: {
+  postId: string;
+  type: "delete" | "sold";
+}) {
   const { pending } = useFormStatus();
 
   return (
-    <Button
-      disabled={pending}
-      className="w-20 flex gap-4"
-      variant="destructive"
+    <form
+      action={async () => {
+        type === "delete" ? deletePost(postId) : postSold(postId);
+      }}
     >
-      {pending ? "Submitting..." : "Confirm"}
-    </Button>
+      <Button
+        disabled={pending}
+        className="w-20 flex gap-4"
+        variant={type === "delete" ? "destructive" : "default"}
+      >
+        {pending ? "Submitting..." : "Confirm"}
+      </Button>
+    </form>
   );
 }

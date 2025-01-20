@@ -23,7 +23,7 @@ export default async function Home() {
   const posts = (await fetchPosts()) as IPost[];
 
   return (
-    <>
+    <div className="p-4 space-y-3">
       <h1 className="text-xl font-bold">Browse Resources</h1>
       <Filters />
 
@@ -31,7 +31,7 @@ export default async function Home() {
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <>
-              <PostCard key={post.id} post={post} />
+              <PostCard type="home" key={post.id} post={post} />
             </>
           ))
         ) : (
@@ -55,6 +55,6 @@ export default async function Home() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </>
+    </div>
   );
 }

@@ -33,7 +33,7 @@ export default async function Profile() {
   const userProfile = (await profile()) as IUserProfile;
 
   return (
-    <>
+    <div className="p-4">
       <div className="w-full mx-auto flex flex-col">
         <div className="relative">
           {/* Banner */}
@@ -101,7 +101,7 @@ export default async function Profile() {
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
         >
           {userProfile.posts.map((item) => (
-            <PostCard key={item.id} post={item} />
+            <PostCard type="profile" key={item.id} post={item} />
           ))}
         </TabsContent>
         <TabsContent
@@ -113,6 +113,6 @@ export default async function Profile() {
           ))}
         </TabsContent>
       </Tabs>
-    </>
+    </div>
   );
 }

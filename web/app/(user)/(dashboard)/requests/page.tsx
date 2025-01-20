@@ -26,17 +26,14 @@ export default async function OthersRequest() {
   const requests = (await fetchRequests()) as IUserRequest[];
 
   return (
-    <>
+    <div className="p-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
-        <div className="mb-2">
+        <div className="mb-3">
           <h1 className="text-xl font-bold">Resource Requests</h1>
-          <p className="text-lg">
-            Browse and upvote requests from other students
-          </p>
         </div>
 
         <Dialog>
-          <DialogTrigger className="flex justify-center items-center py-4 px-6 text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
+          <DialogTrigger className="flex justify-center items-center py-2 px-6 text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
             <Plus className="mr-2" /> Create Request
           </DialogTrigger>
           <DialogContent>
@@ -49,7 +46,7 @@ export default async function OthersRequest() {
         </Dialog>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {requests && requests.length > 0 ? (
           requests.map((request) => (
             <RequestCard key={request.id} request={request} />
@@ -77,6 +74,6 @@ export default async function OthersRequest() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-    </>
+    </div>
   );
 }

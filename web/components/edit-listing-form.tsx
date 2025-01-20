@@ -72,6 +72,7 @@ export function EditProductListingForm({ post }: { post: IPost }) {
           </Label>
           <Textarea
             placeholder="resource description"
+            rows={7}
             {...form.register("description")}
           />
           {form.formState.errors.description && (
@@ -99,7 +100,7 @@ export function EditProductListingForm({ post }: { post: IPost }) {
           disabled={form.formState.isSubmitting}
           className="w-full flex gap-2"
         >
-          {form.formState.isSubmitting ? "Submitting..." : "Create post"}
+          {form.formState.isSubmitting ? "Submitting..." : "Save changes"}
         </Button>
       </div>
     </form>

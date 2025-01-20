@@ -13,6 +13,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 export default function DashboardLayout({
   children,
@@ -28,20 +29,12 @@ export default function DashboardLayout({
             <div className="flex items-center gap-2 px-4">
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
-              <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">Explore</BreadcrumbLink>
-                  </BreadcrumbItem>
-                  {/* <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem> */}
-                </BreadcrumbList>
-              </Breadcrumb>
+              <Link href={"/home"}>
+                <h1 className="text-sm font-bold tracking-wide">CollegeBay</h1>
+              </Link>
             </div>
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+          <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
         </SidebarInset>
       </SidebarProvider>
     </>

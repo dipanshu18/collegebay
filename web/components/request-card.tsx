@@ -27,7 +27,7 @@ export function RequestCard({ request }: { request: IUserRequest }) {
   }
 
   return (
-    <Card className="space-y-2 flex flex-col w-full max-w-sm mx-auto md:mx-0 border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
+    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
       <Image
         src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
         width={1080}
@@ -35,7 +35,7 @@ export function RequestCard({ request }: { request: IUserRequest }) {
         quality={100}
         priority
         alt="Product image"
-        className="w-full object-contain h-52 bg-white"
+        className="w-full object-contain rounded-t-md h-52 bg-white"
       />
       <div className="flex-1">
         <CardTitle className="px-6 flex items-center justify-between">

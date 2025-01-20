@@ -1,9 +1,7 @@
 "use server";
 
-import type { z } from "zod";
 import axios, { AxiosError } from "axios";
 
-import type { CreatePostSchema, CreateRequestSchema } from "@/types/zodSchema";
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 
