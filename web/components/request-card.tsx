@@ -35,7 +35,7 @@ export function RequestCard({
   return (
     <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
       <Image
-        src={`https://dzgbuobd25m4d.cloudfront.net/${request.image}`}
+        src={request.image}
         width={1080}
         height={1920}
         quality={100}
@@ -58,7 +58,7 @@ export function RequestCard({
         <div className="flex max-w-sm items-center gap-5">
           <div className="flex w-10 h-10 rounded-full">
             <Image
-              src={`https://dzgbuobd25m4d.cloudfront.net/${request.user.image}`}
+              src={request.user.image}
               width={200}
               height={200}
               priority

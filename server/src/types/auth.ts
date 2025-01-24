@@ -7,13 +7,6 @@ const emailPattern = /^[a-zA-Z]+\.[a-zA-Z]+@vit\.edu\.in$/;
 export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,10}$/;
 
-// Custom file validation (e.g., checking file type and size)
-export const fileValidationSchema = z
-  .instanceof(Buffer, { message: "Please provide a image" })
-  .refine((file) => file?.buffer.byteLength <= 5 * 1024 * 1024, {
-    message: "File size should not exceed 5MB.",
-  });
-
 export const Signup = z.object({
   email: z
     .string()
@@ -38,7 +31,7 @@ export const Signup = z.object({
   phoneNo: z.coerce.string().refine((val) => /^\d{10}$/.test(val), {
     message: "Phone no. must be exactly 10 digits and contain only numbers",
   }),
-  image: fileValidationSchema,
+  image: z.string(),
 });
 
 export const Login = z.object({

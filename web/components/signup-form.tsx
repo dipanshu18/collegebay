@@ -8,6 +8,8 @@ import type { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
+import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -47,33 +49,10 @@ export function SignupForm() {
   });
 
   const [otp, setOtp] = useState<string | undefined>();
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("image", file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   async function handleSignup(values: z.infer<typeof SignupSchema>) {
     try {
-      const formData = new FormData();
-      formData.append("email", values.email);
-      formData.append("name", values.name);
-      formData.append("password", values.password);
-      formData.append("college", values.college);
-      formData.append("phoneNo", values.phoneNo);
-      if (values.image) {
-        formData.append("image", values.image);
-      }
-
-      const response = await axios.post(`${BASE_URL}/auth/signup`, formData, {
+      const response = await axios.post(`${BASE_URL}/auth/signup`, values, {
         withCredentials: true,
       });
 
@@ -109,8 +88,8 @@ export function SignupForm() {
         </p>
       </div>
 
-      <div className="grid gap-3">
-        <div className="flex flex-col items-center gap-2 p-4">
+      <div className="grid gap-3 mt-5">
+        {/* <div className="flex flex-col items-center gap-2 p-4">
           <div className="relative">
             <div
               className={cn(
@@ -148,6 +127,25 @@ export function SignupForm() {
             accept="image/*"
             className="hidden"
             onChange={handleImageChange}
+          />
+        </div> */}
+
+        <div className="grid gap-2">
+          <Label>Profile picture</Label>
+          <CldUploadButton
+            className="w-full bg-primary rounded-md py-2 text-white"
+            onSuccess={(results) => {
+              const imageObj = results.info as CloudinaryUploadWidgetInfo;
+              const url = imageObj.secure_url;
+              form.setValue("image", url);
+            }}
+            options={{
+              cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+              apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+              sources: ["camera", "local"],
+              maxFiles: 1,
+            }}
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           />
         </div>
 
@@ -194,13 +192,13 @@ export function SignupForm() {
               </p>
             )}
           </div>
-          <div>
+          {/* <div>
             <Button className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary">
               Send OTP
             </Button>
-          </div>
+          </div> */}
         </div>
-        <div className="flex items-end gap-2">
+        {/* <div className="flex items-end gap-2">
           <div className="space-y-2">
             <Label className="text-primary">Enter OTP</Label>
             <InputOTP
@@ -223,7 +221,7 @@ export function SignupForm() {
               Verify
             </Button>
           </div>
-        </div>
+        </div> */}
         <div className="grid gap-2">
           <Label
             className={cn(

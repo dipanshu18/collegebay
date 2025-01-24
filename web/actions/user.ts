@@ -4,6 +4,8 @@ import axios, { AxiosError } from "axios";
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { CreatePostSchema, CreateRequestSchema } from "@/types/zodSchema";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 
@@ -133,15 +135,14 @@ export async function fetchUserProfile() {
 //   }
 // }
 
-export async function createPost(formData: FormData) {
+export async function createPost(values: z.infer<typeof CreatePostSchema>) {
   const session = cookies().get("session")?.value;
 
   try {
-    const response = await axios.post(`${BASE_URL}/posts`, formData, {
+    const response = await axios.post(`${BASE_URL}/posts`, values, {
       withCredentials: true,
       headers: {
         Cookie: `session=${session}`,
-        "Content-Type": "multipart/form-data",
       },
     });
 
@@ -165,10 +166,12 @@ export async function createPost(formData: FormData) {
   }
 }
 
-export async function createRequest(formData: FormData) {
+export async function createRequest(
+  values: z.infer<typeof CreateRequestSchema>
+) {
   const session = cookies().get("session")?.value;
   try {
-    const response = await axios.post(`${BASE_URL}/requests/create`, formData, {
+    const response = await axios.post(`${BASE_URL}/requests/create`, values, {
       withCredentials: true,
       headers: {
         Cookie: `session=${session}`,
@@ -226,29 +229,22 @@ export async function updateProfile(
 ) {
   const session = cookies().get("session")?.value;
   try {
-    const formData = new FormData();
     if (modifiedData) {
-      formData.append("name", modifiedData.name as string);
-      formData.append("password", modifiedData.password as string);
-      formData.append("phoneNo", modifiedData.phoneNo as string);
-      if (modifiedData.image) {
-        formData.append("image", modifiedData.image);
+      const response = await axios.patch(`${BASE_URL}/user`, modifiedData, {
+        withCredentials: true,
+        headers: {
+          Cookie: `session=${session}`,
+        },
+      });
+
+      if (response.status === 200) {
+        const data = await response.data;
+        revalidatePath("/profile");
+        revalidatePath("/home");
+        return { success: data.msg };
       }
     } else {
       return { error: "Nothing to update" };
-    }
-
-    const response = await axios.put(`${BASE_URL}/user`, formData, {
-      withCredentials: true,
-      headers: {
-        Cookie: `session=${session}`,
-      },
-    });
-
-    if (response.status === 200) {
-      const data = await response.data;
-      revalidatePath("/profile");
-      return { success: data.msg };
     }
   } catch (error) {
     if (error instanceof AxiosError) {

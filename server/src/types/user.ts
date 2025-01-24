@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { fileValidationSchema, passwordPattern } from "./auth";
+import { passwordPattern } from "./auth";
 
 export const UpdateUserSchema = z.object({
-  image: fileValidationSchema.optional().nullable(),
+  image: z.string().optional(),
   name: z
     .string()
     .min(4, { message: "Name must be minimum 4 characters long" })

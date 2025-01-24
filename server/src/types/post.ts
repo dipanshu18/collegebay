@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { fileValidationSchema } from "./auth";
 
 export const CreatePostSchema = z.object({
   title: z
@@ -9,8 +8,9 @@ export const CreatePostSchema = z.object({
     .string()
     .min(5, { message: "Description must be minimum 5 characters long" }),
   price: z.string(),
+  category: z.enum(["NOTES", "BOOKS", "EQUIPMENT", "ELECTRONICS", "FURNITURE"]),
   images: z
-    .array(fileValidationSchema)
+    .array(z.string())
     .min(1, { message: "At least one image is required." })
     .max(4, { message: "You can upload a maximum of 4 images." }),
 });
@@ -44,7 +44,7 @@ export const UpdatePostSchema = z.object({
       return value.length >= 1;
     }),
   images: z
-    .array(fileValidationSchema)
+    .array(z.string())
     .optional()
     .refine(
       (value) => {

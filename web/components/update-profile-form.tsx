@@ -18,6 +18,7 @@ import type { UserProfile } from "@/types/index";
 import { UpdateProfileSchema } from "@/types/zodSchema";
 import { updateProfile } from "@/actions/user";
 import { revalidatePath } from "next/cache";
+import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
   const router = useRouter();
@@ -27,111 +28,51 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
     mode: "onChange",
     defaultValues: {
       ...user,
-      image: user?.image,
     },
   });
-
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    user ? `https://dzgbuobd25m4d.cloudfront.net/${user.image}` : null
-  );
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("image", file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   async function handleUpdateProfile(
     values: z.infer<typeof UpdateProfileSchema>
   ) {
-    const modifiedData = Object.keys(form.formState.dirtyFields).reduce(
-      (acc, key) => {
-        const typedKey = key as keyof z.infer<typeof UpdateProfileSchema>;
+    const modifiedData: Partial<z.infer<typeof UpdateProfileSchema>> = {};
 
-        if (form.formState.dirtyFields[typedKey]) {
-          if (typedKey === "image") {
-            const imageValue = values.image;
-            if (imageValue instanceof File) {
-              acc[typedKey] = imageValue; // Keep File if new image is uploaded
-            } else if (typeof imageValue === "string") {
-              acc[typedKey] = imageValue; // Keep string if it's unchanged
-            }
-          } else {
-            acc[typedKey] = values[typedKey];
-          }
-        }
-        return acc;
-      },
-      {} as Partial<z.infer<typeof UpdateProfileSchema>>
-    );
+    if (values.image) modifiedData.image = values.image;
+    if (values.name) modifiedData.name = values.name;
+    if (values.phoneNo) modifiedData.phoneNo = values.phoneNo;
+    if (values.password) modifiedData.password = values.password;
 
-    if (Object.keys(modifiedData).length === 0) {
-      return toast.error("Nothing to update");
-    }
-
-    // If image is present, handle FormData
-    const payload: Partial<z.infer<typeof UpdateProfileSchema>> = modifiedData;
-
-    const response = await updateProfile(payload);
+    const response = await updateProfile(modifiedData);
 
     if (response?.error) return toast(response.error);
 
     if (response?.success) {
       toast(response.success);
-      router.refresh();
+      router.replace("/profile");
     }
   }
 
   return (
     <form
       onSubmit={form.handleSubmit(handleUpdateProfile)}
-      className="space-y-5"
+      className="space-y-5 max-w-xl"
     >
       <div className="grid gap-3">
-        <div className="flex flex-col items-center gap-4 p-4">
-          <div className="relative">
-            <div
-              className={cn(
-                "h-32 w-32 rounded-full overflow-hidden bg-muted flex items-center justify-center hover:opacity-90 transition-opacity",
-                !imagePreview &&
-                  "border-2 border-dashed border-muted-foreground"
-              )}
-            >
-              {imagePreview ? (
-                <Image
-                  src={imagePreview}
-                  alt="Selected image"
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <Upload className="h-12 w-12 text-muted-foreground" />
-              )}
-            </div>
-            <Button
-              size="icon"
-              className="absolute bottom-0 right-0 rounded-full h-8 w-8"
-              onClick={(e) => {
-                e.preventDefault();
-                document.getElementById("image-input")?.click();
-              }}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-          <input
-            id="image-input"
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleImageChange}
+        <div className="grid gap-2">
+          <Label>Update profile picture</Label>
+          <CldUploadButton
+            className="w-full bg-primary rounded-md py-2 text-white"
+            onSuccess={(results) => {
+              const imageObj = results.info as CloudinaryUploadWidgetInfo;
+              const url = imageObj.secure_url;
+              form.setValue("image", url);
+            }}
+            options={{
+              cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+              apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+              sources: ["camera", "local"],
+              maxFiles: 1,
+            }}
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           />
         </div>
 

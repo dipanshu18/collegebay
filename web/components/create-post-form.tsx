@@ -14,33 +14,28 @@ import { CreatePostSchema } from "@/types/zodSchema";
 import { createPost } from "@/actions/user";
 import { revalidatePath } from "next/cache";
 import { Label } from "./ui/label";
+import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { useRef } from "react";
 
 export function CreatePostForm() {
   const router = useRouter();
 
+  const imgUrls = useRef<string[]>([]);
   const form = useForm<z.infer<typeof CreatePostSchema>>({
     resolver: zodResolver(CreatePostSchema),
     mode: "onChange",
-    defaultValues: {
-      title: "",
-      description: "",
-      price: "",
-      images: [],
-    },
   });
 
   async function handleCreatePost(values: z.infer<typeof CreatePostSchema>) {
-    const formData = new FormData();
-
-    // biome-ignore lint/complexity/noForEach: <explanation>
-    values.images.forEach((image) => {
-      formData.append("images", image); // Append each file
-    });
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-
-    const response = await createPost(formData);
+    console.log(values);
+    const response = await createPost(values);
 
     if (response?.success) {
       form.reset();
@@ -49,23 +44,33 @@ export function CreatePostForm() {
   }
 
   return (
-    <form className="text-left" onSubmit={form.handleSubmit(handleCreatePost)}>
+    <form
+      className="text-left max-w-xl"
+      onSubmit={form.handleSubmit(handleCreatePost)}
+    >
       <div className="grid gap-5">
         <div className="grid gap-2">
           <Label className={cn(form.formState.errors.images && "text-red-500")}>
             Product Images (Select upto 4 images)
           </Label>
-          <Input
-            type="file"
-            accept="image/jpeg"
-            multiple
-            maxLength={4}
-            className="w-full dark:bg-inherit"
-            onChange={(e) => {
-              const files = Array.from(e.target.files || []);
-              form.setValue("images", files, { shouldValidate: true });
+          <CldUploadButton
+            className="w-full bg-primary rounded-md py-2 text-white"
+            onSuccess={(results) => {
+              const imageObj = results.info as CloudinaryUploadWidgetInfo;
+              imgUrls.current.push(imageObj.secure_url);
+              form.setValue("images", imgUrls.current, {
+                shouldValidate: true,
+              });
             }}
+            options={{
+              cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+              apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+              sources: ["camera", "local"],
+              maxFiles: 4,
+            }}
+            uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           />
+
           {form.formState.errors.images && (
             <p className="text-red-500">
               {form.formState.errors.images.message}
@@ -115,6 +120,35 @@ export function CreatePostForm() {
           {form.formState.errors.price && (
             <p className="text-red-500">
               {form.formState.errors.price.message}
+            </p>
+          )}
+        </div>
+        <div className="grid gap-2">
+          <Label
+            className={cn(
+              "text-primary",
+              form.formState.errors.category && "text-red-500"
+            )}
+          >
+            Category
+          </Label>
+
+          <Select onValueChange={(value) => form.setValue("category", value)}>
+            <SelectTrigger className="py-6">
+              <SelectValue placeholder="resource category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NOTES">Notes</SelectItem>
+              <SelectItem value="BOOKS">Books</SelectItem>
+              <SelectItem value="ELECTRONICS">Electronics</SelectItem>
+              <SelectItem value="FURNITURE">Furniture</SelectItem>
+              <SelectItem value="EQUIPMENT">Equipment</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {form.formState.errors.category && (
+            <p className="text-red-500 text-base">
+              {form.formState.errors.category.message}
             </p>
           )}
         </div>

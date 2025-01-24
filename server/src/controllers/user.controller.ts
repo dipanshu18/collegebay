@@ -3,18 +3,21 @@ dotenv.config();
 
 import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
-import { UpdateUserSchema } from "../types/user";
 import type { z } from "zod";
 import bcrypt from "bcrypt";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+
+import { UpdateUserSchema } from "../types/user";
 import { client } from "../utils/s3";
 
 const db = new PrismaClient();
 
 export async function getUser(req: Request, res: Response) {
   try {
-    const { id } = req.body.user;
+    console.log(req.user);
+    console.log(req.user);
+    const { id } = req.user!;
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -60,9 +63,9 @@ export async function getUser(req: Request, res: Response) {
 }
 
 export async function updateUser(req: Request, res: Response) {
+  console.log(req);
   try {
-    console.log(req.body);
-    const { id } = req.body.user;
+    const { id } = req.user!;
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -75,7 +78,7 @@ export async function updateUser(req: Request, res: Response) {
     if (!user) {
       return res.status(404).json({ msg: "User not found" });
     }
-    const result = UpdateUserSchema.safeParse({ ...req.body, image: req.file });
+    const result = UpdateUserSchema.safeParse(req.body);
 
     if (!result.success) {
       return res.status(400).json({ msg: "Invalid inputs" });
@@ -92,25 +95,26 @@ export async function updateUser(req: Request, res: Response) {
       newHash = await bcrypt.hash(dataUpdates.password, 10);
     }
 
-    const key = user.image;
-    if (dataUpdates.image) {
-      const command = new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET!,
-        Key: key,
-        ContentType: "image/jpeg",
-      });
+    // const key = user.image;
+    // if (dataUpdates.image) {
+    //   const command = new PutObjectCommand({
+    //     Bucket: process.env.AWS_BUCKET!,
+    //     Key: key,
+    //     ContentType: "image/jpeg",
+    //   });
 
-      const url = await getSignedUrl(client, command);
+    //   const url = await getSignedUrl(client, command);
 
-      await fetch(url, {
-        method: "PUT",
-        body: dataUpdates.image,
-        headers: { "Content-Type": "image/jpeg" },
-      });
-    }
+    //   await fetch(url, {
+    //     method: "PUT",
+    //     body: dataUpdates.image,
+    //     headers: { "Content-Type": "image/jpeg" },
+    //   });
+    // }
 
     const updatedData: z.infer<typeof UpdateUserSchema> = {
       name: dataUpdates.name ?? user.name,
+      image: dataUpdates.image ?? user.image,
       password: dataUpdates.password ? newHash : user.password,
       phoneNo: dataUpdates.phoneNo ?? user.phoneNo,
     };
@@ -118,6 +122,7 @@ export async function updateUser(req: Request, res: Response) {
     const updatedUser = await db.user.update({
       where: { id },
       data: {
+        image: updatedData.image,
         name: updatedData.name,
         password: updatedData.password,
         phoneNo: updatedData.phoneNo,
@@ -137,7 +142,7 @@ export async function updateUser(req: Request, res: Response) {
 
 export async function deleteUser(req: Request, res: Response) {
   try {
-    const { id } = req.body.user;
+    const { id } = req.user!;
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });

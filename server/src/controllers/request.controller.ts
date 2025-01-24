@@ -14,6 +14,9 @@ const upVoteModel = new PrismaClient().upVote;
 export async function getAllRequests(req: Request, res: Response) {
   try {
     const requests = await requestModel.findMany({
+      where: {
+        isApproved: true,
+      },
       orderBy: {
         upVotes: {
           _count: "desc",
@@ -50,7 +53,7 @@ export async function getAllRequests(req: Request, res: Response) {
 
 export async function getUserRequests(req: Request, res: Response) {
   try {
-    const { id: userId } = req.body.user;
+    const { id: userId } = req.user!;
     const requests = await requestModel.findMany({
       where: {
         userId,
@@ -70,11 +73,8 @@ export async function getUserRequests(req: Request, res: Response) {
 
 export async function createRequest(req: Request, res: Response) {
   try {
-    const { id, email } = req.body.user;
-    const result = UserRequestSchema.safeParse({
-      ...req.body,
-      image: req.file?.buffer,
-    });
+    const { id } = req.user!;
+    const result = UserRequestSchema.safeParse(req.body);
 
     if (!result.success) {
       // Extract error messages from Zod's error object
@@ -103,27 +103,27 @@ export async function createRequest(req: Request, res: Response) {
 
     const { image, title, description } = result.data;
 
-    const key = `request/${email}/${crypto.randomUUID()}.jpg`;
-    const command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET!,
-      Key: key,
-      ContentType: "image/jpeg",
-    });
-    const url = await getSignedUrl(client, command);
+    // const key = `request/${email}/${crypto.randomUUID()}.jpg`;
+    // const command = new PutObjectCommand({
+    //   Bucket: process.env.AWS_BUCKET!,
+    //   Key: key,
+    //   ContentType: "image/jpeg",
+    // });
+    // const url = await getSignedUrl(client, command);
 
-    await fetch(url, {
-      method: "PUT",
-      body: image,
-      headers: {
-        "Content-Type": "image/jpeg",
-      },
-    });
+    // await fetch(url, {
+    //   method: "PUT",
+    //   body: image,
+    //   headers: {
+    //     "Content-Type": "image/jpeg",
+    //   },
+    // });
 
     const newRequest = await requestModel.create({
       data: {
         title,
         description,
-        image: key,
+        image,
         userId: id,
       },
     });
@@ -139,7 +139,7 @@ export async function createRequest(req: Request, res: Response) {
 
 export async function upVoteRequest(req: Request, res: Response) {
   try {
-    const { id: userId }: { id: string } = req.body.user;
+    const { id: userId } = req.user!;
     const { id: requestId } = req.params;
 
     const requestExists = await requestModel.findUnique({

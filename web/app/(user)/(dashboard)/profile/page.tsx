@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { UpdateProfileForm } from "@/components/update-profile-form";
 import { toast } from "sonner";
+import Link from "next/link";
 
 async function profile() {
   const response = await fetchUserProfile();
@@ -44,7 +45,7 @@ export default async function Profile() {
             <div className="relative">
               <div className="w-32 h-32 rounded-full border-4 border-white overflow-hidden bg-white">
                 <Image
-                  src={`https://dzgbuobd25m4d.cloudfront.net/${userProfile.image}`}
+                  src={userProfile.image}
                   alt={`${userProfile.name} profile picture`}
                   width={300}
                   height={300}
@@ -57,18 +58,11 @@ export default async function Profile() {
         </div>
 
         <div className="w-full flex flex-col items-center mt-20 sm:mt-0 sm:items-end sm:pr-5 sm:pt-5">
-          <Dialog>
-            <DialogTrigger className="flex py-2 rounded-md px-8 bg-primary text-white hover:bg-accent transition-all duration-300">
+          <Link href={"/profile/edit"}>
+            <Button className="bg-primary text-white hover:bg-accent">
               <SquarePen className="mr-2" /> Edit profile
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Update your profile</DialogTitle>
-
-                <UpdateProfileForm user={userProfile} />
-              </DialogHeader>
-            </DialogContent>
-          </Dialog>
+            </Button>
+          </Link>
         </div>
       </div>
 

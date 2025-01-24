@@ -9,15 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { CreatePostForm } from "@/components/create-post-form";
 
 export function Filters() {
   return (
@@ -38,22 +29,12 @@ export function Filters() {
           <SelectContent>
             <SelectItem value="Equiment">Equiment</SelectItem>
             <SelectItem value="Notes">Notes</SelectItem>
+            <SelectItem value="Electronics">Electronics</SelectItem>
+            <SelectItem value="Furniture">Furniture</SelectItem>
             <SelectItem value="Books">Books</SelectItem>
           </SelectContent>
         </Select>
       </div>
-
-      <Dialog>
-        <DialogTrigger className="rounded-md w-full py-2 md:max-w-xs text-white bg-primary hover:bg-accent transition-all duration-300">
-          Create Post
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="mb-2">Create a post</DialogTitle>
-            <CreatePostForm />
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

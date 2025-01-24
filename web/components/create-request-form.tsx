@@ -1,12 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { revalidatePath } from "next/cache";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
+import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -23,45 +21,15 @@ export function CreateRequestForm() {
   const form = useForm<z.infer<typeof CreateRequestSchema>>({
     resolver: zodResolver(CreateRequestSchema),
     mode: "onChange",
-    defaultValues: {
-      title: "",
-      description: "",
-    },
   });
-
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      form.setValue("image", file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   async function handleCreateRequest(
     values: z.infer<typeof CreateRequestSchema>
   ) {
-    const formData = new FormData();
-
-    formData.append("image", values.image);
-    formData.append("title", values.title);
-    formData.append("description", values.description);
-
-    const response = await createRequest(formData);
+    const response = await createRequest(values);
 
     if (response?.success) {
       form.reset();
-      setImagePreview(null);
-
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
 
       router.refresh();
     }
@@ -70,33 +38,31 @@ export function CreateRequestForm() {
   return (
     <form
       onSubmit={form.handleSubmit(handleCreateRequest)}
-      className="text-left space-y-4"
+      className="text-left space-y-4 max-w-xl"
     >
       <div className="grid gap-2">
         <Label
           htmlFor="image"
           className={cn(form.formState.errors.image && "text-red-500")}
         >
-          {imagePreview ? (
-            <Image
-              src={imagePreview}
-              alt="Selected Image"
-              width={100}
-              height={100}
-              quality={100}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            "Image"
-          )}
+          Upload reference image
         </Label>
-        <Input
-          id="image"
-          className="w-full dark:bg-inherit"
-          type="file"
-          accept="image/jpeg"
-          onChange={handleImageChange}
-          ref={fileInputRef}
+        <CldUploadButton
+          className="w-full bg-primary rounded-md py-2 text-white"
+          onSuccess={(results) => {
+            const imageObj = results.info as CloudinaryUploadWidgetInfo;
+
+            form.setValue("image", imageObj.secure_url, {
+              shouldValidate: true,
+            });
+          }}
+          options={{
+            cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+            apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
+            sources: ["camera", "local"],
+            maxFiles: 1,
+          }}
+          uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
         />
       </div>
 

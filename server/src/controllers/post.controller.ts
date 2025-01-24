@@ -13,6 +13,9 @@ const postModel = new PrismaClient().post;
 export async function getAllPosts(req: Request, res: Response) {
   try {
     const posts = await postModel.findMany({
+      where: {
+        isApproved: true,
+      },
       orderBy: {
         createdAt: "asc",
       },
@@ -67,14 +70,9 @@ export async function getUserPosts(req: Request, res: Response) {
 
 export async function createPost(req: Request, res: Response) {
   try {
-    const { id: userId, email } = req.body.user;
+    const { id: userId } = req.user!;
 
-    const files = req.files as { buffer: Buffer }[];
-
-    const result = CreatePostSchema.safeParse({
-      ...req.body,
-      images: files.map((image) => image.buffer),
-    });
+    const result = CreatePostSchema.safeParse(req.body);
 
     if (!result.success) {
       // Extract error messages from Zod's error object
@@ -101,39 +99,40 @@ export async function createPost(req: Request, res: Response) {
       });
     }
 
-    const { images, title, description, price } = result.data;
+    const { images, title, description, price, category } = result.data;
 
-    let keys: string[] = [];
-    const uploadPromises = images.map(async (image) => {
-      const key = `post/${email}/${crypto.randomUUID()}.jpg`;
-      keys.push(key);
-      const command = new PutObjectCommand({
-        Bucket: process.env.AWS_BUCKET!,
-        Key: key,
-        ContentType: "image/jpeg",
-      });
+    // let keys: string[] = [];
+    // const uploadPromises = images.map(async (image) => {
+    //   const key = `post/${email}/${crypto.randomUUID()}.jpg`;
+    //   keys.push(key);
+    //   const command = new PutObjectCommand({
+    //     Bucket: process.env.AWS_BUCKET!,
+    //     Key: key,
+    //     ContentType: "image/jpeg",
+    //   });
 
-      const url = await getSignedUrl(client, command);
+    //   const url = await getSignedUrl(client, command);
 
-      // Upload image to the signed URL
-      await fetch(url, {
-        method: "PUT",
-        body: image.buffer,
-        headers: {
-          "Content-Type": "image/jpeg",
-        },
-      });
-    });
+    //   // Upload image to the signed URL
+    //   await fetch(url, {
+    //     method: "PUT",
+    //     body: image.buffer,
+    //     headers: {
+    //       "Content-Type": "image/jpeg",
+    //     },
+    //   });
+    // });
 
     // Wait for all image uploads to complete
-    await Promise.all(uploadPromises);
+    // await Promise.all(uploadPromises);
 
     const newPost = await postModel.create({
       data: {
         title,
         description,
-        images: keys,
+        images,
         price,
+        category,
         userId,
       },
     });

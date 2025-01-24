@@ -16,7 +16,10 @@ export async function adminMiddleware(
     return res.status(401).json({ msg: "Unauthorized!" });
   }
 
-  const decoded = jwt.verify(token, SECRET) as JwtPayload;
+  const decoded = jwt.verify(token, SECRET) as JwtPayload as {
+    id: string;
+    role: "ADMIN" | "USER";
+  };
 
   if (!decoded) {
     return res.status(401).json({ msg: "Invalid token!" });
@@ -28,7 +31,7 @@ export async function adminMiddleware(
       .json({ msg: "Only admin is allowed to access this page" });
   }
 
-  req.body.user = decoded;
+  req.user = decoded;
 
   next();
 }

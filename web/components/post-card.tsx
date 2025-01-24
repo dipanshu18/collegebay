@@ -30,7 +30,7 @@ export function PostCard({
         )}
       >
         <Image
-          src={`https://dzgbuobd25m4d.cloudfront.net/${post.images[0]}`}
+          src={post.images[0]}
           width={500}
           height={500}
           quality={100}

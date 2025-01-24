@@ -23,7 +23,7 @@ export function ImageCarousel({ images }: { images: string[] }) {
             className="flex justify-center items-center h-full w-full rounded-md"
           >
             <Image
-              src={`https://dzgbuobd25m4d.cloudfront.net/${image}`}
+              src={image}
               alt="Product image"
               height={600}
               width={600}

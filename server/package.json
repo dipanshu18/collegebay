@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
-    "dev": "nodemon src/bin.ts",
     "start": "pnpm build && node dist/bin.js",
     "db:studio": "pnpm prisma studio",
     "db:migrate": "pnpm prisma migrate dev"
@@ -33,9 +32,7 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.6",
-    "nodemon": "^3.1.4",
     "prisma": "^5.19.0",
-    "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
   "packageManager": "pnpm@9.15.3+sha512.1f79bc245a66eb0b07c5d4d83131240774642caaa86ef7d0434ab47c0d16f66b04e21e0c086eb61e62c77efc4d7f7ec071afad3796af64892fae66509173893a"

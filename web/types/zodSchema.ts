@@ -1,15 +1,5 @@
 import { z } from "zod";
 
-// Custom file validation (e.g., checking file type and size)
-const fileValidationSchema = z
-  .instanceof(File, { message: "Please select a image" })
-  .refine((file) => file?.type === "image/jpeg", {
-    message: "Only JPEG images are allowed.",
-  })
-  .refine((file) => file?.size <= 5 * 1024 * 1024, {
-    message: "File size should not exceed 5MB.",
-  });
-
 export const LoginSchema = z.object({
   email: z
     .string()
@@ -48,7 +38,7 @@ export const SignupSchema = z.object({
     .string()
     .min(10, { message: "Phone no. must be minimum 10 digits" })
     .max(10, { message: "Phone no. must be maximum 10 digits" }),
-  image: fileValidationSchema,
+  image: z.string(),
 });
 
 export const CreatePostSchema = z.object({
@@ -60,9 +50,10 @@ export const CreatePostSchema = z.object({
     .min(5, { message: "Description must be minimum 5 characters long" }),
   price: z.string(),
   images: z
-    .array(fileValidationSchema)
+    .array(z.string())
     .min(1, { message: "At least one image is required." })
     .max(4, { message: "You can upload a maximum of 4 images." }),
+  category: z.string(),
 });
 
 export const CreateRequestSchema = z.object({
@@ -72,7 +63,7 @@ export const CreateRequestSchema = z.object({
   description: z
     .string()
     .min(5, { message: "Description must be minimum 5 characters long" }),
-  image: fileValidationSchema,
+  image: z.string(),
 });
 
 export const UpdateProfileSchema = z.object({
@@ -119,7 +110,7 @@ export const UpdateProfileSchema = z.object({
         message: "Phone number must be exactly 10 digits long.",
       }
     ),
-  image: z.union([fileValidationSchema.optional(), z.string().optional()]),
+  image: z.string().optional(),
 });
 
 export const UpdatePostSchema = z.object({
@@ -154,7 +145,7 @@ export const UpdatePostSchema = z.object({
       return value.length >= 1;
     }),
   images: z
-    .array(fileValidationSchema)
+    .array(z.string())
     .optional()
     .refine(
       (value) => {

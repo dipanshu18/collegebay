@@ -15,13 +15,16 @@ export async function authMiddleware(
     return res.status(401).json({ msg: "Unauthorized!" });
   }
 
-  const decoded = jwt.verify(token, SECRET) as JwtPayload;
+  const decoded = jwt.verify(token, SECRET) as JwtPayload as {
+    id: string;
+    role: "USER" | "ADMIN";
+  };
 
   if (!decoded) {
     return res.status(401).json({ msg: "Invalid token!" });
   }
 
-  req.body.user = decoded;
+  req.user = decoded;
 
   next();
 }

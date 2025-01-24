@@ -15,8 +15,7 @@ import { client } from "../utils/s3";
 const userModel = new PrismaClient().user;
 
 export async function signup(req: Request, res: Response) {
-  console.log(req.file);
-  const result = Signup.safeParse({ ...req.body, image: req.file?.buffer });
+  const result = Signup.safeParse(req.body);
 
   if (!result.success) {
     // Extract error messages from Zod's error object
@@ -25,6 +24,7 @@ export async function signup(req: Request, res: Response) {
     // Prepare a structured error message object
     const errorMessages: Record<string, string> = {};
 
+    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.entries(errors).forEach(([field, error]) => {
       if (field !== "_errors") {
         // Exclude the '_errors' field
@@ -58,20 +58,20 @@ export async function signup(req: Request, res: Response) {
         .json({ msg: "Account already exists. Please login!" });
     }
 
-    const key = `profile/${email}/${crypto.randomUUID()}.jpg`;
-    const command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET!,
-      Key: key,
-      ContentType: "image/jpeg",
-    });
+    // const key = `profile/${email}/${crypto.randomUUID()}.jpg`;
+    // const command = new PutObjectCommand({
+    //   Bucket: process.env.AWS_BUCKET!,
+    //   Key: key,
+    //   ContentType: "image/jpeg",
+    // });
 
-    const url = await getSignedUrl(client, command);
+    // const url = await getSignedUrl(client, command);
 
-    await fetch(url, {
-      method: "PUT",
-      body: image,
-      headers: { "Content-Type": "image/jpeg" },
-    });
+    // await fetch(url, {
+    //   method: "PUT",
+    //   body: image,
+    //   headers: { "Content-Type": "image/jpeg" },
+    // });
 
     const hashPass = await bcrypt.hash(password, 10);
 
@@ -82,12 +82,15 @@ export async function signup(req: Request, res: Response) {
         password: hashPass,
         college,
         phoneNo,
-        image: key,
+        image,
       },
     });
 
     if (newUser) {
-      const token = jwt.sign({ id: newUser.id, email: newUser.email }, SECRET);
+      const token = jwt.sign(
+        { id: newUser.id, email: newUser.email, role: newUser.role },
+        SECRET
+      );
       res.cookie("session", token);
       return res.status(201).json({ msg: "Account created!" });
     }
@@ -107,6 +110,7 @@ export async function login(req: Request, res: Response) {
     // Prepare a structured error message object
     const errorMessages: Record<string, string> = {};
 
+    // biome-ignore lint/complexity/noForEach: <explanation>
     Object.entries(errors).forEach(([field, error]) => {
       if (field !== "_errors") {
         // Exclude the '_errors' field
@@ -145,7 +149,7 @@ export async function login(req: Request, res: Response) {
     }
 
     const token = jwt.sign(
-      { id: userExists.id, email: userExists.email },
+      { id: userExists.id, email: userExists.email, role: userExists.role },
       SECRET
     );
     res.cookie("session", token);
