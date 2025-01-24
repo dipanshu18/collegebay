@@ -24,9 +24,9 @@ export default function AdminLogin() {
       <div className="lg:bg-light flex justify-center items-center">
         <div className="relative hidden lg:block p-5 h-1/2 w-1/2 m-auto">
           <Image
-            src="/login.svg"
-            width={100}
-            height={100}
+            src="/admin-login.svg"
+            width={1080}
+            height={1920}
             alt="Login user welcome logo"
             className="absolute inset-0 h-full w-full object-cover"
           />

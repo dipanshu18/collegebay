@@ -82,7 +82,7 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
     >
       <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl font-bold text-primary">
-          Login to your account
+          {type === "admin" ? "Admin Login" : "User Login"}
         </h1>
         <p className="text-accent text-balance text-sm text-muted-foreground">
           Enter your email below to login to your account
@@ -98,7 +98,7 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
             id="email"
             type="email"
             {...form.register("email")}
-            placeholder="your edu email"
+            placeholder={type === "admin" ? "your email" : "your edu email"}
             className="py-6"
             required
           />
@@ -143,15 +143,17 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
         </Button>
       </div>
 
-      <div className="text-accent text-center text-sm mt-5">
-        Don&apos;t have an account?{" "}
-        <Link
-          href="/signup"
-          className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
-        >
-          Sign up
-        </Link>
-      </div>
+      {type === "user" && (
+        <div className="text-accent text-center text-sm mt-5">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
+          >
+            Sign up
+          </Link>
+        </div>
+      )}
     </form>
   );
 }

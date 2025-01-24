@@ -27,6 +27,7 @@ export interface IUserRequest {
   title: string;
   description: string;
   image: string;
+  isApproved: boolean;
   userId: string;
   createdAt: Date;
   user: {
