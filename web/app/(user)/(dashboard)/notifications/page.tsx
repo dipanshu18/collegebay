@@ -9,7 +9,7 @@ export default function Notifications() {
       </div>
 
       <div className="grid grid-cols-1 gap-5">
-        <div className="flex items-center justify-between shadow p-5 rounded-md">
+        <div className="flex flex-col md:flex-row md:items-center gap-2 justify-between shadow p-5 rounded-md">
           <div className="flex items-center gap-5">
             <Image
               src={"/logo.svg"}

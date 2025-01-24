@@ -16,7 +16,7 @@ import axios, { AxiosError } from "axios";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 
-export function LoginForm() {
+export function LoginForm({ type }: { type: "user" | "admin" }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -27,7 +27,7 @@ export function LoginForm() {
     },
   });
 
-  async function handleLogin(values: z.infer<typeof LoginSchema>) {
+  async function handleUserLogin(values: z.infer<typeof LoginSchema>) {
     try {
       const response = await axios.post(`${BASE_URL}/auth/login`, values, {
         withCredentials: true,
@@ -48,8 +48,38 @@ export function LoginForm() {
     }
   }
 
+  async function handleAdminLogin(values: z.infer<typeof LoginSchema>) {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/auth/admin/login`,
+        values,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.data;
+        toast(data.msg);
+        router.replace("/admin/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof AxiosError) {
+        const errorData = error.response?.data.msg;
+        return toast(errorData);
+      }
+    }
+  }
+
   return (
-    <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-5">
+    <form
+      onSubmit={form.handleSubmit(
+        type === "user" ? handleUserLogin : handleAdminLogin
+      )}
+      className="space-y-5"
+    >
       <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl font-bold text-primary">
           Login to your account

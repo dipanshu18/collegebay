@@ -18,6 +18,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { Plus, Upload } from "lucide-react";
 
 import { cn } from "@/components/lib/utils";
@@ -41,6 +46,7 @@ export function SignupForm() {
     },
   });
 
+  const [otp, setOtp] = useState<string | undefined>();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,7 +61,7 @@ export function SignupForm() {
     }
   };
 
-  async function handleSigup(values: z.infer<typeof SignupSchema>) {
+  async function handleSignup(values: z.infer<typeof SignupSchema>) {
     try {
       const formData = new FormData();
       formData.append("email", values.email);
@@ -95,7 +101,7 @@ export function SignupForm() {
   }
 
   return (
-    <form onSubmit={form.handleSubmit(handleSigup)}>
+    <form onSubmit={form.handleSubmit(handleSignup)}>
       <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl text-primary font-bold">Create your account</h1>
         <p className="text-accent text-balance text-sm text-muted-foreground">
@@ -166,26 +172,57 @@ export function SignupForm() {
             </p>
           )}
         </div>
-        <div className="grid gap-2">
-          <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.email && "text-red-500"
+        <div className="flex items-end gap-2 w-full">
+          <div className="grid gap-2 w-full">
+            <Label
+              className={cn(
+                "text-primary",
+                form.formState.errors.email && "text-red-500"
+              )}
+            >
+              Email
+            </Label>
+            <Input
+              type="email"
+              placeholder="your edu email"
+              className="py-6 w-full"
+              {...form.register("email")}
+            />
+            {form.formState.errors.email && (
+              <p className="text-red-500 text-base">
+                {form.formState.errors.email.message}
+              </p>
             )}
-          >
-            Email
-          </Label>
-          <Input
-            type="email"
-            placeholder="your edu email"
-            className="py-6"
-            {...form.register("email")}
-          />
-          {form.formState.errors.email && (
-            <p className="text-red-500 text-base">
-              {form.formState.errors.email.message}
-            </p>
-          )}
+          </div>
+          <div>
+            <Button className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary">
+              Send OTP
+            </Button>
+          </div>
+        </div>
+        <div className="flex items-end gap-2">
+          <div className="space-y-2">
+            <Label className="text-primary">Enter OTP</Label>
+            <InputOTP
+              maxLength={6}
+              value={otp}
+              onChange={(value) => setOtp(value)}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+          </div>
+          <div>
+            <Button className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary">
+              Verify
+            </Button>
+          </div>
         </div>
         <div className="grid gap-2">
           <Label

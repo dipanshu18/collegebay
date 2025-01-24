@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { formatDistanceToNow } from "date-fns";
 
-import { ChevronUp } from "lucide-react";
+import { ChevronUp, Contact, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
@@ -13,7 +13,13 @@ import type { IUserRequest } from "@/actions/types";
 import { upVoteRequest } from "@/actions/user";
 import { toast } from "sonner";
 
-export function RequestCard({ request }: { request: IUserRequest }) {
+export function RequestCard({
+  type,
+  request,
+}: {
+  type: "home" | "profile";
+  request: IUserRequest;
+}) {
   const router = useRouter();
 
   async function handleUpVote(e: FormEvent) {
@@ -48,15 +54,15 @@ export function RequestCard({ request }: { request: IUserRequest }) {
           {request.description}
         </CardDescription>
       </div>
-      <div className="p-5 pt-0 space-y-2">
+      <div className="p-5 pt-0 space-y-3">
         <div className="flex max-w-sm items-center gap-5">
-          <div className="flex w-16 h-16 rounded-full">
+          <div className="flex w-10 h-10 rounded-full">
             <Image
               src={`https://dzgbuobd25m4d.cloudfront.net/${request.user.image}`}
               width={200}
               height={200}
               priority
-              alt="Product image"
+              alt={`${request.user.name} profile picture`}
               className="w-full object-cover rounded-full "
             />
           </div>
@@ -71,7 +77,20 @@ export function RequestCard({ request }: { request: IUserRequest }) {
           </div>
         </div>
         <div className="w-full">
-          <Button className="w-full">Contact</Button>
+          <Button
+            className="w-full"
+            variant={type === "profile" ? "destructive" : "default"}
+          >
+            {type === "profile" ? (
+              <div className="flex items-center gap-2">
+                <Trash2 /> Delete
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Contact /> Contact
+              </div>
+            )}
+          </Button>
         </div>
       </div>
     </Card>

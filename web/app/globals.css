@@ -10,7 +10,7 @@
   width: 6px;
 }
 .scrollbar-thin::-webkit-scrollbar-thumb {
-  background-color: #b7b7b7; /* Tailwind Gray-400 */
+  background-color: #a9a9a9; /* Tailwind Gray-400 */
   border-radius: 9999px;
 }
 .scrollbar-thin::-webkit-scrollbar-track {

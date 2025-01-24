@@ -49,7 +49,7 @@ export default async function OthersRequest() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {requests && requests.length > 0 ? (
           requests.map((request) => (
-            <RequestCard key={request.id} request={request} />
+            <RequestCard type="home" key={request.id} request={request} />
           ))
         ) : (
           <h1 className="mt-10 text-xl col-span-3">
