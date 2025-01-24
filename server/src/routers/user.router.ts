@@ -4,13 +4,13 @@ import {
   getUser,
   updateUser,
 } from "../controllers/user.controller";
-import multer from "multer";
 
-const upload = multer();
 const userRouter = express.Router();
 
 userRouter.get("/", getUser);
-userRouter.put("/", updateUser);
+
+userRouter.patch("/", updateUser);
+
 userRouter.delete("/", deleteUser);
 
 export { userRouter };

@@ -22,7 +22,6 @@ export async function authMiddleware(
   }
 
   req.body.user = decoded;
-  console.log(req.body);
 
   next();
 }

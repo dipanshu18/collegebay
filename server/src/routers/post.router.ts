@@ -1,5 +1,4 @@
 import express from "express";
-import multer from "multer";
 
 import {
   createPost,
@@ -10,22 +9,20 @@ import {
   getUserPosts,
   postSold,
 } from "../controllers/post.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
 
 const postRouter = express.Router();
 
-const uploads = multer();
 postRouter.get("/", getAllPosts);
-
-postRouter.get("/user", getUserPosts);
-
-postRouter.post("/", uploads.array("images"), authMiddleware, createPost);
 
 postRouter.get("/:id", getPost);
 
-postRouter.put("/:id/sold", authMiddleware, postSold);
+postRouter.get("/user", getUserPosts);
 
-postRouter.put("/:id", uploads.array("images"), authMiddleware, editPost);
+postRouter.post("/", createPost);
+
+postRouter.patch("/:id/sold", postSold);
+
+postRouter.patch("/:id", editPost);
 
 postRouter.delete("/:id", deletePost);
 

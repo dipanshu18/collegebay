@@ -28,30 +28,32 @@ model User {
 }
 
 model Post {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  price       String
-  images      String[]
-  isAvailable Boolean  @default(true)
-  isApproved  Boolean  @default(false)
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  price        String
+  images       String[]
+  isAvailable  Boolean  @default(true)
+  isApproved   Boolean  @default(false)
+  adminMessage String
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Request {
-  id          String   @id @default(uuid())
-  title       String
-  description String
-  image       String
-  upVotes     UpVote[]
-  isApproved  Boolean  @default(false)
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  image        String
+  upVotes      UpVote[]
+  isApproved   Boolean  @default(false)
+  adminMessage String
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model UpVote {
