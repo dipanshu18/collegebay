@@ -8,17 +8,23 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(uuid())
-  name     String
-  email    String    @unique
-  password String
-  college  String
-  phoneNo  String
-  image    String
-  role     Role      @default(USER)
-  posts    Post[]
-  requests Request[]
-  upVotes  UpVote[]
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  college       String
+  phoneNo       String
+  image         String
+  role          Role           @default(USER)
+  posts         Post[]
+  requests      Request[]
+  upVotes       UpVote[]
+  chats         Chat[]
+  messages      Message[]
+  notifications Notification[] @relation("user-notifications")
+  action        Notification[] @relation("which-user")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model Post {
@@ -41,22 +47,74 @@ model Request {
   description String
   image       String
   upVotes     UpVote[]
+  isApproved  Boolean  @default(false)
   user        User     @relation(fields: [userId], references: [id])
   userId      String
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model UpVote {
-  id        String  @id @default(uuid())
-  request   Request @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  request   Request  @relation(fields: [requestId], references: [id], onDelete: Cascade)
   requestId String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([requestId, userId])
+}
+
+model Chat {
+  id           String    @id @default(uuid())
+  participants User[]
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Message {
+  id        String      @id @default(uuid())
+  type      MessageType
+  mediaUrl  String?
+  text      String?
+  chat      Chat        @relation(fields: [chatId], references: [id])
+  chatId    String
+  sender    User        @relation(fields: [senderId], references: [id])
+  senderId  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+}
+
+model Notification {
+  id         String     @id @default(uuid())
+  targetType TargetType
+  target     User       @relation("user-notifications", fields: [targetId], references: [id])
+  targetId   String
+  action     User       @relation("which-user", fields: [actionId], references: [id])
+  actionId   String
+  message    String
+  read       Boolean    @default(false)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 enum Role {
   ADMIN
   USER
+}
+
+enum MessageType {
+  IMAGE
+  VIDEO
+  TEXT
+}
+
+enum TargetType {
+  UPVOTE
+  POST
+  REQUEST
+  ADMIN_APPROVE
+  ADMIN_REJECT
 }
