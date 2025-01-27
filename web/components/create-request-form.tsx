@@ -41,7 +41,7 @@ export function CreateRequestForm() {
   return (
     <form
       onSubmit={form.handleSubmit(handleCreateRequest)}
-      className="text-left space-y-4 max-w-xl mx-auto"
+      className="text-left space-y-4"
     >
       <div className="grid gap-2">
         <Label

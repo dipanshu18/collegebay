@@ -23,11 +23,11 @@ export default async function Home() {
   const posts = (await fetchPosts()) as IPost[];
 
   return (
-    <div className="p-5 space-y-3 mb-20 lg:mb-0">
+    <div className="p-5 space-y-3 mb-20 lg:mb-0 max-w-5xl mx-auto">
       <h1 className="text-xl font-bold text-primary">Browse Resources</h1>
       <Filters />
 
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
         {posts && posts.length > 0 ? (
           posts.map((post) => (
             <>

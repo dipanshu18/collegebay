@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 
 import { cookies } from "next/headers";
 import type { IPost, IUserRequest } from "./types";
+import { revalidatePath } from "next/cache";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 
@@ -70,6 +71,7 @@ export async function approvePost(id: string) {
 
     if (response.status === 200) {
       const data = await response.data.msg;
+      revalidatePath("/admin/dashboard");
       return data;
     }
   } catch (error) {
@@ -98,6 +100,7 @@ export async function rejectPost(id: string, reason: string) {
 
     if (response.status === 200) {
       const data = await response.data.msg;
+      revalidatePath("/admin/dashboard");
       return data;
     }
   } catch (error) {
@@ -124,6 +127,7 @@ export async function approveRequest(id: string) {
 
     if (response.status === 200) {
       const data = await response.data.msg;
+      revalidatePath("/admin/dashboard");
       return data;
     }
   } catch (error) {
@@ -152,6 +156,7 @@ export async function rejectRequest(id: string, reason: string) {
 
     if (response.status === 200) {
       const data = await response.data.msg;
+      revalidatePath("/admin/dashboard");
       return data;
     }
   } catch (error) {

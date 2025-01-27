@@ -10,7 +10,7 @@ export default function MessageBox() {
   return (
     <div className="flex flex-1 flex-col h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 bg-light border-y border-info p-3">
+      <div className="flex items-center gap-2 border-y border-gray-100 p-3">
         <div>
           <Link href={"/messages"}>
             <ArrowLeft className="text-primary" />
@@ -30,7 +30,7 @@ export default function MessageBox() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 max-h-[72dvh] lg:max-h-full overflow-y-auto p-2 scrollbar-thin">
+      <div className="flex-1 max-h-[62dvh] lg:max-h-full overflow-y-auto p-2 scrollbar-thin">
         <div className="grid grid-cols-1 gap-3">
           {Array(20)
             .fill("")
@@ -47,7 +47,7 @@ export default function MessageBox() {
                     idx % 2 === 0
                       ? "bg-gray-100 text-secondary"
                       : "bg-primary text-white"
-                  } max-w-xs p-3 rounded-lg shadow-md`}
+                  } max-w-sm p-3 rounded-lg shadow-md`}
                 >
                   <p>
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -77,7 +77,7 @@ export default function MessageBox() {
       </div>
 
       {/* Input Bar */}
-      <div className="w-full mb-20 lg:mb-0 border-t border-info bg-light sticky bottom-0 flex gap-2 items-center p-2">
+      <div className="w-full mb-20 lg:mb-0 border-t bg-gray-100 border-gray-100 sticky bottom-0 flex gap-2 items-center p-2">
         <div className="relative w-full">
           <Textarea rows={5} placeholder="your message" className="flex-1" />
           <Button className="absolute bottom-0 right-0 m-2 bg-primary hover:bg-accent text-white">

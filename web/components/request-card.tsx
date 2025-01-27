@@ -12,6 +12,7 @@ import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 import type { IUserRequest } from "@/actions/types";
 import { upVoteRequest } from "@/actions/user";
 import { toast } from "sonner";
+import { cn } from "./lib/utils";
 
 export function RequestCard({
   type,
@@ -33,7 +34,7 @@ export function RequestCard({
   }
 
   return (
-    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-md transition-all duration-300 bg-gray-100">
+    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-md transition-all duration-300">
       <Image
         src={request.image}
         width={1080}
@@ -83,7 +84,10 @@ export function RequestCard({
         </div>
         <div className="w-full">
           <Button
-            className="w-full"
+            className={cn(
+              "w-full",
+              type !== "profile" && "bg-primary text-white hover:bg-accent"
+            )}
             variant={type === "profile" ? "destructive" : "default"}
           >
             {type === "profile" ? (

@@ -56,11 +56,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-dvh lg:flex-row">
+    <div className="flex flex-col min-h-dvh lg:flex-row max-w-5xl mx-auto">
       <div className="sticky top-0 lg:hidden z-40">
         <Navbar />
       </div>
-      <aside className="hidden sticky h-dvh bg-light border-r border-info top-0 w-[300px] p-5 lg:flex flex-col justify-between">
+      <aside className="hidden sticky h-dvh top-0 w-[250px] border-r p-5 lg:flex flex-col justify-between">
         <div>
           <div className="w-fit">
             <Logo />
@@ -85,12 +85,12 @@ export default function DashboardLayout({
         {children}
       </main>
 
-      <div className="lg:hidden bg-light fixed bottom-0 p-5 w-full">
-        <ul className="flex w-full justify-evenly gap-5">
+      <div className="lg:hidden bg-gray-100 fixed bottom-0 py-3 w-full">
+        <ul className="flex w-full justify-evenly">
           {homeLinks.map((item, idx) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <Link key={idx} href={item.link}>
-              <li className="text-primary hover:bg-primary hover:text-white transition-all duration-300 p-1 rounded-full">
+              <li className="text-primary hover:bg-primary p-2 hover:text-white transition-all duration-300 rounded-full">
                 {item.icon}
               </li>
             </Link>

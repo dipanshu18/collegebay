@@ -17,7 +17,7 @@ export default function Notifications() {
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               key={idx}
               className={cn(
-                "bg-light flex flex-col md:flex-row md:items-center gap-2 justify-between shadow p-5 rounded-md",
+                "flex flex-col md:flex-row md:items-center gap-2 justify-between shadow p-5 rounded-md",
                 idx + 1 === 10 && "mb-20 lg:mb-0"
               )}
             >

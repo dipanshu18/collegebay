@@ -46,10 +46,7 @@ export function CreatePostForm() {
   }
 
   return (
-    <form
-      className="text-left max-w-xl mx-auto"
-      onSubmit={form.handleSubmit(handleCreatePost)}
-    >
+    <form className="text-left" onSubmit={form.handleSubmit(handleCreatePost)}>
       <div className="grid gap-5">
         <div className="grid gap-2">
           <Label className={cn(form.formState.errors.images && "text-red-500")}>

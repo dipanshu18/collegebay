@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { toast } from "sonner";
@@ -21,15 +22,31 @@ export function ApproveBtn({
   id: string;
 }) {
   const { pending } = useFormStatus();
+  const router = useRouter();
+
+  async function handleApprovePostOrRequest(e: FormEvent) {
+    e.preventDefault();
+
+    const response =
+      type === "post" ? await approvePost(id) : await approveRequest(id);
+
+    if (response?.error) {
+      toast.error(response.error);
+      return;
+    }
+
+    toast.success(response);
+    router.replace("/admin/dashboard");
+    return;
+  }
 
   return (
-    <form
-      action={async () => {
-        type === "post" ? approvePost(id) : approveRequest(id);
-      }}
-      className="w-full"
-    >
-      <Button disabled={pending} className="w-full">
+    <form className="w-full">
+      <Button
+        onClick={handleApprovePostOrRequest}
+        disabled={pending}
+        className="w-full"
+      >
         {pending ? "Submitting..." : "Approve"}
       </Button>
     </form>
@@ -44,6 +61,7 @@ export function RejectMessageForm({
   id: string;
 }) {
   const { pending } = useFormStatus();
+  const router = useRouter();
   const [reason, setReason] = useState("");
 
   async function handleAdminRejectWithReason(e: FormEvent) {
@@ -57,10 +75,13 @@ export function RejectMessageForm({
 
       if (response?.error) {
         toast.error(response.error);
+
         return;
       }
 
       toast.success(response);
+      setReason("");
+      router.replace("/admin/dashboard");
       return;
     } catch (error) {
       if (error instanceof AxiosError) {

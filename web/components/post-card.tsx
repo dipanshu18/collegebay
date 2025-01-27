@@ -25,7 +25,7 @@ export function PostCard({
     >
       <Card
         className={cn(
-          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-md transition-all duration-300 bg-gray-100",
+          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-md transition-all duration-300",
           !post.isAvailable && "bg-top"
         )}
       >
