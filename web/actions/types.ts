@@ -41,3 +41,26 @@ export interface IUserRequest {
     upVotes: number;
   };
 }
+
+export interface IUserNotification {
+  id: string;
+  targetType:
+    | "MESSAGE"
+    | "ADMIN_APPROVE"
+    | "ADMIN_REJECT"
+    | "UPVOTE"
+    | "POST"
+    | "REQUEST";
+  action: {
+    id: string;
+    name: string;
+    image: string;
+  };
+  targetId: string;
+  actionId: string;
+  message: string;
+  read: boolean;
+
+  createdAt: Date;
+  updatedAt: Date;
+}

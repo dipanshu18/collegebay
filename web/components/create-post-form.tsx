@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 
 import { cn } from "@/components/lib/utils";
 import { CreatePostSchema } from "@/types/zodSchema";
-import { createPost } from "@/actions/user";
+import { createPost } from "@/actions/post";
 import { Label } from "./ui/label";
 import {
   CldUploadButton,

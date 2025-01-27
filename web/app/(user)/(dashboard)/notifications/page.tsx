@@ -1,8 +1,15 @@
-import { cn } from "@/components/lib/utils";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { formatDistanceToNow } from "date-fns";
 
-export default function Notifications() {
+import { cn } from "@/components/lib/utils";
+
+import { fetchUserNotifications } from "@/actions/user";
+import type { IUserNotification } from "@/actions/types";
+import { MarkAsReadBtn } from "@/components/mark-as-read-btn";
+
+export default async function Notifications() {
+  const notifications = (await fetchUserNotifications()) as IUserNotification[];
+
   return (
     <div className="p-5">
       <div className="mb-2">
@@ -10,37 +17,48 @@ export default function Notifications() {
       </div>
 
       <div className="grid grid-cols-1 gap-5">
-        {Array(10)
-          .fill("")
-          .map((_, idx) => (
+        {notifications.length > 0 ? (
+          notifications.map((item, idx) => (
             <div
-              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-              key={idx}
+              key={item.id}
               className={cn(
                 "flex flex-col md:flex-row md:items-center gap-2 justify-between shadow p-5 rounded-md",
-                idx + 1 === 10 && "mb-20 lg:mb-0"
+                idx + 1 === notifications.length && "mb-20 lg:mb-0"
               )}
             >
               <div className="flex items-center gap-5">
                 <Image
-                  src={"/logo.svg"}
+                  src={
+                    item.targetType === "ADMIN_APPROVE" ||
+                    item.targetType === "ADMIN_REJECT"
+                      ? "/logo.svg"
+                      : item.action.image
+                  }
                   alt="user profile pic"
                   width={100}
                   height={100}
                   quality={100}
-                  className="w-12 h-12 object-cover rounded-full border border-black"
+                  className="w-12 h-12 object-cover rounded-full"
                 />
                 <div>
-                  <h1 className="text-secondary">Notification message</h1>
+                  <h1 className="text-secondary">{item.message}</h1>
+                  <p className="text-xs text-wrap text-accent">
+                    {formatDistanceToNow(new Date(item.createdAt), {
+                      addSuffix: true,
+                    })}
+                  </p>
                 </div>
               </div>
-              <div>
-                <Button className="bg-primary hover:bg-accent text-white">
-                  Mark as read
-                </Button>
-              </div>
+              {!item.read && (
+                <div>
+                  <MarkAsReadBtn id={item.id} />
+                </div>
+              )}
             </div>
-          ))}
+          ))
+        ) : (
+          <h1>No notifications for you yet</h1>
+        )}
       </div>
     </div>
   );

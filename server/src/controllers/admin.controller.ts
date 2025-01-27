@@ -9,9 +9,7 @@ import jwt from "jsonwebtoken";
 
 import { Login } from "../types/auth";
 
-const userModel = new PrismaClient().user;
-const postModel = new PrismaClient().post;
-const requestModel = new PrismaClient().request;
+const db = new PrismaClient();
 
 export async function adminLogin(req: Request, res: Response) {
   const result = Login.safeParse(req.body);
@@ -45,7 +43,7 @@ export async function adminLogin(req: Request, res: Response) {
   const { email, password } = result.data;
 
   try {
-    const userExists = await userModel.findUnique({
+    const userExists = await db.user.findUnique({
       where: {
         email,
         role: "ADMIN",
@@ -76,14 +74,14 @@ export async function adminLogin(req: Request, res: Response) {
 
 export async function adminHome(req: Request, res: Response) {
   try {
-    const posts = await postModel.findMany({
+    const posts = await db.post.findMany({
       where: { isApproved: false },
       orderBy: {
         createdAt: "desc",
       },
     });
 
-    const requests = await requestModel.findMany({
+    const requests = await db.request.findMany({
       where: { isApproved: false },
       orderBy: {
         createdAt: "desc",
@@ -103,7 +101,7 @@ export async function adminHome(req: Request, res: Response) {
 export async function requestDetails(req: Request, res: Response) {
   try {
     const { id } = req.params;
-    const request = await requestModel.findFirst({
+    const request = await db.request.findFirst({
       where: { isApproved: false, id },
       orderBy: {
         createdAt: "desc",
@@ -121,13 +119,33 @@ export async function requestDetails(req: Request, res: Response) {
 
 export async function approvePost(req: Request, res: Response) {
   try {
+    const adminId = req.user?.id;
+
+    if (!adminId) {
+      return res.status(401).json({
+        msg: "Only valid admin user is allowed to perform these actions",
+      });
+    }
+
     const { id } = req.params;
 
-    await postModel.update({
+    const post = await db.post.update({
       where: { id },
       data: {
         adminMessage: "Post verified and approved",
         isApproved: true,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const newNotification = await db.notification.create({
+      data: {
+        message: `Admin has verified and approved your post for ${post.title}`,
+        actionId: adminId,
+        targetId: post.userId,
+        targetType: "ADMIN_APPROVE",
       },
     });
 
@@ -140,14 +158,34 @@ export async function approvePost(req: Request, res: Response) {
 
 export async function rejectPost(req: Request, res: Response) {
   try {
+    const adminId = req.user?.id;
+
+    if (!adminId) {
+      return res.status(401).json({
+        msg: "Only valid admin user is allowed to perform these actions",
+      });
+    }
+
     const { id } = req.params;
     const { reason } = req.body;
 
-    await postModel.update({
+    const post = await db.post.update({
       where: { id },
       data: {
         adminMessage: reason,
         isApproved: false,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const newNotification = await db.notification.create({
+      data: {
+        message: `Admin has reject your post for ${post.title} and the reason is "${post.adminMessage}"`,
+        actionId: adminId,
+        targetId: post.userId,
+        targetType: "ADMIN_REJECT",
       },
     });
 
@@ -160,13 +198,33 @@ export async function rejectPost(req: Request, res: Response) {
 
 export async function approveRequest(req: Request, res: Response) {
   try {
+    const adminId = req.user?.id;
+
+    if (!adminId) {
+      return res.status(401).json({
+        msg: "Only valid admin user is allowed to perform these actions",
+      });
+    }
+
     const { id } = req.params;
 
-    await requestModel.update({
+    const request = await db.request.update({
       where: { id },
       data: {
         adminMessage: "Request verified and approved",
         isApproved: true,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const newNotification = await db.notification.create({
+      data: {
+        message: `Admin has verified and approved your request for ${request.title}`,
+        actionId: adminId,
+        targetId: request.userId,
+        targetType: "ADMIN_APPROVE",
       },
     });
 
@@ -179,14 +237,34 @@ export async function approveRequest(req: Request, res: Response) {
 
 export async function rejectRequest(req: Request, res: Response) {
   try {
+    const adminId = req.user?.id;
+
+    if (!adminId) {
+      return res.status(401).json({
+        msg: "Only valid admin user is allowed to perform these actions",
+      });
+    }
+
     const { id } = req.params;
     const { reason } = req.body;
 
-    await requestModel.update({
+    const request = await db.request.update({
       where: { id },
       data: {
         adminMessage: reason,
         isApproved: false,
+      },
+      include: {
+        user: true,
+      },
+    });
+
+    const newNotification = await db.notification.create({
+      data: {
+        message: `Admin has reject your post for ${request.title} and the reason is "${request.adminMessage}"`,
+        actionId: adminId,
+        targetId: request.userId,
+        targetType: "ADMIN_REJECT",
       },
     });
 

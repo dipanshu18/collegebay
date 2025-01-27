@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 import type { IUserRequest } from "@/actions/types";
-import { upVoteRequest } from "@/actions/user";
+import { upVoteRequest } from "@/actions/request";
 import { toast } from "sonner";
 import { cn } from "./lib/utils";
 

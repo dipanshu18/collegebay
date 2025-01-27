@@ -1,10 +1,11 @@
-import { fetchPost } from "@/actions/user";
+import Link from "next/link";
+
 import { ImageCarousel } from "@/components/image-carousel";
 import { Button } from "@/components/ui/button";
-
-import type { IPost } from "@/actions/types";
 import { ArrowLeft, IndianRupee, Send } from "lucide-react";
-import Link from "next/link";
+
+import { fetchPost } from "@/actions/post";
+import type { IPost } from "@/actions/types";
 
 export default async function PostDetails({
   params,

@@ -1,16 +1,17 @@
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import Link from "next/link";
+import { formatDistanceToNow } from "date-fns";
+
 import {
   Card,
   CardDescription,
   CardFooter,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import { formatDistanceToNow } from "date-fns";
+import { IndianRupee } from "lucide-react";
+
 import { cn } from "@/components/lib/utils";
 import type { IPost } from "@/actions/types";
-import { IndianRupee } from "lucide-react";
 
 export function PostCard({
   type,

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { Filters } from "@/components/filters";
-import { fetchPosts } from "@/actions/user";
+import { fetchPosts } from "@/actions/post";
 import type { IPost } from "@/actions/types";
 import { PostCard } from "@/components/post-card";
 

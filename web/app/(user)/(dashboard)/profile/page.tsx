@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -8,17 +9,7 @@ import type { IUserProfile } from "@/actions/types";
 import { Mail, Phone, School, SquarePen } from "lucide-react";
 import { PostCard } from "@/components/post-card";
 import { RequestCard } from "@/components/request-card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { UpdateProfileForm } from "@/components/update-profile-form";
 import { toast } from "sonner";
-import Link from "next/link";
 
 async function profile() {
   const response = await fetchUserProfile();

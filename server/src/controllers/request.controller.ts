@@ -1,19 +1,15 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import type { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
-import { Request, Response } from "express";
 import { UserRequestSchema } from "../types/request";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { client } from "../utils/s3";
 
-const requestModel = new PrismaClient().request;
-const upVoteModel = new PrismaClient().upVote;
+const db = new PrismaClient();
 
 export async function getAllRequests(req: Request, res: Response) {
   try {
-    const requests = await requestModel.findMany({
+    const requests = await db.request.findMany({
       where: {
         isApproved: true,
       },
@@ -53,10 +49,13 @@ export async function getAllRequests(req: Request, res: Response) {
 
 export async function getUserRequests(req: Request, res: Response) {
   try {
-    const { id: userId } = req.user!;
-    const requests = await requestModel.findMany({
+    const { id: userId } = req.user as { id: string };
+    const requests = await db.request.findMany({
       where: {
         userId,
+      },
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
@@ -73,7 +72,7 @@ export async function getUserRequests(req: Request, res: Response) {
 
 export async function createRequest(req: Request, res: Response) {
   try {
-    const { id } = req.user!;
+    const { id } = req.user as { id: string };
     const result = UserRequestSchema.safeParse(req.body);
 
     if (!result.success) {
@@ -83,6 +82,7 @@ export async function createRequest(req: Request, res: Response) {
       // Prepare a structured error message object
       const errorMessages: Record<string, string> = {};
 
+      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.entries(errors).forEach(([field, error]) => {
         if (field !== "_errors") {
           // Exclude the '_errors' field
@@ -103,23 +103,7 @@ export async function createRequest(req: Request, res: Response) {
 
     const { image, title, description } = result.data;
 
-    // const key = `request/${email}/${crypto.randomUUID()}.jpg`;
-    // const command = new PutObjectCommand({
-    //   Bucket: process.env.AWS_BUCKET!,
-    //   Key: key,
-    //   ContentType: "image/jpeg",
-    // });
-    // const url = await getSignedUrl(client, command);
-
-    // await fetch(url, {
-    //   method: "PUT",
-    //   body: image,
-    //   headers: {
-    //     "Content-Type": "image/jpeg",
-    //   },
-    // });
-
-    const newRequest = await requestModel.create({
+    const newRequest = await db.request.create({
       data: {
         title,
         description,
@@ -139,10 +123,10 @@ export async function createRequest(req: Request, res: Response) {
 
 export async function upVoteRequest(req: Request, res: Response) {
   try {
-    const { id: userId } = req.user!;
+    const { id: userId } = req.user as { id: string };
     const { id: requestId } = req.params;
 
-    const requestExists = await requestModel.findUnique({
+    const requestExists = await db.request.findUnique({
       where: {
         id: requestId,
       },
@@ -152,7 +136,7 @@ export async function upVoteRequest(req: Request, res: Response) {
       return res.status(404).json({ msg: "Request doesn't exists" });
     }
 
-    const alreadyUpVoted = await upVoteModel.findUnique({
+    const alreadyUpVoted = await db.upVote.findUnique({
       where: {
         requestId_userId: {
           requestId,
@@ -162,19 +146,19 @@ export async function upVoteRequest(req: Request, res: Response) {
     });
 
     if (!alreadyUpVoted) {
-      await upVoteModel.create({ data: { requestId, userId } });
-      return res.status(200).json();
-    } else {
-      await upVoteModel.delete({
-        where: {
-          requestId_userId: {
-            requestId,
-            userId,
-          },
-        },
-      });
+      await db.upVote.create({ data: { requestId, userId } });
       return res.status(200).json();
     }
+
+    await db.upVote.delete({
+      where: {
+        requestId_userId: {
+          requestId,
+          userId,
+        },
+      },
+    });
+    return res.status(200).json();
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong" });
@@ -185,21 +169,13 @@ export async function deleteRequest(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const requestExists = await requestModel.findUnique({ where: { id } });
+    const requestExists = await db.request.findUnique({ where: { id } });
 
     if (!requestExists) {
       return res.status(404).json({ msg: "Request doesn't exists" });
     }
 
-    const command = new DeleteObjectCommand({
-      Bucket: process.env.AWS_BUCKET!,
-      Key: requestExists.image,
-    });
-    const url = await getSignedUrl(client, command);
-
-    await fetch(url, { method: "DELETE" });
-
-    await requestModel.delete({ where: { id } });
+    await db.request.delete({ where: { id } });
 
     return res.status(200).json({ msg: "Request deleted" });
   } catch (error) {

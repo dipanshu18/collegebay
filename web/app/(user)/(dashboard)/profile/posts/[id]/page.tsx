@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { EditProductListingForm } from "@/components/edit-listing-form";
-import { deletePost, fetchPost, postSold } from "@/actions/user";
+import { deletePost, fetchPost, postSold } from "@/actions/post";
 import { ConfirmButton } from "@/components/confirm-button";
 import type { IPost } from "@/actions/types";
 
@@ -25,20 +25,20 @@ export default async function UserPostDetails({
   const userPost = (await fetchPost(params.id)) as IPost;
 
   return (
-    <div className="my-5 p-5">
-      <div className="grid grid-cols-1 md:grid-cols-2 place-items-center space-y-10 md:space-y-0 md:space-x-10">
+    <div className="p-5">
+      <div className="">
         <div className="w-full px-10">
           <ImageCarousel images={userPost.images} />
         </div>
-        <div className="space-y-3 w-full my-10">
+        <div className="space-y-2 w-full">
           <h1 className="text-2xl font-bold">{userPost.title}</h1>
-          <p className="text-sm text-neutral-700 dark:text-neutral-200 text-wrap">
+          <p className="text-sm text-neutral-800 text-wrap">
             {userPost.description}
           </p>
           <p className="font-extrabold text-xl">Rs. {userPost.price}</p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-10 md:my-16">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-5">
         {!userPost.isApproved && (
           <Dialog>
             <DialogTrigger asChild>

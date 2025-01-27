@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 import { cn } from "@/components/lib/utils";
-import { createRequest } from "@/actions/user";
+import { createRequest } from "@/actions/request";
 import { CreateRequestSchema } from "@/types/zodSchema";
 
 export function CreateRequestForm() {

@@ -5,19 +5,14 @@ import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 import type { z } from "zod";
 import bcrypt from "bcrypt";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 
 import { UpdateUserSchema } from "../types/user";
-import { client } from "../utils/s3";
 
 const db = new PrismaClient();
 
 export async function getUser(req: Request, res: Response) {
   try {
-    console.log(req.user);
-    console.log(req.user);
-    const { id } = req.user!;
+    const { id } = req.user as { id: string };
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -62,10 +57,67 @@ export async function getUser(req: Request, res: Response) {
   }
 }
 
-export async function updateUser(req: Request, res: Response) {
-  console.log(req);
+export async function getUserNotifications(req: Request, res: Response) {
   try {
-    const { id } = req.user!;
+    const { id } = req.user as { id: string };
+
+    if (!id) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const user = await db.user.findUnique({
+      where: { id },
+    });
+
+    const notifications = await db.notification.findMany({
+      where: {
+        targetId: user?.id,
+      },
+      include: {
+        action: {
+          select: {
+            id: true,
+            image: true,
+            name: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+
+    return res.status(200).json({ notifications });
+  } catch (error) {
+    console.log("Error:", error);
+    return res.status(500).json({ msg: "Something went wrong" });
+  }
+}
+
+export async function markAsRead(req: Request, res: Response) {
+  try {
+    const id = req.params.id;
+
+    await db.notification.update({
+      where: {
+        id,
+      },
+      data: {
+        read: true,
+      },
+    });
+
+    res.status(200).json({ msg: "Notification marked as read" });
+    return;
+  } catch (error) {
+    console.log("Error:", error);
+    return res.status(500).json({ msg: "Something went wrong" });
+  }
+}
+
+export async function updateUser(req: Request, res: Response) {
+  try {
+    const { id } = req.user as { id: string };
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -142,7 +194,7 @@ export async function updateUser(req: Request, res: Response) {
 
 export async function deleteUser(req: Request, res: Response) {
   try {
-    const { id } = req.user!;
+    const { id } = req.user as { id: string };
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -168,13 +220,13 @@ export async function deleteUser(req: Request, res: Response) {
       return res.status(400).json({ msg: "Delete all your requests first" });
     }
 
-    const command = new DeleteObjectCommand({
-      Bucket: process.env.AWS_BUCKET!,
-      Key: user.image,
-    });
-    const url = await getSignedUrl(client, command);
+    // const command = new DeleteObjectCommand({
+    //   Bucket: process.env.AWS_BUCKET!,
+    //   Key: user.image,
+    // });
+    // const url = await getSignedUrl(client, command);
 
-    await fetch(url, { method: "DELETE" });
+    // await fetch(url, { method: "DELETE" });
 
     const deletedUser = await db.user.delete({ where: { id } });
 

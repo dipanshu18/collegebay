@@ -8,7 +8,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { fetchRequests } from "@/actions/user";
+import { fetchRequests } from "@/actions/request";
 import type { IUserRequest } from "@/actions/types";
 import { RequestCard } from "@/components/request-card";
 
