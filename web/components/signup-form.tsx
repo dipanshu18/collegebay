@@ -8,7 +8,10 @@ import type { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import {
+  CldUploadButton,
+  type CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -57,8 +60,8 @@ export function SignupForm() {
       });
 
       if (response.status === 201) {
-        const data = response.data;
-        toast(data.msg);
+        const data = response.data.msg;
+        toast.success(data);
         return router.replace("/home");
       }
     } catch (error) {
@@ -83,7 +86,7 @@ export function SignupForm() {
     <form onSubmit={form.handleSubmit(handleSignup)}>
       <div className="flex flex-col items-center text-center">
         <h1 className="text-2xl text-primary font-bold">Create your account</h1>
-        <p className="text-accent text-balance text-sm text-muted-foreground">
+        <p className="text-accent  text-balance text-sm text-muted-foreground">
           Enter your details below to create your account
         </p>
       </div>
@@ -133,7 +136,7 @@ export function SignupForm() {
         <div className="grid gap-2">
           <Label>Profile picture</Label>
           <CldUploadButton
-            className="w-full bg-primary rounded-md py-2 text-white"
+            className="max-w-xs bg-primary hover:bg-accent rounded-md py-2 text-white text-sm font-medium"
             onSuccess={(results) => {
               const imageObj = results.info as CloudinaryUploadWidgetInfo;
               const url = imageObj.secure_url;
@@ -150,18 +153,12 @@ export function SignupForm() {
         </div>
 
         <div className="grid gap-2">
-          <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.name && "text-red-500"
-            )}
-          >
+          <Label className={cn(form.formState.errors.name && "text-red-500")}>
             Full Name
           </Label>
           <Input
             type="text"
             placeholder="your full name"
-            className="py-6"
             {...form.register("name")}
           />
           {form.formState.errors.name && (
@@ -173,17 +170,13 @@ export function SignupForm() {
         <div className="flex items-end gap-2 w-full">
           <div className="grid gap-2 w-full">
             <Label
-              className={cn(
-                "text-primary",
-                form.formState.errors.email && "text-red-500"
-              )}
+              className={cn(form.formState.errors.email && "text-red-500")}
             >
               Email
             </Label>
             <Input
               type="email"
               placeholder="your edu email"
-              className="py-6 w-full"
               {...form.register("email")}
             />
             {form.formState.errors.email && (
@@ -224,17 +217,13 @@ export function SignupForm() {
         </div> */}
         <div className="grid gap-2">
           <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.password && "text-red-500"
-            )}
+            className={cn(form.formState.errors.password && "text-red-500")}
           >
             Password
           </Label>
           <Input
             type="password"
             placeholder="your password"
-            className="py-6"
             {...form.register("password")}
           />
           {form.formState.errors.password && (
@@ -245,20 +234,16 @@ export function SignupForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.phoneNo && "text-red-500"
-            )}
+            className={cn(form.formState.errors.phoneNo && "text-red-500")}
           >
             Phone No.{" "}
-            <span className="text-info text-sm">
+            <span className="text-accent text-sm">
               (Please don{`'`}t include +91- or +91)
             </span>
           </Label>
           <Input
             type="text"
             placeholder="your phone no."
-            className="py-6"
             {...form.register("phoneNo")}
           />
           {form.formState.errors.phoneNo && (
@@ -269,10 +254,7 @@ export function SignupForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.college && "text-red-500"
-            )}
+            className={cn(form.formState.errors.college && "text-red-500")}
           >
             College
           </Label>
@@ -281,7 +263,7 @@ export function SignupForm() {
             {...form.register("college")}
             defaultValue={form.formState.defaultValues?.college}
           >
-            <SelectTrigger className="py-6">
+            <SelectTrigger className="">
               <SelectValue placeholder="your college" />
             </SelectTrigger>
             <SelectContent>
@@ -300,17 +282,17 @@ export function SignupForm() {
         <Button
           disabled={form.formState.isSubmitting}
           type="submit"
-          className="w-full flex items-center gap-2 mt-2 bg-accent hover:bg-primary"
+          className="w-full flex items-center gap-2 mt-2 bg-primary hover:bg-accent"
         >
           {form.formState.isSubmitting ? "Submitting..." : "Signup"}
         </Button>
       </div>
 
-      <div className="text-accent text-center text-sm mt-5">
+      <div className="text-center text-sm mt-5">
         Already have an account?{" "}
         <Link
           href="/login"
-          className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
+          className="font-bold text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
         >
           Login
         </Link>

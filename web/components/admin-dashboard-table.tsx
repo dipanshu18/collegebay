@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import type { IPost, IUserRequest } from "@/actions/types";
+import { IndianRupee } from "lucide-react";
 
 export function DashboardTable({
   type,
@@ -25,7 +26,7 @@ export function DashboardTable({
         <TableRow>
           <TableHead className="w-[100px]">Status</TableHead>
           <TableHead>Title</TableHead>
-          {posts && <TableHead className="text-right">Amount</TableHead>}
+          {posts && <TableHead>Amount</TableHead>}
           <TableHead> </TableHead>
         </TableRow>
       </TableHeader>
@@ -38,16 +39,14 @@ export function DashboardTable({
                 {item.isApproved ? "Approved" : "Pending"}
               </TableCell>
               <TableCell>{item.title}</TableCell>
-              <TableCell className="text-right">{item.price}</TableCell>
+              <TableCell className="flex items-center">
+                <IndianRupee size={14} /> {item.price}
+              </TableCell>
               <TableCell className="text-right">
-                <Link
-                  href={
-                    type === "post"
-                      ? `/admin/dashboard/posts/${item.id}`
-                      : `/admin/dashboard/requests/${item.id}`
-                  }
-                >
-                  <Button>View details</Button>
+                <Link href={`/admin/dashboard/posts/${item.id}`}>
+                  <Button className="bg-primary hover:bg-accent text-white">
+                    View details
+                  </Button>
                 </Link>
               </TableCell>
             </TableRow>
@@ -61,14 +60,10 @@ export function DashboardTable({
                 </TableCell>
                 <TableCell>{item.title}</TableCell>
                 <TableCell className="text-right">
-                  <Link
-                    href={
-                      type === "post"
-                        ? "/admin/dashboard/posts/:id"
-                        : "/admin/dashboard/requests/:id"
-                    }
-                  >
-                    <Button>View details</Button>
+                  <Link href={`/admin/dashboard/requests/${item.id}`}>
+                    <Button className="bg-primary hover:bg-accent text-white">
+                      View details
+                    </Button>
                   </Link>
                 </TableCell>
               </TableRow>

@@ -12,7 +12,7 @@ export default async function PostDetails({
   const post = (await fetchPost(params.id)) as IPost;
 
   return (
-    <div className="p-4 h-full">
+    <div className="p-5 h-full">
       <div className="flex flex-col md:flex-row gap-10 p-5 items-center">
         <div className="w-full max-w-lg mx-auto p-5">
           <ImageCarousel images={post.images} />

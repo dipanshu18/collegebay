@@ -34,41 +34,40 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
       });
 
       if (response.status === 200) {
-        const data = await response.data;
-        toast(data.msg);
+        const data = await response.data?.msg;
+        toast.success(data);
         router.replace("/home");
+        return;
       }
     } catch (error) {
       console.log(error);
 
       if (error instanceof AxiosError) {
         const errorData = error.response?.data.msg;
-        return toast(errorData);
+        return toast.error(errorData);
       }
     }
   }
 
   async function handleAdminLogin(values: z.infer<typeof LoginSchema>) {
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/admin/login`,
-        values,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post(`${BASE_URL}/admin/login`, values, {
+        withCredentials: true,
+      });
 
       if (response.status === 200) {
-        const data = await response.data;
-        toast(data.msg);
+        const data = await response.data.msg;
+        toast.success(data);
         router.replace("/admin/dashboard");
+        return;
       }
     } catch (error) {
       console.log(error);
 
       if (error instanceof AxiosError) {
         const errorData = error.response?.data.msg;
-        return toast(errorData);
+        toast.error(errorData);
+        return;
       }
     }
   }
@@ -91,7 +90,7 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
 
       <div className="grid gap-2">
         <div className="grid gap-2">
-          <Label htmlFor="email" className="text-accent text-md">
+          <Label htmlFor="email" className="text-md">
             Email
           </Label>
           <Input
@@ -99,7 +98,6 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
             type="email"
             {...form.register("email")}
             placeholder={type === "admin" ? "your email" : "your edu email"}
-            className="py-6"
             required
           />
           {form.formState.errors.email && (
@@ -110,7 +108,7 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
         </div>
         <div className="grid gap-2">
           <div className="flex items-center">
-            <Label htmlFor="password" className="text-accent text-md">
+            <Label htmlFor="password" className="text-md">
               Password
             </Label>
             {/* <a
@@ -125,7 +123,6 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
             type="password"
             placeholder="your password"
             {...form.register("password")}
-            className="py-6"
             required
           />
           {form.formState.errors.password && (
@@ -137,18 +134,18 @@ export function LoginForm({ type }: { type: "user" | "admin" }) {
         <Button
           disabled={form.formState.isSubmitting}
           type="submit"
-          className="w-full flex items-center gap-2 mt-5 bg-accent hover:bg-primary"
+          className="w-full flex items-center gap-2 mt-5 bg-primary hover:bg-accent"
         >
           {form.formState.isSubmitting ? "Submitting..." : "Login"}
         </Button>
       </div>
 
       {type === "user" && (
-        <div className="text-accent text-center text-sm mt-5">
+        <div className="text-center text-sm mt-5">
           Don&apos;t have an account?{" "}
           <Link
             href="/signup"
-            className="text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
+            className="font-bold text-primary hover:text-info transition-all duration-300 underline underline-offset-4"
           >
             Sign up
           </Link>

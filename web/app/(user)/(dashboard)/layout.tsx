@@ -1,19 +1,54 @@
-import { AppSidebar } from "@/components/app-sidebar";
+import { Logout } from "@/components/logout-btn";
+import { Logo, Navbar } from "@/components/navbar";
+import { Button } from "@/components/ui/button";
 import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+  ArchiveRestore,
+  Bell,
+  HandHelping,
+  Home,
+  MessageSquare,
+  Upload,
+  User,
+} from "lucide-react";
 import Link from "next/link";
+
+const homeLinks: { icon: React.ReactNode; title: string; link: string }[] = [
+  {
+    icon: <Home />,
+    title: "Home",
+    link: "/home",
+  },
+  {
+    icon: <Upload />,
+    title: "Create Post",
+    link: "/post",
+  },
+  {
+    icon: <HandHelping />,
+    title: "Requests",
+    link: "/requests",
+  },
+  {
+    icon: <MessageSquare />,
+    title: "Messages",
+    link: "/messages",
+  },
+  {
+    icon: <Bell />,
+    title: "Notifications",
+    link: "/notifications",
+  },
+  {
+    icon: <ArchiveRestore />,
+    title: "Create Request",
+    link: "/requests/create",
+  },
+  {
+    icon: <User />,
+    title: "Profile",
+    link: "/profile",
+  },
+];
 
 export default function DashboardLayout({
   children,
@@ -21,22 +56,47 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset>
-          <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-            <div className="flex items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-              <Separator orientation="vertical" className="mr-2 h-4" />
-              <Link href={"/home"}>
-                <h1 className="text-sm font-bold tracking-wide">CollegeBay</h1>
+    <div className="flex flex-col min-h-dvh lg:flex-row">
+      <div className="sticky top-0 lg:hidden z-40">
+        <Navbar />
+      </div>
+      <aside className="hidden sticky h-dvh bg-light border-r border-info top-0 w-[300px] p-5 lg:flex flex-col justify-between">
+        <div>
+          <div className="w-fit">
+            <Logo />
+          </div>
+
+          <ul className="grid grid-cols-1 my-5">
+            {homeLinks.map((item, idx) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+              <Link key={idx} href={item.link}>
+                <li className="flex gap-2 text-secondary hover:bg-primary hover:text-white transition-all duration-100 p-2 rounded">
+                  {item.icon} {item.title}
+                </li>
               </Link>
-            </div>
-          </header>
-          <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
-        </SidebarInset>
-      </SidebarProvider>
-    </>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <Logout type="USER" />
+        </div>
+      </aside>
+      <main className="flex-1 h-dvh w-full lg:overflow-y-auto scrollbar-thin">
+        {children}
+      </main>
+
+      <div className="lg:hidden bg-light fixed bottom-0 p-5 w-full">
+        <ul className="flex w-full justify-evenly gap-5">
+          {homeLinks.map((item, idx) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+            <Link key={idx} href={item.link}>
+              <li className="text-primary hover:bg-primary hover:text-white transition-all duration-300 p-1 rounded-full">
+                {item.icon}
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 }

@@ -15,18 +15,19 @@ import {
 import { EditProductListingForm } from "@/components/edit-listing-form";
 import { deletePost, fetchPost, postSold } from "@/actions/user";
 import { ConfirmButton } from "@/components/confirm-button";
+import type { IPost } from "@/actions/types";
 
 export default async function UserPostDetails({
   params,
 }: {
   params: { id: string };
 }) {
-  const userPost = await fetchPost(params.id);
+  const userPost = (await fetchPost(params.id)) as IPost;
 
   return (
     <div className="my-5 p-5">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 place-items-center space-y-10 md:space-y-0 md:space-x-10">
-        <div className="w-full my-5 col-span-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 place-items-center space-y-10 md:space-y-0 md:space-x-10">
+        <div className="w-full px-10">
           <ImageCarousel images={userPost.images} />
         </div>
         <div className="space-y-3 w-full my-10">
@@ -38,21 +39,23 @@ export default async function UserPostDetails({
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-10 md:my-16">
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button>Edit Post</Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] dark:bg-black">
-            <DialogHeader>
-              <DialogTitle>Edit product listing</DialogTitle>
-              <DialogDescription>
-                Make changes to your listing here. Click save when you{`'`}
-                re done.
-              </DialogDescription>
-            </DialogHeader>
-            <EditProductListingForm post={userPost} />
-          </DialogContent>
-        </Dialog>
+        {!userPost.isApproved && (
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>Edit Post</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px] dark:bg-black">
+              <DialogHeader>
+                <DialogTitle>Edit product listing</DialogTitle>
+                <DialogDescription>
+                  Make changes to your listing here. Click save when you{`'`}
+                  re done.
+                </DialogDescription>
+              </DialogHeader>
+              <EditProductListingForm post={userPost} />
+            </DialogContent>
+          </Dialog>
+        )}
 
         <Dialog>
           <DialogTrigger asChild>
@@ -92,42 +95,6 @@ export default async function UserPostDetails({
             </DialogHeader>
           </DialogContent>
         </Dialog>
-      </div>
-      <div>
-        <h1 className="text-lg font-extrabold">Messages for this product</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 place-items-center gap-5 my-5">
-          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-neutral-200">
-            <CardHeader className="p-0">
-              <Image
-                src={"/Logo.png"}
-                alt="User profile photo"
-                width={50}
-                height={50}
-                className="object-cover border border-black dark:border-neutral-200 rounded-full w-28 h-28"
-              />
-            </CardHeader>
-            <CardTitle className="font-normal">Messaged User Name</CardTitle>
-            <CardFooter className="p-0">
-              <Button>Message</Button>
-            </CardFooter>
-          </Card>
-
-          <Card className="p-6 w-full space-y-5 dark:bg-inherit dark:border-neutral-200">
-            <CardHeader className="p-0">
-              <Image
-                src={"/Logo.png"}
-                alt="User profile photo"
-                width={50}
-                height={50}
-                className="object-cover border border-black dark:border-neutral-200 rounded-full w-28 h-28"
-              />
-            </CardHeader>
-            <CardTitle className="font-normal">Messaged User Name</CardTitle>
-            <CardFooter className="p-0">
-              <Button>Message</Button>
-            </CardFooter>
-          </Card>
-        </div>
       </div>
     </div>
   );

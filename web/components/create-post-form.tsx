@@ -12,9 +12,11 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/components/lib/utils";
 import { CreatePostSchema } from "@/types/zodSchema";
 import { createPost } from "@/actions/user";
-import { revalidatePath } from "next/cache";
 import { Label } from "./ui/label";
-import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import {
+  CldUploadButton,
+  type CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 import {
   Select,
   SelectContent,
@@ -45,7 +47,7 @@ export function CreatePostForm() {
 
   return (
     <form
-      className="text-left max-w-xl"
+      className="text-left max-w-xl mx-auto"
       onSubmit={form.handleSubmit(handleCreatePost)}
     >
       <div className="grid gap-5">
@@ -54,7 +56,7 @@ export function CreatePostForm() {
             Product Images (Select upto 4 images)
           </Label>
           <CldUploadButton
-            className="w-full bg-primary rounded-md py-2 text-white"
+            className="w-full bg-primary hover:bg-accent rounded-md py-2 text-white"
             onSuccess={(results) => {
               const imageObj = results.info as CloudinaryUploadWidgetInfo;
               imgUrls.current.push(imageObj.secure_url);
@@ -99,6 +101,7 @@ export function CreatePostForm() {
             Description
           </Label>
           <Textarea
+            rows={10}
             placeholder="resource description"
             {...form.register("description")}
           />
@@ -125,16 +128,13 @@ export function CreatePostForm() {
         </div>
         <div className="grid gap-2">
           <Label
-            className={cn(
-              "text-primary",
-              form.formState.errors.category && "text-red-500"
-            )}
+            className={cn(form.formState.errors.category && "text-red-500")}
           >
             Category
           </Label>
 
           <Select onValueChange={(value) => form.setValue("category", value)}>
-            <SelectTrigger className="py-6">
+            <SelectTrigger>
               <SelectValue placeholder="resource category" />
             </SelectTrigger>
             <SelectContent>
@@ -154,7 +154,7 @@ export function CreatePostForm() {
         </div>
         <Button
           disabled={form.formState.isSubmitting}
-          className="w-full flex gap-2"
+          className="w-full flex gap-2 bg-primary hover:bg-accent text-white"
         >
           {form.formState.isSubmitting ? "Submitting..." : "Create post"}
         </Button>

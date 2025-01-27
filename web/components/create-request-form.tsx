@@ -4,7 +4,10 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import {
+  CldUploadButton,
+  type CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -38,7 +41,7 @@ export function CreateRequestForm() {
   return (
     <form
       onSubmit={form.handleSubmit(handleCreateRequest)}
-      className="text-left space-y-4 max-w-xl"
+      className="text-left space-y-4 max-w-xl mx-auto"
     >
       <div className="grid gap-2">
         <Label
@@ -48,7 +51,7 @@ export function CreateRequestForm() {
           Upload reference image
         </Label>
         <CldUploadButton
-          className="w-full bg-primary rounded-md py-2 text-white"
+          className="w-full bg-primary hover:bg-accent rounded-md py-2 text-white font-medium text-sm"
           onSuccess={(results) => {
             const imageObj = results.info as CloudinaryUploadWidgetInfo;
 
@@ -105,7 +108,7 @@ export function CreateRequestForm() {
 
       <Button
         disabled={form.formState.isSubmitting}
-        className="w-full flex gap-2"
+        className="w-full flex gap-2 bg-primary hover:bg-accent rounded-md py-2 text-white"
       >
         {form.formState.isSubmitting ? "Submitting..." : "Create request"}
       </Button>

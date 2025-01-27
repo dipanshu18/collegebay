@@ -13,7 +13,7 @@ export function ImageCarousel({ images }: { images: string[] }) {
       opts={{
         align: "start",
       }}
-      className="w-full p-5"
+      className="w-full"
     >
       <CarouselContent className="-mt-1 object-cover h-[300px] lg:h-[500px]">
         {images?.map((image, index) => (

@@ -33,7 +33,7 @@ export function RequestCard({
   }
 
   return (
-    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50">
+    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-md transition-all duration-300 bg-gray-100">
       <Image
         src={request.image}
         width={1080}
@@ -44,13 +44,16 @@ export function RequestCard({
         className="w-full object-contain rounded-t-md h-52 bg-white"
       />
       <div className="flex-1">
-        <CardTitle className="px-6 flex items-center justify-between">
-          <div>{request.title} </div>
-          <Button onClick={handleUpVote} className="flex items-center gap-2">
+        <CardTitle className="px-6 my-2 flex items-center justify-between">
+          <div className="text-secondary">{request.title} </div>
+          <Button
+            onClick={handleUpVote}
+            className="flex items-center gap-2 bg-primary text-white hover:bg-accent"
+          >
             <ChevronUp /> {request._count.upVotes}
           </Button>
         </CardTitle>
-        <CardDescription className="px-6 space-y-5">
+        <CardDescription className="px-6 space-y-5 text-primary">
           {request.description}
         </CardDescription>
       </div>
@@ -67,8 +70,10 @@ export function RequestCard({
             />
           </div>
           <div>
-            <h1 className="text-md font-bold">{request.user.name}</h1>
-            <p className="text-xs">
+            <h1 className="text-md font-bold text-primary">
+              {request.user.name}
+            </h1>
+            <p className="text-xs text-accent">
               Created{" "}
               {formatDistanceToNow(new Date(request.createdAt), {
                 addSuffix: true,

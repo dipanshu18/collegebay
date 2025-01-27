@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Logout } from "@/components/logout-btn";
 import Link from "next/link";
 
 export default function AdminDashboardLayout({
@@ -13,7 +13,9 @@ export default function AdminDashboardLayout({
           <Link href={"/admin/dashboard"}>Admin Dashboard</Link>
         </h1>
 
-        <Button>Logout</Button>
+        <div>
+          <Logout type="ADMIN" />
+        </div>
       </div>
       <main className="p-5">
         <div className="max-w-5xl mx-auto">{children}</div>

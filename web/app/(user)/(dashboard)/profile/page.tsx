@@ -34,11 +34,11 @@ export default async function Profile() {
   const userProfile = (await profile()) as IUserProfile;
 
   return (
-    <div className="p-4">
+    <div className="p-4 mb-20 lg:mb-0">
       <div className="w-full mx-auto flex flex-col">
         <div className="relative">
           {/* Banner */}
-          <div className="w-full h-32 bg-light rounded-t-xl" />
+          <div className="w-full h-32 bg-primary rounded-t-xl" />
 
           {/* Profile Picture Container */}
           <div className="absolute bottom-0 w-full sm:w-fit flex justify-center transform translate-y-1/2 sm:justify-start sm:left-6">
@@ -68,7 +68,7 @@ export default async function Profile() {
 
       <div className="sm:pl-10">
         <h1 className="text-2xl font-bold text-primary">{userProfile.name}</h1>
-        <ul className="my-2 space-y-3 text-accent">
+        <ul className="my-2 space-y-3 text-gray-700/80">
           <li className="flex gap-2">
             <Mail /> {userProfile.email}
           </li>
@@ -82,7 +82,7 @@ export default async function Profile() {
       </div>
 
       <Tabs defaultValue="posts" className="w-full sm:px-10">
-        <TabsList className="w-full sm:w-fit">
+        <TabsList className="w-full sm:w-fit bg-light text-secondary">
           <TabsTrigger value="posts" className="w-full px-10">
             Posts
           </TabsTrigger>
@@ -92,7 +92,7 @@ export default async function Profile() {
         </TabsList>
         <TabsContent
           value="posts"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {userProfile.posts.map((item) => (
             <PostCard type="profile" key={item.id} post={item} />
@@ -100,7 +100,7 @@ export default async function Profile() {
         </TabsContent>
         <TabsContent
           value="requests"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {userProfile.requests.map((item) => (
             <RequestCard type="profile" key={item.id} request={item} />

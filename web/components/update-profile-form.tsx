@@ -17,8 +17,10 @@ import { cn } from "@/components/lib/utils";
 import type { UserProfile } from "@/types/index";
 import { UpdateProfileSchema } from "@/types/zodSchema";
 import { updateProfile } from "@/actions/user";
-import { revalidatePath } from "next/cache";
-import { CldUploadButton, CloudinaryUploadWidgetInfo } from "next-cloudinary";
+import {
+  CldUploadButton,
+  type CloudinaryUploadWidgetInfo,
+} from "next-cloudinary";
 
 export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
   const router = useRouter();
@@ -60,7 +62,7 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
         <div className="grid gap-2">
           <Label>Update profile picture</Label>
           <CldUploadButton
-            className="w-full bg-primary rounded-md py-2 text-white"
+            className="w-full bg-primary hover:bg-accent rounded-md py-2 text-white"
             onSuccess={(results) => {
               const imageObj = results.info as CloudinaryUploadWidgetInfo;
               const url = imageObj.secure_url;
@@ -83,7 +85,6 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
           <Input
             type="text"
             placeholder="your full name"
-            className="py-6"
             {...form.register("name")}
           />
           {form.formState.errors.name && (
@@ -104,7 +105,6 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
           <Input
             type="text"
             placeholder="your phone no."
-            className="py-6"
             {...form.register("phoneNo")}
           />
           {form.formState.errors.phoneNo && (
@@ -122,7 +122,6 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
           <Input
             type="password"
             placeholder="your password"
-            className="py-6"
             {...form.register("password")}
           />
           {form.formState.errors.password && (
@@ -135,7 +134,7 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
         {form.formState.isDirty && (
           <Button
             disabled={form.formState.isSubmitting}
-            className="w-full"
+            className="w-full bg-primary hover:bg-accent text-white"
             type="submit"
           >
             {form.formState.isSubmitting ? "Submitting..." : "Save Changes"}

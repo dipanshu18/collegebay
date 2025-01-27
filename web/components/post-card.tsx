@@ -25,7 +25,7 @@ export function PostCard({
     >
       <Card
         className={cn(
-          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-lg transition-all duration-300 bg-neutral-50",
+          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-md transition-all duration-300 bg-gray-100",
           !post.isAvailable && "bg-top"
         )}
       >
@@ -35,7 +35,7 @@ export function PostCard({
           height={500}
           quality={100}
           alt="Product image"
-          className="w-full object-contain h-52 bg-white"
+          className="w-full object-contain rounded-t h-52 bg-white"
         />
         <div className="absolute">
           {!post.isAvailable && (
@@ -47,20 +47,20 @@ export function PostCard({
         <div className="flex-1">
           <CardTitle className="flex justify-between px-6">
             <div>
-              <h1 className="text-xl">{post.title}</h1>
+              <h1 className="text-xl text-secondary">{post.title}</h1>
             </div>
             <div>
-              <h1 className="flex items-center text-base">
+              <h1 className="flex items-center text-base text-secondary">
                 <IndianRupee size={18} /> {post.price}
               </h1>
             </div>
           </CardTitle>
-          <CardDescription className="px-6 text-sm space-y-5">
+          <CardDescription className="px-6 text-sm space-y-5 text-primary">
             {`${post.description.slice(0, 90)}...`}
           </CardDescription>
         </div>
         <CardFooter className="flex justify-between">
-          <p className="text-xs text-wrap">
+          <p className="text-xs text-wrap text-accent">
             Created{" "}
             {formatDistanceToNow(new Date(post.createdAt), {
               addSuffix: true,

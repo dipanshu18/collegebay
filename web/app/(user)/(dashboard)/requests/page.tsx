@@ -1,13 +1,4 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
-import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
@@ -17,7 +8,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { CreateRequestForm } from "@/components/create-request-form";
 import { fetchRequests } from "@/actions/user";
 import type { IUserRequest } from "@/actions/types";
 import { RequestCard } from "@/components/request-card";
@@ -26,24 +16,11 @@ export default async function OthersRequest() {
   const requests = (await fetchRequests()) as IUserRequest[];
 
   return (
-    <div className="p-4">
+    <div className="p-5 mb-20 lg:mb-0">
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div className="mb-3">
-          <h1 className="text-xl font-bold">Resource Requests</h1>
+          <h1 className="text-xl font-bold text-primary">Resource Requests</h1>
         </div>
-
-        <Dialog>
-          <DialogTrigger className="flex justify-center items-center py-2 px-6 text-white rounded-md bg-primary hover:bg-accent transition-all duration-300">
-            <Plus className="mr-2" /> Create Request
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="mb-2">Request for resource</DialogTitle>
-
-              <CreateRequestForm />
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -52,7 +29,7 @@ export default async function OthersRequest() {
             <RequestCard type="home" key={request.id} request={request} />
           ))
         ) : (
-          <h1 className="mt-10 text-xl col-span-3">
+          <h1 className="text-xl col-span-3">
             No requests created by others yet
           </h1>
         )}

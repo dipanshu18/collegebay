@@ -4,8 +4,8 @@ import axios, { AxiosError } from "axios";
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
-import { CreatePostSchema, CreateRequestSchema } from "@/types/zodSchema";
+import type { z } from "zod";
+import type { CreatePostSchema, CreateRequestSchema } from "@/types/zodSchema";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 

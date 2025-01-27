@@ -1,6 +1,5 @@
 import { fetchPost } from "@/actions/user";
 import { ImageCarousel } from "@/components/image-carousel";
-import { Button } from "@/components/ui/button";
 
 import type { IPost } from "@/actions/types";
 import {
@@ -35,7 +34,7 @@ export default async function AdminPostDetails({
           <p className="font-extrabold text-2xl">Rs. {post.price}</p>
 
           <div className="flex items-center w-full gap-5">
-            <ApproveBtn type="post" />
+            <ApproveBtn type="post" id={params.id} />
             <Dialog>
               <DialogTrigger className="w-full bg-red-500 text-neutral-50 hover:bg-red-700 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/90 py-2 rounded-md">
                 Reject
@@ -45,7 +44,7 @@ export default async function AdminPostDetails({
                   <DialogTitle>Enter rejection reason</DialogTitle>
                 </DialogHeader>
                 <div>
-                  <RejectMessageForm type="post" />
+                  <RejectMessageForm type="post" id={params.id} />
                 </div>
               </DialogContent>
             </Dialog>
