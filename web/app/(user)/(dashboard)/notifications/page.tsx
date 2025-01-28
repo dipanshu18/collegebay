@@ -65,7 +65,7 @@ export default async function Notifications() {
             </div>
           ))
         ) : (
-          <h1>No notifications for you yet</h1>
+          <h1 className="text-lg font-bold">No notifications for you yet</h1>
         )}
       </div>
     </div>

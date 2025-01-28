@@ -144,6 +144,7 @@ export const UpdatePostSchema = z.object({
 
       return value.length >= 1;
     }),
+  category: z.string().optional(),
   images: z
     .array(z.string())
     .optional()

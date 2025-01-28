@@ -45,10 +45,10 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
 
     const response = await updateProfile(modifiedData);
 
-    if (response?.error) return toast(response.error);
+    if (response?.error) return toast.error(response.error);
 
     if (response?.success) {
-      toast(response.success);
+      toast.success(response.success);
       router.replace("/profile");
     }
   }
@@ -73,6 +73,8 @@ export function UpdateProfileForm({ user }: { user: UserProfile | undefined }) {
               apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
               sources: ["camera", "local"],
               maxFiles: 1,
+              maxImageFileSize: 5000000,
+              clientAllowedFormats: ["jpeg", "png"],
             }}
             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           />

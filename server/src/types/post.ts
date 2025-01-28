@@ -43,6 +43,9 @@ export const UpdatePostSchema = z.object({
 
       return value.length >= 1;
     }),
+  category: z
+    .enum(["NOTES", "BOOKS", "EQUIPMENT", "ELECTRONICS", "FURNITURE"])
+    .optional(),
   images: z
     .array(z.string())
     .optional()

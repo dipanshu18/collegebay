@@ -35,7 +35,7 @@ export async function updateProfile(
     name?: string | undefined;
     password?: string | undefined;
     phoneNo?: string | undefined;
-    image?: string | File | undefined;
+    image?: string | undefined;
   }>
 ) {
   const session = cookies().get("session")?.value;
@@ -51,7 +51,6 @@ export async function updateProfile(
       if (response.status === 200) {
         const data = await response.data.msg;
         revalidatePath("/profile");
-        revalidatePath("/home");
         return { success: data };
       }
     } else {
@@ -60,7 +59,6 @@ export async function updateProfile(
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
-
       return { error: errorData };
     }
   }

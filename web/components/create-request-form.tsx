@@ -65,6 +65,8 @@ export function CreateRequestForm() {
             apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
             sources: ["camera", "local"],
             maxFiles: 1,
+            maxImageFileSize: 5000000,
+            clientAllowedFormats: ["jpeg", "png"],
           }}
           uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
         />

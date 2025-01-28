@@ -7,6 +7,7 @@ export interface IPost {
   isAvailable: boolean;
   isApproved: boolean;
   userId: string;
+  category: string;
   createdAt: Date;
   updatedAt: Date;
 }

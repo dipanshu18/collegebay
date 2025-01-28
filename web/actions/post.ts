@@ -109,6 +109,48 @@ export async function createPost(values: z.infer<typeof CreatePostSchema>) {
   }
 }
 
+export async function updatePost(
+  postId: string,
+  modifiedData: Partial<{
+    title?: string | undefined;
+    category?: string | undefined;
+    price?: string | undefined;
+    description?: string | undefined;
+    images?: string[] | undefined;
+  }>
+) {
+  const session = cookies().get("session")?.value;
+  try {
+    if (modifiedData) {
+      const response = await axios.patch(
+        `${BASE_URL}/posts/${postId}`,
+        modifiedData,
+        {
+          withCredentials: true,
+          headers: {
+            Cookie: `session=${session}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.data.msg;
+        revalidatePath("/profile");
+        revalidatePath(`/profile/posts/${postId}`);
+        revalidatePath(`/profile/posts/${postId}/edit`);
+        return { success: data };
+      }
+    } else {
+      return { error: "Nothing to update" };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      return { error: errorData };
+    }
+  }
+}
+
 export async function postSold(postId: string) {
   const session = cookies().get("session")?.value;
   try {

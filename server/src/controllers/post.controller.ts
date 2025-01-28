@@ -3,7 +3,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import type { Request, Response } from "express";
-import { CreatePostSchema } from "../types/post";
+import { CreatePostSchema, UpdatePostSchema } from "../types/post";
+import { z } from "zod";
 
 const db = new PrismaClient();
 
@@ -173,7 +174,60 @@ export async function postSold(req: Request, res: Response) {
   }
 }
 
-export async function editPost(req: Request, res: Response) {}
+export async function editPost(req: Request, res: Response) {
+  try {
+    const { id } = req.user as { id: string };
+    const { id: postId } = req.params;
+
+    if (!id) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    const post = await db.post.findUnique({
+      where: { id: postId },
+    });
+
+    if (!post) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    const result = UpdatePostSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({ msg: "Invalid inputs" });
+    }
+
+    const dataUpdates = result.data;
+
+    if (!dataUpdates) {
+      return res.status(400).json({ msg: "Nothing to update" });
+    }
+
+    const updatedData: z.infer<typeof UpdatePostSchema> = {
+      title: dataUpdates.title ?? post.title,
+      images: dataUpdates.images ?? post.images,
+      category: dataUpdates.category ?? post.category,
+      price: dataUpdates.price ?? post.price,
+      description: dataUpdates.description ?? post.description,
+    };
+
+    const updatedPost = await db.post.update({
+      where: { id: postId },
+      data: {
+        ...updatedData,
+      },
+    });
+
+    console.log(updatedData);
+
+    if (updatedPost) {
+      return res.status(200).json({ msg: "Post updated" });
+    }
+  } catch (error) {
+    console.log("Error:", error);
+    return res.status(500).json({ msg: "Something went wrong" });
+  }
+}
 
 export async function deletePost(req: Request, res: Response) {
   try {

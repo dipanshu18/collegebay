@@ -42,7 +42,8 @@ export function CreatePostForm() {
     if (response?.success) {
       toast.success(response.success);
       form.reset();
-      form.resetField("category");
+      form.setValue("category", "");
+      form.resetField("images");
       router.refresh();
     }
   }
@@ -68,6 +69,8 @@ export function CreatePostForm() {
               apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
               sources: ["camera", "local"],
               maxFiles: 4,
+              maxImageFileSize: 5000000,
+              clientAllowedFormats: ["jpeg", "png"],
             }}
             uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME}
           />

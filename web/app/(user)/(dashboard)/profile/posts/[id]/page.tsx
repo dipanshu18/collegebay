@@ -14,6 +14,8 @@ import { EditProductListingForm } from "@/components/edit-listing-form";
 import { fetchPost } from "@/actions/post";
 import { ConfirmButton } from "@/components/confirm-button";
 import type { IPost } from "@/actions/types";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 
 export default async function UserPostDetails({
   params,
@@ -30,12 +32,20 @@ export default async function UserPostDetails({
   }
 
   return (
-    <div className="p-5">
+    <>
+      <div className="pt-5 pl-5">
+        <Link
+          href={"/profile"}
+          className="text-primary hover:bg-secondary hover:text-white transition-all duration-150 w-10 h-10 flex justify-center items-center rounded-full"
+        >
+          <ArrowLeft size={24} />
+        </Link>
+      </div>
       <div className="">
-        <div className="w-full px-10">
+        <div className="w-full max-w-lg mx-auto px-12">
           <ImageCarousel images={post?.images as string[]} />
         </div>
-        <div className="space-y-2 w-full">
+        <div className="space-y-2 w-full px-5">
           <h1 className="text-2xl font-bold">{post?.title}</h1>
           <p className="text-sm text-neutral-800 text-wrap">
             {post?.description}
@@ -43,23 +53,11 @@ export default async function UserPostDetails({
           <p className="font-extrabold text-xl">Rs. {post?.price}</p>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 my-5 px-5">
         {!post?.isApproved && (
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>Edit Post</Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] dark:bg-black">
-              <DialogHeader>
-                <DialogTitle>Edit product listing</DialogTitle>
-                <DialogDescription>
-                  Make changes to your listing here. Click save when you{`'`}
-                  re done.
-                </DialogDescription>
-              </DialogHeader>
-              <EditProductListingForm post={post as IPost} />
-            </DialogContent>
-          </Dialog>
+          <Link href={`/profile/posts/${post?.id}/edit`}>
+            <Button className="w-full">Edit Post</Button>
+          </Link>
         )}
 
         <Dialog>
@@ -75,10 +73,9 @@ export default async function UserPostDetails({
                 <span>
                   Are you sure you want to delete your product listing?
                 </span>
-
-                <ConfirmButton postId={params.id} type="delete" />
               </DialogDescription>
             </DialogHeader>
+            <ConfirmButton postId={params.id} type="delete" />
           </DialogContent>
         </Dialog>
 
@@ -103,6 +100,6 @@ export default async function UserPostDetails({
           </Dialog>
         )}
       </div>
-    </div>
+    </>
   );
 }

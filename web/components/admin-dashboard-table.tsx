@@ -27,6 +27,7 @@ export function DashboardTable({
           <TableHead className="w-[100px]">Status</TableHead>
           <TableHead>Title</TableHead>
           {posts && <TableHead>Amount</TableHead>}
+          {posts && <TableHead>Category</TableHead>}
           <TableHead> </TableHead>
         </TableRow>
       </TableHeader>
@@ -34,14 +35,13 @@ export function DashboardTable({
         {(posts &&
           posts?.length > 0 &&
           posts.map((item) => (
-            <TableRow key={item.id}>
+            <TableRow key={item.id} className="">
               <TableCell className="font-medium">
                 {item.isApproved ? "Approved" : "Pending"}
               </TableCell>
               <TableCell>{item.title}</TableCell>
-              <TableCell className="flex items-center">
-                <IndianRupee size={14} /> {item.price}
-              </TableCell>
+              <TableCell className="">{item.price}</TableCell>
+              <TableCell className="">{item.category}</TableCell>
               <TableCell className="text-right">
                 <Link href={`/admin/dashboard/posts/${item.id}`}>
                   <Button className="bg-primary hover:bg-accent text-white">
