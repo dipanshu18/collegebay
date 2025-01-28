@@ -1,60 +1,95 @@
 import type { Metadata } from "next";
 
 import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+	Pagination,
+	PaginationContent,
+	PaginationEllipsis,
+	PaginationItem,
+	PaginationLink,
+	PaginationNext,
+	PaginationPrevious,
 } from "@/components/ui/pagination";
 
 import { Filters } from "@/components/filters";
-import { fetchPosts } from "@/actions/post";
+import { fetchFilteredPosts, fetchPosts } from "@/actions/post";
 import type { IPost } from "@/actions/types";
 import { PostCard } from "@/components/post-card";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Home",
+	title: "Home",
 };
 
-export default async function Home() {
-  const posts = (await fetchPosts()) as IPost[];
+export default async function Home({
+	searchParams,
+}: {
+	searchParams?: { [key: string]: string | undefined };
+}) {
+	let query: string | undefined = undefined;
+	let category: string | undefined = undefined;
 
-  return (
-    <div className="p-5 space-y-3 mb-20 lg:mb-0 max-w-5xl mx-auto">
-      <h1 className="text-xl font-bold text-primary">Browse Resources</h1>
-      <Filters />
+	if (searchParams) {
+		query = searchParams?.q;
+		category = searchParams.category;
+	}
 
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5">
-        {posts && posts.length > 0 ? (
-          posts.map((post) => (
-            <>
-              <PostCard type="home" key={post.id} post={post} />
-            </>
-          ))
-        ) : (
-          <h1 className="col-span-3 text-xl">No resource listed yet</h1>
-        )}
-      </div>
+	const response =
+		query || category
+			? await fetchFilteredPosts(category as string, query)
+			: await fetchPosts();
 
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious href="#" />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink href="#">1</PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext href="#" />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-    </div>
-  );
+	let posts: IPost[] | [] = [];
+	if (response?.error)
+		return (
+			<div className="p-5">
+				<Link href={"/home"}>
+					<div className="text-primary flex items-center justify-center  w-10 h-10 rounded-full hover:bg-primary hover:text-white transition duration-150">
+						<ArrowLeft size={24} />
+					</div>
+				</Link>
+				<h1 className="text-xl font-bold">Search Results: </h1>
+				<h1>{response.error}</h1>
+			</div>
+		);
+
+	if (response?.success) {
+		posts = response.success;
+	}
+
+	return (
+		<div className="p-5 mb-20 lg:mb-0">
+			<h1 className="text-xl font-bold text-primary mb-5">Browse Resources</h1>
+			<Filters />
+
+			<div className="w-full grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+				{posts && posts.length > 0 ? (
+					posts.map((post) => (
+						<>
+							<PostCard type="home" key={post.id} post={post} />
+						</>
+					))
+				) : (
+					<h1 className="col-span-3 text-xl">No resource listed yet</h1>
+				)}
+			</div>
+
+			<Pagination>
+				<PaginationContent>
+					<PaginationItem>
+						<PaginationPrevious href="#" />
+					</PaginationItem>
+					<PaginationItem>
+						<PaginationLink href="#">1</PaginationLink>
+					</PaginationItem>
+					<PaginationItem>
+						<PaginationEllipsis />
+					</PaginationItem>
+					<PaginationItem>
+						<PaginationNext href="#" />
+					</PaginationItem>
+				</PaginationContent>
+			</Pagination>
+		</div>
+	);
 }

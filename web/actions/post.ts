@@ -5,6 +5,7 @@ import axios, { AxiosError } from "axios";
 import { cookies } from "next/headers";
 import type { z } from "zod";
 import type { CreatePostSchema } from "@/types/zodSchema";
+import { revalidatePath } from "next/cache";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 
@@ -20,7 +21,7 @@ export async function fetchPosts() {
 
     if (response.status === 200) {
       const data = await response.data.posts;
-      return data;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -42,7 +43,32 @@ export async function fetchPost(postId: string) {
 
     if (response.status === 200) {
       const data = await response.data.post;
-      return data;
+      return { success: data };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      return { error: errorData };
+    }
+  }
+}
+
+export async function fetchFilteredPosts(category: string, query?: string) {
+  const session = cookies().get("session")?.value;
+  try {
+    const response = await axios.get(
+      `${BASE_URL}/posts/filters?q=${query}&category=${category}`,
+      {
+        withCredentials: true,
+        headers: {
+          Cookie: `session=${session}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.data.posts;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -64,8 +90,8 @@ export async function createPost(values: z.infer<typeof CreatePostSchema>) {
     });
 
     if (response.status === 201) {
-      const data = await response.data;
-      return { success: data.msg };
+      const data = await response.data.msg;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -86,7 +112,7 @@ export async function createPost(values: z.infer<typeof CreatePostSchema>) {
 export async function postSold(postId: string) {
   const session = cookies().get("session")?.value;
   try {
-    const response = await axios.put(
+    const response = await axios.patch(
       `${BASE_URL}/posts/${postId}/sold`,
       {},
       {
@@ -98,8 +124,9 @@ export async function postSold(postId: string) {
     );
 
     if (response.status === 200) {
-      const data = await response.data;
-      return { success: data.msg };
+      const data = await response.data.msg;
+      console.log(data);
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -120,8 +147,9 @@ export async function deletePost(postId: string) {
     });
 
     if (response.status === 200) {
-      const data = await response.data;
-      return { success: data.msg };
+      const data = await response.data.msg;
+      revalidatePath("/profile");
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {

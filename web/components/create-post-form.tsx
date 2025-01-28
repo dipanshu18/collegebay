@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { useRef } from "react";
+import { toast } from "sonner";
 
 export function CreatePostForm() {
   const router = useRouter();
@@ -36,11 +37,12 @@ export function CreatePostForm() {
   });
 
   async function handleCreatePost(values: z.infer<typeof CreatePostSchema>) {
-    console.log(values);
     const response = await createPost(values);
 
     if (response?.success) {
+      toast.success(response.success);
       form.reset();
+      form.resetField("category");
       router.refresh();
     }
   }

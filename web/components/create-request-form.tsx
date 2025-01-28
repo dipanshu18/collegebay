@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/components/lib/utils";
 import { createRequest } from "@/actions/request";
 import { CreateRequestSchema } from "@/types/zodSchema";
+import { toast } from "sonner";
 
 export function CreateRequestForm() {
   const router = useRouter();
@@ -32,8 +33,8 @@ export function CreateRequestForm() {
     const response = await createRequest(values);
 
     if (response?.success) {
+      toast.success(response.success);
       form.reset();
-
       router.refresh();
     }
   }

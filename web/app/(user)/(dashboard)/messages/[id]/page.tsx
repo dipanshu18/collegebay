@@ -10,7 +10,7 @@ export default function MessageBox() {
   return (
     <div className="flex flex-1 flex-col h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 border-y border-gray-100 p-3">
+      <div className="flex items-center gap-2 bg-gray-100 border-y border-gray-100 p-3">
         <div>
           <Link href={"/messages"}>
             <ArrowLeft className="text-primary" />

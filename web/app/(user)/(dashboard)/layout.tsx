@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { Logout } from "@/components/logout-btn";
 import { Logo, Navbar } from "@/components/navbar";
-import { Button } from "@/components/ui/button";
 import {
   ArchiveRestore,
   Bell,
@@ -10,7 +11,8 @@ import {
   Upload,
   User,
 } from "lucide-react";
-import Link from "next/link";
+import { fetchUserNotifications } from "@/actions/user";
+import { toast } from "sonner";
 
 const homeLinks: { icon: React.ReactNode; title: string; link: string }[] = [
   {
@@ -50,11 +52,20 @@ const homeLinks: { icon: React.ReactNode; title: string; link: string }[] = [
   },
 ];
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const response = await fetchUserNotifications();
+
+  if (response?.error) return toast.error(response.error);
+
+  const notifications = response?.success?.filter(
+    (item) => item.read === false
+  );
+  const count = notifications?.length as number;
+
   return (
     <div className="flex flex-col min-h-dvh lg:flex-row max-w-5xl mx-auto">
       <div className="sticky top-0 lg:hidden z-40">
@@ -70,8 +81,13 @@ export default function DashboardLayout({
             {homeLinks.map((item, idx) => (
               // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <Link key={idx} href={item.link}>
-                <li className="flex gap-2 text-secondary hover:bg-primary hover:text-white transition-all duration-100 p-2 rounded">
-                  {item.icon} {item.title}
+                <li className="flex items-center gap-2 text-secondary hover:bg-primary hover:text-white transition-all duration-100 p-2 rounded">
+                  {item.icon} {item.title}{" "}
+                  {item.title === "Notifications" && count > 0 && (
+                    <span className="bg-accent text-white rounded-full w-8 h-8 flex items-center justify-center">
+                      {count}
+                    </span>
+                  )}
                 </li>
               </Link>
             ))}
@@ -90,8 +106,13 @@ export default function DashboardLayout({
           {homeLinks.map((item, idx) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <Link key={idx} href={item.link}>
-              <li className="text-primary hover:bg-primary p-2 hover:text-white transition-all duration-300 rounded-full">
+              <li className="text-primary hover:bg-primary p-2 hover:text-white transition-all duration-300 rounded-full relative">
                 {item.icon}
+                {item.title === "Notifications" && count > 0 && (
+                  <span className="absolute top-0 left-5 z-40 bg-accent text-white rounded-full w-5 h-5 flex items-center justify-center">
+                    {count}
+                  </span>
+                )}
               </li>
             </Link>
           ))}

@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
 import { formatDistanceToNow } from "date-fns";
 
-import { ChevronUp, Contact, Trash2 } from "lucide-react";
+import { ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
 import type { IUserRequest } from "@/actions/types";
 import { upVoteRequest } from "@/actions/request";
 import { toast } from "sonner";
-import { cn } from "./lib/utils";
+import { UserRequestActionsBtn } from "./user-request-actions-btn";
 
 export function RequestCard({
   type,
@@ -34,7 +34,7 @@ export function RequestCard({
   }
 
   return (
-    <Card className="space-y-2 flex flex-col w-full border-0 hover:shadow-md transition-all duration-300">
+    <Card className="space-y-2 flex flex-col w-full border-0 bg-gray-50 hover:shadow-md transition-all duration-300">
       <Image
         src={request.image}
         width={1080}
@@ -83,23 +83,7 @@ export function RequestCard({
           </div>
         </div>
         <div className="w-full">
-          <Button
-            className={cn(
-              "w-full",
-              type !== "profile" && "bg-primary text-white hover:bg-accent"
-            )}
-            variant={type === "profile" ? "destructive" : "default"}
-          >
-            {type === "profile" ? (
-              <div className="flex items-center gap-2">
-                <Trash2 /> Delete
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Contact /> Contact
-              </div>
-            )}
-          </Button>
+          <UserRequestActionsBtn type={type} id={request.id} />
         </div>
       </div>
     </Card>

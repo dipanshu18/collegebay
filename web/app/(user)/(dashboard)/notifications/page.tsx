@@ -6,9 +6,17 @@ import { cn } from "@/components/lib/utils";
 import { fetchUserNotifications } from "@/actions/user";
 import type { IUserNotification } from "@/actions/types";
 import { MarkAsReadBtn } from "@/components/mark-as-read-btn";
+import { toast } from "sonner";
 
 export default async function Notifications() {
-  const notifications = (await fetchUserNotifications()) as IUserNotification[];
+  const response = await fetchUserNotifications();
+  let notifications: IUserNotification[] | [] = [];
+
+  if (response?.error) return toast.error(response.error);
+
+  if (response?.success) {
+    notifications = response.success as IUserNotification[];
+  }
 
   return (
     <div className="p-5">
@@ -22,7 +30,7 @@ export default async function Notifications() {
             <div
               key={item.id}
               className={cn(
-                "flex flex-col md:flex-row md:items-center gap-2 justify-between shadow p-5 rounded-md",
+                "flex flex-col md:flex-row md:items-center gap-2 justify-between shadow bg-gray-50 p-5 rounded-md",
                 idx + 1 === notifications.length && "mb-20 lg:mb-0"
               )}
             >

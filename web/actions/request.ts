@@ -94,8 +94,8 @@ export async function deleteRequest(requestId: string) {
     });
 
     if (response.status === 200) {
-      const data = await response.data;
-      return { success: data.msg };
+      const data = await response.data.msg;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {

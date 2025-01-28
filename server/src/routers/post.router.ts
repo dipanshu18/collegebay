@@ -5,8 +5,8 @@ import {
   deletePost,
   editPost,
   getAllPosts,
+  getFilteredPosts,
   getPost,
-  getUserPosts,
   postSold,
 } from "../controllers/post.controller";
 
@@ -14,9 +14,9 @@ const postRouter = express.Router();
 
 postRouter.get("/", getAllPosts);
 
-postRouter.get("/:id", getPost);
+postRouter.get("/filters", getFilteredPosts);
 
-postRouter.get("/user", getUserPosts);
+postRouter.get("/:id", getPost);
 
 postRouter.post("/", createPost);
 

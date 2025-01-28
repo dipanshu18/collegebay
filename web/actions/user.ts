@@ -4,6 +4,7 @@ import axios, { AxiosError } from "axios";
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
+import type { IUserNotification } from "./types";
 
 const BASE_URL = "http://localhost:5000/api/v1";
 
@@ -48,10 +49,10 @@ export async function updateProfile(
       });
 
       if (response.status === 200) {
-        const data = await response.data;
+        const data = await response.data.msg;
         revalidatePath("/profile");
         revalidatePath("/home");
-        return { success: data.msg };
+        return { success: data };
       }
     } else {
       return { error: "Nothing to update" };
@@ -76,8 +77,8 @@ export async function deleteUser() {
     });
 
     if (response.status === 200) {
-      const data = await response.data;
-      return { success: data.msg };
+      const data = await response.data.msg;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -98,8 +99,8 @@ export async function fetchUserNotifications() {
     });
 
     if (response.status === 200) {
-      const data = await response.data.notifications;
-      return data;
+      const data = (await response.data.notifications) as IUserNotification[];
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -125,8 +126,9 @@ export async function markAsRead(id: string) {
 
     if (response.status === 200) {
       revalidatePath("/notifications");
+      revalidatePath("/home");
       const data = await response.data.msg;
-      return data;
+      return { success: data };
     }
   } catch (error) {
     if (error instanceof AxiosError) {

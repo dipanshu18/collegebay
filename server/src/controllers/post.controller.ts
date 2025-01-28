@@ -1,18 +1,15 @@
-import { PrismaClient } from "@prisma/client";
+import { type Prisma, PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { type Request, Response } from "express";
+import type { Request, Response } from "express";
 import { CreatePostSchema } from "../types/post";
-import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { client } from "../utils/s3";
 
-const postModel = new PrismaClient().post;
+const db = new PrismaClient();
 
 export async function getAllPosts(req: Request, res: Response) {
   try {
-    const posts = await postModel.findMany({
+    const posts = await db.post.findMany({
       where: {
         isApproved: true,
       },
@@ -36,7 +33,7 @@ export async function getPost(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const post = await postModel.findUnique({ where: { id } });
+    const post = await db.post.findUnique({ where: { id } });
 
     if (!post) {
       return res.status(404).json({ msg: "No post found" });
@@ -49,16 +46,36 @@ export async function getPost(req: Request, res: Response) {
   }
 }
 
-export async function getUserPosts(req: Request, res: Response) {
+export async function getFilteredPosts(req: Request, res: Response) {
   try {
-    const { id: userId, email } = req.body.user;
+    const q = req.query.q as string;
+    const category = req.query.category as
+      | "ALL"
+      | "EQUIPMENT"
+      | "NOTES"
+      | "ELECTRONICS"
+      | "FURNITURE"
+      | "BOOKS";
 
-    const posts = await postModel.findMany({
-      where: { userId, user: { email } },
+    const queryConditions: Prisma.PostWhereInput = {
+      isApproved: true,
+    };
+    if (q) {
+      queryConditions.title = { contains: q, mode: "insensitive" };
+    }
+
+    if (category && category !== "ALL") {
+      queryConditions.category = { equals: category };
+    }
+
+    const posts = await db.post.findMany({
+      where: queryConditions,
     });
 
-    if (posts.length < 1) {
-      return res.status(404).json({ msg: "No post found" });
+    if (posts.length === 0) {
+      return res.status(404).json({
+        msg: "No posts found with the provided filters",
+      });
     }
 
     return res.status(200).json({ posts });
@@ -70,7 +87,7 @@ export async function getUserPosts(req: Request, res: Response) {
 
 export async function createPost(req: Request, res: Response) {
   try {
-    const { id: userId } = req.user!;
+    const { id: userId } = req.user as { id: string };
 
     const result = CreatePostSchema.safeParse(req.body);
 
@@ -81,6 +98,7 @@ export async function createPost(req: Request, res: Response) {
       // Prepare a structured error message object
       const errorMessages: Record<string, string> = {};
 
+      // biome-ignore lint/complexity/noForEach: <explanation>
       Object.entries(errors).forEach(([field, error]) => {
         if (field !== "_errors") {
           // Exclude the '_errors' field
@@ -101,32 +119,7 @@ export async function createPost(req: Request, res: Response) {
 
     const { images, title, description, price, category } = result.data;
 
-    // let keys: string[] = [];
-    // const uploadPromises = images.map(async (image) => {
-    //   const key = `post/${email}/${crypto.randomUUID()}.jpg`;
-    //   keys.push(key);
-    //   const command = new PutObjectCommand({
-    //     Bucket: process.env.AWS_BUCKET!,
-    //     Key: key,
-    //     ContentType: "image/jpeg",
-    //   });
-
-    //   const url = await getSignedUrl(client, command);
-
-    //   // Upload image to the signed URL
-    //   await fetch(url, {
-    //     method: "PUT",
-    //     body: image.buffer,
-    //     headers: {
-    //       "Content-Type": "image/jpeg",
-    //     },
-    //   });
-    // });
-
-    // Wait for all image uploads to complete
-    // await Promise.all(uploadPromises);
-
-    const newPost = await postModel.create({
+    const newPost = await db.post.create({
       data: {
         title,
         description,
@@ -148,25 +141,23 @@ export async function createPost(req: Request, res: Response) {
 
 export async function postSold(req: Request, res: Response) {
   try {
-    const { id: userId, email } = req.body.user;
+    const { id: userId } = req.user as { id: string };
     const { id: postId } = req.params;
 
-    const postExists = await postModel.findUnique({
+    const postExists = await db.post.findUnique({
       where: {
         id: postId,
         userId,
-        user: { email },
       },
     });
 
     if (!postExists)
       return res.status(404).json({ msg: "Post does not exists" });
 
-    const postSold = await postModel.update({
+    const postSold = await db.post.update({
       where: {
         id: postId,
         userId,
-        user: { email },
       },
       data: {
         isAvailable: false,
@@ -186,10 +177,10 @@ export async function editPost(req: Request, res: Response) {}
 
 export async function deletePost(req: Request, res: Response) {
   try {
-    const { id: userId } = req.body.user;
+    const { id: userId } = req.user as { id: string };
     const { id: postId } = req.params;
 
-    const postExists = await postModel.findUnique({
+    const postExists = await db.post.findUnique({
       where: {
         id: postId,
         userId,
@@ -200,25 +191,9 @@ export async function deletePost(req: Request, res: Response) {
       return res.status(404).json({ msg: "Post not found" });
     }
 
-    const deletePromises = postExists.images.map(async (image) => {
-      const key = image;
-      const command = new DeleteObjectCommand({
-        Bucket: process.env.AWS_BUCKET!,
-        Key: key,
-      });
+    // TODO: delete from cloudinary
 
-      const url = await getSignedUrl(client, command);
-
-      // Upload image to the signed URL
-      await fetch(url, {
-        method: "DELETE",
-      });
-    });
-
-    // Wait for all image uploads to complete
-    await Promise.all(deletePromises);
-
-    await postModel.delete({ where: { id: postId, userId } });
+    await db.post.delete({ where: { id: postId, userId } });
 
     return res.status(200).json({ msg: "Post deleted" });
   } catch (error) {

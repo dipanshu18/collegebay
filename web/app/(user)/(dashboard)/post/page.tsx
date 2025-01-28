@@ -5,7 +5,7 @@ export default function PostResource() {
     <div className="p-5 mb-10 lg:mb-0">
       <h1 className="text-xl font-bold text-primary">Post a resource</h1>
 
-      <div className="my-5 p-10 shadow rounded-md">
+      <div className="my-5 p-10 bg-gray-50 shadow rounded-md">
         <CreatePostForm />
       </div>
     </div>

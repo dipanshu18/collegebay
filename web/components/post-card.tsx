@@ -26,7 +26,7 @@ export function PostCard({
     >
       <Card
         className={cn(
-          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-md transition-all duration-300",
+          "space-y-2 w-full h-full flex flex-col sm:mx-0 border-0 hover:shadow-md bg-gray-50 transition-all duration-300",
           !post.isAvailable && "bg-top"
         )}
       >
@@ -40,7 +40,7 @@ export function PostCard({
         />
         <div className="absolute">
           {!post.isAvailable && (
-            <div className="bg-light relative -top-5 right-0 text-white px-4 py-2 rounded-md">
+            <div className="bg-primary relative -top-5 right-0 text-white px-4 py-2 rounded-md">
               Sold
             </div>
           )}
