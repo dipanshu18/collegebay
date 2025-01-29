@@ -3,15 +3,12 @@ import express from "express";
 import {
   createMessage,
   deleteMessage,
-  getAllChatMessages,
 } from "../controllers/message.controller";
 
 const messageRouter = express.Router();
 
-messageRouter.get("/:id", getAllChatMessages);
+messageRouter.post("/:chatId", createMessage);
 
-messageRouter.post("/", createMessage);
-
-messageRouter.delete("/:id", deleteMessage);
+messageRouter.delete("/:chatId/:id", deleteMessage);
 
 export { messageRouter };

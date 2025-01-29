@@ -6,7 +6,14 @@ export interface IPost {
   images: string[];
   isAvailable: boolean;
   isApproved: boolean;
-  userId: string;
+  user: {
+    id: string;
+    image: string;
+    name: string;
+    email: string;
+    college: string;
+    phoneNo: string;
+  };
   category: string;
   createdAt: Date;
   updatedAt: Date;
@@ -61,7 +68,34 @@ export interface IUserNotification {
   actionId: string;
   message: string;
   read: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
+export interface IChat {
+  id: string;
+  participants: {
+    id: string;
+    name: string;
+    college: string;
+    image: string;
+  }[];
+  messages: {
+    id: string;
+    type: "TEXT" | "IMAGE" | "VIDEO";
+    mediaUrl: string | null;
+    text: string | null;
+    chatId: string;
+    senderId: string;
+    sender: {
+      id: string;
+      name: string;
+      college: string;
+      image: string;
+    };
+    createdAt: Date;
+    updatedAt: Date;
+  }[];
   createdAt: Date;
   updatedAt: Date;
 }

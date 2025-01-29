@@ -15,7 +15,7 @@ export function ImageCarousel({ images }: { images: string[] }) {
       }}
       className="w-full"
     >
-      <CarouselContent className="-mt-1 object-cover h-[300px] lg:h-[500px]">
+      <CarouselContent className="-mt-1 object-cover h-[300px] lg:h-[350px]">
         {images?.map((image, index) => (
           <CarouselItem
             // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>

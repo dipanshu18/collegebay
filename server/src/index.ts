@@ -14,8 +14,8 @@ import { authRouter } from "./routers/auth.router";
 import { userRouter } from "./routers/user.router";
 import { postRouter } from "./routers/post.router";
 import { requestRouter } from "./routers/request.router";
-import { chatRouter } from "./routers/chat.router";
 import { messageRouter } from "./routers/message.router";
+import { chatRouter } from "./routers/chat.router";
 
 export const app = express();
 

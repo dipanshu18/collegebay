@@ -4,7 +4,7 @@ dotenv.config();
 
 import type { Request, Response } from "express";
 import { CreatePostSchema, UpdatePostSchema } from "../types/post";
-import { z } from "zod";
+import type { z } from "zod";
 
 const db = new PrismaClient();
 
@@ -34,7 +34,21 @@ export async function getPost(req: Request, res: Response) {
   try {
     const { id } = req.params;
 
-    const post = await db.post.findUnique({ where: { id } });
+    const post = await db.post.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            college: true,
+            email: true,
+            image: true,
+            name: true,
+            phoneNo: true,
+          },
+        },
+      },
+    });
 
     if (!post) {
       return res.status(404).json({ msg: "No post found" });
