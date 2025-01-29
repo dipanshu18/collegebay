@@ -1,10 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
+import { unsealCookie } from "@/utils/unseal";
 import { getAllChats } from "@/actions/chat";
 import type { IChat } from "@/actions/types";
 
 export default async function MessagesPage() {
+  const sealed_uid = cookies().get("uid")?.value;
+  const userId = (await unsealCookie(sealed_uid as string)) as string;
+
   const response = await getAllChats();
   let chats: IChat[] | [] = [];
 
@@ -52,7 +57,10 @@ export default async function MessagesPage() {
               >
                 <div className="flex items-center gap-3 border-b p-5 hover:bg-gray-100">
                   <Image
-                    src={item.participants[1].image}
+                    src={
+                      item.participants.filter((user) => user.id !== userId)[0]
+                        .image
+                    }
                     alt="user profile pic"
                     width={100}
                     height={100}
@@ -60,12 +68,26 @@ export default async function MessagesPage() {
                     className="w-10 h-10 object-cover rounded-full"
                   />
                   <div>
-                    <h1 className="text-secondary">
-                      {item.participants[1].name}
+                    <h1 className="text-secondary font-bold">
+                      {
+                        item.participants.filter(
+                          (user) => user.id !== userId
+                        )[0].name
+                      }
                     </h1>
                     <p className="text-sm text-primary">
                       {item.messages && item.messages.length > 0 ? (
-                        item.messages[item.messages.length - 1].text
+                        <>
+                          {item.messages[item.messages.length - 1].senderId !==
+                          userId
+                            ? `${
+                                item.participants.filter(
+                                  (user) => user.id !== userId
+                                )[0].name
+                              }: `
+                            : "You: "}
+                          {item.messages[item.messages.length - 1].text}
+                        </>
                       ) : (
                         <p>Start conversation by sending the first message</p>
                       )}

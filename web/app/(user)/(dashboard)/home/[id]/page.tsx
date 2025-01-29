@@ -1,8 +1,7 @@
 import Link from "next/link";
 
 import { ImageCarousel } from "@/components/image-carousel";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, IndianRupee, Send } from "lucide-react";
+import { ArrowLeft, IndianRupee } from "lucide-react";
 
 import { fetchPost } from "@/actions/post";
 import type { IPost } from "@/actions/types";
@@ -10,6 +9,7 @@ import { toast } from "sonner";
 import Image from "next/image";
 import { unsealCookie } from "@/utils/unseal";
 import { cookies } from "next/headers";
+import { MessageSellerBtn } from "@/components/message-seller-btn";
 
 export default async function PostDetails({
   params,
@@ -72,10 +72,8 @@ export default async function PostDetails({
             </div>
           </div>
 
-          {post?.user.id !== userId && (
-            <Button className="w-full bg-primary text-white hover:bg-accent">
-              <Send className="mr-2" /> Message seller
-            </Button>
+          {post?.user.id !== userId && post?.isAvailable && (
+            <MessageSellerBtn sellerId={post?.user.id as string} />
           )}
         </div>
       </div>

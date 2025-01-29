@@ -30,32 +30,42 @@ export default async function MessageBox({
   }
 
   return (
-    <div className="flex flex-1 flex-col h-full">
+    <div className="flex flex-1 flex-col min-h-[91dvh] lg:h-full">
       {/* Header */}
-      <div className="flex items-center gap-2 bg-gray-100 border-y border-gray-100 p-3">
-        <div>
-          <Link href={"/messages"}>
-            <ArrowLeft className="text-primary" />
+      <div className="flex items-center gap-2 border-y border-r border-gray-100 p-3">
+        <div className="">
+          <Link
+            href={"/home"}
+            className="text-primary hover:bg-secondary hover:text-white transition-all duration-150 w-10 h-10 flex justify-center items-center rounded-full"
+          >
+            <ArrowLeft size={24} />
           </Link>
         </div>
         <div className="flex items-center gap-2">
           <Image
-            src={"/logo.svg"}
+            src={
+              chat?.participants.filter((user) => user.id !== userId)[0]
+                .image as string
+            }
             alt="user profile pic"
             width={100}
             height={100}
             quality={100}
             className="w-10 h-10 rounded-full"
           />
-          <h1 className="text-primary font-bold">Seller Full Name</h1>
+          <h1 className="text-primary font-bold">
+            {chat?.participants.filter((user) => user.id !== userId)[0].name}
+          </h1>
         </div>
       </div>
 
       {/* Chat Messages */}
-      <ChatMessages messages={chat?.messages as IMessage[]} userId={userId} />
+      <div className="flex-1 max-h-full overflow-y-auto p-2 border-r border-gray-100 scrollbar-thin">
+        <ChatMessages messages={chat?.messages as IMessage[]} userId={userId} />
+      </div>
 
       {/* Input Bar */}
-      <MessageInput />
+      <MessageInput chatId={params.id} />
     </div>
   );
 }

@@ -111,7 +111,7 @@ export async function startChat(req: Request, res: Response) {
     const { id } = req.user as { id: string };
     const { withUserId } = req.body as { withUserId: string };
 
-    if (id !== withUserId) {
+    if (id === withUserId) {
       return res.status(400).json({ msg: "You cannot chat with yourself" });
     }
 
@@ -161,7 +161,9 @@ export async function startChat(req: Request, res: Response) {
         .json({ msg: "Initiated chat", chatId: startChat.id });
     }
 
-    return res.status(400).json({ msg: "Chat already exists" });
+    return res
+      .status(200)
+      .json({ msg: "Chat already exists", chatId: chatExists.id });
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong" });

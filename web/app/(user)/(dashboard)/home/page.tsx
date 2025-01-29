@@ -34,8 +34,6 @@ export default async function Home({
     category = searchParams.category;
   }
 
-  console.log(query, category);
-
   const response =
     query !== undefined || category !== undefined
       ? await fetchFilteredPosts(category as string, query)
