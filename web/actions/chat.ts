@@ -18,9 +18,7 @@ export async function getAllChats() {
     });
 
     if (response.status === 200) {
-      const data = (await response.data) as {
-        chats: IChat[];
-      };
+      const data = await response.data.chats;
       return { success: data };
     }
   } catch (error) {
@@ -42,9 +40,7 @@ export async function getChat(id: string) {
     });
 
     if (response.status === 200) {
-      const data = (await response.data) as {
-        chats: IChat;
-      };
+      const data = await response.data.chat;
       return { success: data };
     }
   } catch (error) {

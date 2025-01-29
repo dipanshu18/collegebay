@@ -99,3 +99,20 @@ export interface IChat {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface IMessage {
+  id: string;
+  type: "TEXT" | "IMAGE" | "VIDEO";
+  mediaUrl: string | null;
+  text: string | null;
+  chatId: string;
+  senderId: string;
+  sender: {
+    id: string;
+    name: string;
+    college: string;
+    image: string;
+  };
+  createdAt: Date;
+  updatedAt: Date;
+}

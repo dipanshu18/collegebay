@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 const SECRET = process.env.SECRET as string;
+const SEAL_PASSWORD = process.env.SEAL_PASSWORD as string;
 
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sealData } from "iron-session";
 
 import { Login, Signup } from "../types/auth";
 import { PrismaClient } from "@prisma/client";
@@ -55,21 +57,6 @@ export async function signup(req: Request, res: Response) {
         .json({ msg: "Account already exists. Please login!" });
     }
 
-    // const key = `profile/${email}/${crypto.randomUUID()}.jpg`;
-    // const command = new PutObjectCommand({
-    //   Bucket: process.env.AWS_BUCKET!,
-    //   Key: key,
-    //   ContentType: "image/jpeg",
-    // });
-
-    // const url = await getSignedUrl(client, command);
-
-    // await fetch(url, {
-    //   method: "PUT",
-    //   body: image,
-    //   headers: { "Content-Type": "image/jpeg" },
-    // });
-
     const hashPass = await bcrypt.hash(password, 10);
 
     const newUser = await userModel.create({
@@ -89,7 +76,11 @@ export async function signup(req: Request, res: Response) {
         SECRET
       );
       res.cookie("session", token);
-      return res.status(201).json({ msg: "Account created!" });
+      const result = await sealData(newUser.id, { password: SEAL_PASSWORD });
+      res.cookie("uid", result);
+      return res
+        .status(201)
+        .json({ msg: "Account created!", userId: newUser.id });
     }
   } catch (error) {
     console.log("Error:", error);
@@ -146,10 +137,13 @@ export async function login(req: Request, res: Response) {
     }
 
     const token = jwt.sign(
-      { id: userExists.id, email: userExists.email, role: userExists.role },
+      { id: userExists.id, role: userExists.role },
       SECRET
     );
+
+    const result = await sealData(userExists.id, { password: SEAL_PASSWORD });
     res.cookie("session", token);
+    res.cookie("uid", result);
     return res.status(200).json({ msg: "Credentials verified!" });
   } catch (error) {
     console.log("Error:", error);

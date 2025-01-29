@@ -8,6 +8,8 @@ import { fetchPost } from "@/actions/post";
 import type { IPost } from "@/actions/types";
 import { toast } from "sonner";
 import Image from "next/image";
+import { unsealCookie } from "@/utils/unseal";
+import { cookies } from "next/headers";
 
 export default async function PostDetails({
   params,
@@ -23,7 +25,8 @@ export default async function PostDetails({
     post = response.success;
   }
 
-  console.log(post);
+  const sealed_uid = cookies().get("uid")?.value;
+  const userId = (await unsealCookie(sealed_uid as string)) as string;
 
   return (
     <div className="h-full mb-20 lg:mb-0">
@@ -69,9 +72,11 @@ export default async function PostDetails({
             </div>
           </div>
 
-          <Button className="w-full bg-primary text-white hover:bg-accent">
-            <Send className="mr-2" /> Message seller
-          </Button>
+          {post?.user.id !== userId && (
+            <Button className="w-full bg-primary text-white hover:bg-accent">
+              <Send className="mr-2" /> Message seller
+            </Button>
+          )}
         </div>
       </div>
 

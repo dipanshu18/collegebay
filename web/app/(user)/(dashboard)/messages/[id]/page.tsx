@@ -1,12 +1,34 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Send } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import { MessageInput } from "@/components/message-input";
+import { ChatMessages } from "@/components/chat-messages";
+import { getChat } from "@/actions/chat";
+import type { IChat, IMessage } from "@/actions/types";
+import { cookies } from "next/headers";
+import { unsealCookie } from "@/utils/unseal";
 
-export default function MessageBox() {
+export default async function MessageBox({
+  params,
+}: {
+  params: {
+    id: string;
+  };
+}) {
+  const response = await getChat(params.id);
+  let chat: IChat | undefined = undefined;
+
+  const sealed_uid = cookies().get("uid")?.value;
+  const userId = (await unsealCookie(sealed_uid as string)) as string;
+
+  if (response?.error) {
+    return console.log(response.error);
+  }
+
+  if (response?.success) {
+    chat = response.success;
+  }
+
   return (
     <div className="flex flex-1 flex-col h-full">
       {/* Header */}
@@ -30,61 +52,10 @@ export default function MessageBox() {
       </div>
 
       {/* Chat Messages */}
-      <div className="flex-1 max-h-[62dvh] lg:max-h-full overflow-y-auto p-2 scrollbar-thin">
-        <div className="grid grid-cols-1 gap-3">
-          {Array(20)
-            .fill("")
-            .map((_, idx) => (
-              <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                key={idx}
-                className={`flex ${
-                  idx % 2 === 0 ? "justify-start" : "justify-end"
-                }`}
-              >
-                <div
-                  className={`${
-                    idx % 2 === 0
-                      ? "bg-gray-100 text-secondary"
-                      : "bg-primary text-white"
-                  } max-w-sm p-3 rounded-lg shadow-md`}
-                >
-                  <p>
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Laboriosam, harum.
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Image
-                      src={"/logo.svg"}
-                      alt="user profile pic"
-                      width={100}
-                      height={100}
-                      quality={100}
-                      className="w-6 h-6 rounded-full"
-                    />
-                    <h1
-                      className={`font-bold ${
-                        idx % 2 === 0 ? "text-primary" : "text-white"
-                      }`}
-                    >
-                      {idx % 2 === 0 ? "Other User" : "You"}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
+      <ChatMessages messages={chat?.messages as IMessage[]} userId={userId} />
 
       {/* Input Bar */}
-      <div className="w-full mb-20 lg:mb-0 border-t bg-gray-100 border-gray-100 sticky bottom-0 flex gap-2 items-center p-2">
-        <div className="relative w-full">
-          <Textarea rows={5} placeholder="your message" className="flex-1" />
-          <Button className="absolute bottom-0 right-0 m-2 bg-primary hover:bg-accent text-white">
-            <Send />
-          </Button>
-        </div>
-      </div>
+      <MessageInput />
     </div>
   );
 }
