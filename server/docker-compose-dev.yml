@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  api:
+    restart: always
+    build:
+      target: "dev"
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      PORT: 5000
+      DATABASE_URL: "postgresql://postgres:supersecret@db:5432/collegebaydb?schema=public"
+      SECRET: "supersecret123@#"
+      SEAL_PASSWORD: "cyz7:~WY^p?8kXDgQ9r,yPTt94~tt0*Pk^]Ne2"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    restart: always
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: "supersecret"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+volumes:
+  pgdata:

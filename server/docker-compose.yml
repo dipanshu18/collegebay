@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  api:
+    restart: unless-stopped
+    build:
+      target: "prod"
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - "5000:5000"
+    env_file: ./.env

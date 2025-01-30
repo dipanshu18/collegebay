@@ -6,6 +6,6 @@ import colors from "colors";
 
 import { app } from ".";
 
-app.listen(PORT, () => {
+app.listen({ port: PORT, hostname: "0.0.0.0" }, () => {
   console.log(colors.cyan(`Server started on port: ${PORT}`));
 });
