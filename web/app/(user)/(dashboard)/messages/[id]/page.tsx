@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { MessageInput } from "@/components/message-input";
-import { ChatMessages } from "@/components/chat-messages";
 import { getChat } from "@/actions/chat";
-import type { IChat, IMessage } from "@/actions/types";
+import type { IChat } from "@/actions/types";
 import { cookies } from "next/headers";
 import { unsealCookie } from "@/utils/unseal";
+import { MessageBox } from "@/components/message-box";
 
-export default async function MessageBox({
+export default async function Chat({
   params,
 }: {
   params: {
@@ -35,7 +34,7 @@ export default async function MessageBox({
       <div className="flex items-center gap-2 border-y border-r border-gray-100 p-3">
         <div className="">
           <Link
-            href={"/home"}
+            href={"/messages"}
             className="text-primary hover:bg-secondary hover:text-white transition-all duration-150 w-10 h-10 flex justify-center items-center rounded-full"
           >
             <ArrowLeft size={24} />
@@ -59,13 +58,7 @@ export default async function MessageBox({
         </div>
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 max-h-full overflow-y-auto p-2 border-r border-gray-100 scrollbar-thin">
-        <ChatMessages messages={chat?.messages as IMessage[]} userId={userId} />
-      </div>
-
-      {/* Input Bar */}
-      <MessageInput chatId={params.id} />
+      <MessageBox chat={chat as IChat} userId={userId} />
     </div>
   );
 }

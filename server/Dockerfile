@@ -11,5 +11,4 @@ FROM base AS dev
 CMD [ "pnpm", "dev" ]
 
 FROM base AS prod
-RUN pnpm build
-CMD [ "node", "dist/bin.js" ]
+CMD [ "pnpm", "start" ]

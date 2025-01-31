@@ -3,6 +3,7 @@
 import Image from "next/image";
 
 import type { IMessage } from "@/actions/types";
+import { useEffect, useRef } from "react";
 
 export function ChatMessages({
   messages,
@@ -11,6 +12,12 @@ export function ChatMessages({
   messages: IMessage[];
   userId: string;
 }) {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="grid grid-cols-1 gap-3">
       {messages && messages.length > 0 ? (
@@ -47,6 +54,7 @@ export function ChatMessages({
                 </h1>
               </div>
             </div>
+            <div ref={messagesEndRef} />
           </div>
         ))
       ) : (

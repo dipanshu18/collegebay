@@ -1,34 +1,48 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useRef } from "react";
 import { useFormStatus } from "react-dom";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Send } from "lucide-react";
 import Spinner from "@/components/spinner";
-import { toast } from "sonner";
-
-import { sendMessage } from "@/actions/chat";
 import { useRouter } from "next/navigation";
 
-export function MessageInput({ chatId }: { chatId: string }) {
+export function MessageInput({
+  chatId,
+  receiverId,
+  socket,
+}: {
+  chatId: string;
+  receiverId: string;
+  socket: WebSocket;
+}) {
   const router = useRouter();
-  const [message, setMessage] = useState("");
+  const message = useRef<HTMLTextAreaElement>(null);
   const { pending } = useFormStatus();
 
-  async function handleSendMessage(e: FormEvent) {
-    e.preventDefault();
+  async function handleSendMessage(e?: FormEvent) {
+    e?.preventDefault();
 
-    const response = await sendMessage(chatId, message);
+    if (message.current?.value && message.current?.value.length < 1) return;
 
-    if (response?.error) {
-      return toast.error(response.error);
-    }
+    const payload = JSON.stringify({
+      event: "new_message",
+      chatId,
+      text: message.current?.value,
+      receiverId,
+    });
+    socket.send(payload);
 
-    if (response?.success) {
-      setMessage("");
-      return router.refresh();
+    if (message.current?.value) message.current.value = "";
+    router.refresh();
+  }
+
+  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevents newline
+      handleSendMessage();
     }
   }
 
@@ -37,10 +51,10 @@ export function MessageInput({ chatId }: { chatId: string }) {
       <div className="w-full relative">
         <form onSubmit={handleSendMessage}>
           <Textarea
+            onKeyDown={handleKeyDown}
             rows={5}
             placeholder="your message"
-            onChange={(e) => setMessage(e.target.value)}
-            value={message}
+            ref={message}
           />
           {pending ? (
             <Button>
