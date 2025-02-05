@@ -9,9 +9,7 @@ import jwt from "jsonwebtoken";
 import { sealData } from "iron-session";
 
 import { Login, Signup } from "../types/auth";
-import { PrismaClient } from "@prisma/client";
-
-const userModel = new PrismaClient().user;
+import { db } from "../utils/db";
 
 export async function signup(req: Request, res: Response) {
   const result = Signup.safeParse(req.body);
@@ -45,7 +43,7 @@ export async function signup(req: Request, res: Response) {
   const { email, name, password, college, phoneNo, image } = result.data;
 
   try {
-    const userExists = await userModel.findUnique({
+    const userExists = await db.user.findUnique({
       where: {
         email,
       },
@@ -59,7 +57,7 @@ export async function signup(req: Request, res: Response) {
 
     const hashPass = await bcrypt.hash(password, 10);
 
-    const newUser = await userModel.create({
+    const newUser = await db.user.create({
       data: {
         email,
         name,
@@ -120,7 +118,7 @@ export async function login(req: Request, res: Response) {
   const { email, password } = result.data;
 
   try {
-    const userExists = await userModel.findUnique({
+    const userExists = await db.user.findUnique({
       where: {
         email,
       },

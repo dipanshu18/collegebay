@@ -3,13 +3,11 @@ dotenv.config();
 const SECRET = process.env.SECRET as string;
 
 import type { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 import { Login } from "../types/auth";
-
-const db = new PrismaClient();
+import { db } from "../utils/db";
 
 export async function adminLogin(req: Request, res: Response) {
   const result = Login.safeParse(req.body);

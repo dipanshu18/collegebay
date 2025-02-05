@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { IChat, IMessage } from "@/actions/types";
+import type { IChat, IMessage } from "@/actions/types";
 import { ChatMessages } from "./chat-messages";
 import { MessageInput } from "./message-input";
 

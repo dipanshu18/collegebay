@@ -1,12 +1,11 @@
-import { type Prisma, PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import dotenv from "dotenv";
 dotenv.config();
 
 import type { Request, Response } from "express";
 import { CreatePostSchema, UpdatePostSchema } from "../types/post";
 import type { z } from "zod";
-
-const db = new PrismaClient();
+import { db } from "../utils/db";
 
 export async function getAllPosts(req: Request, res: Response) {
   try {

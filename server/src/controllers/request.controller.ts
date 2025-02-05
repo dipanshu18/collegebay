@@ -2,10 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import type { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { UserRequestSchema } from "../types/request";
-
-const db = new PrismaClient();
+import { db } from "../utils/db";
 
 export async function getAllRequests(req: Request, res: Response) {
   try {

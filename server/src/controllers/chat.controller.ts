@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
-
-const db = new PrismaClient();
+import { db } from "../utils/db";
 
 export async function getAllChats(req: Request, res: Response) {
   try {

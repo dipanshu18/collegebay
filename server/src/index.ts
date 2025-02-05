@@ -16,7 +16,6 @@ import { authRouter } from "./routers/auth.router";
 import { userRouter } from "./routers/user.router";
 import { postRouter } from "./routers/post.router";
 import { requestRouter } from "./routers/request.router";
-import { messageRouter } from "./routers/message.router";
 import { chatRouter } from "./routers/chat.router";
 import { checkAuth } from "./utils/auth";
 
@@ -54,7 +53,6 @@ app.use("/api/v1/user", authMiddleware, userRouter);
 app.use("/api/v1/requests", authMiddleware, requestRouter);
 app.use("/api/v1/posts", authMiddleware, postRouter);
 app.use("/api/v1/chats", authMiddleware, chatRouter);
-app.use("/api/v1/messages", authMiddleware, messageRouter);
 
 const server = http.createServer(app);
 
@@ -65,8 +63,7 @@ wss.on("connection", async (socket, request) => {
   }
 
   console.log("Client connected:", auth.id);
-  const user = new UserManager();
-  await user.addUser(auth.id, socket);
+  const user = new UserManager(auth.id, socket);
 
   socket.on("message", async (data) => {
     const decoded = JSON.parse(data.toString());

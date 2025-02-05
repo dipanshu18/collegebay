@@ -6,7 +6,7 @@ dotenv.config();
 const SECRET = process.env.SECRET;
 
 export function checkAuth(request: internal.IncomingMessage) {
-  let token;
+  let token: string | undefined = undefined;
   const cookies = request.headers.cookie?.split(";")[0];
 
   if (cookies?.split("=")[0] === "session") {

@@ -4,35 +4,26 @@ const REDIS_URL = process.env.REDIS_URL;
 
 import Redis from "ioredis";
 import type { WebSocket } from "ws";
-import { PrismaClient } from "@prisma/client";
+import { db } from "../utils/db";
 
-const db = new PrismaClient();
-const pub = new Redis({
-  host: "redis",
-});
-const sub = new Redis({
-  host: "redis",
-});
-const redis = new Redis({
-  host: "redis",
-});
+const client = new Redis({});
 
 const onlineUsers: { [userId: string]: WebSocket } = {};
 
 export class UserManager {
-  async addUser(userId: string, socket: WebSocket) {
+  constructor(userId: string, socket: WebSocket) {
     onlineUsers[userId] = socket;
-    await redis.sadd("online_users", userId);
+    client.sadd("online_users", userId);
   }
 
   async removeUser(userId: string) {
     delete onlineUsers[userId];
-    await redis.srem("online_users", userId);
+    await client.srem("online_users", userId);
   }
 
   async isUserOnline(userId: string) {
     console.log(userId);
-    return redis.sismember("online_users", userId);
+    return client.sismember("online_users", userId);
   }
 
   async sendMessage(

@@ -1,14 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { PrismaClient } from "@prisma/client";
 import type { Request, Response } from "express";
 import type { z } from "zod";
 import bcrypt from "bcrypt";
 
 import { UpdateUserSchema } from "../types/user";
-
-const db = new PrismaClient();
+import { db } from "../utils/db";
 
 export async function getUser(req: Request, res: Response) {
   try {
