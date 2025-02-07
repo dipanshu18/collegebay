@@ -232,16 +232,16 @@ export default function Landing() {
                 <Card
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={idx}
-                  className="bg-neutral-100 border-none hover:shadow-xl transition-all duration-300"
+                  className="bg-gray-50 border-none hover:shadow-lg transition-all duration-300"
                 >
-                  <CardHeader className="space-y-5">
+                  <CardHeader className="space-y-3">
                     <div className="rounded-md p-5 bg-primary w-fit text-white">
                       {item.icon}
                     </div>
-                    <CardTitle className="dark:text-neutral-300">
+                    <h2 className="text-black font-bold text-2xl">
                       {item.title}
-                    </CardTitle>
-                    <CardDescription className="dark:text-neutral-100 text-md">
+                    </h2>
+                    <CardDescription className="text-md">
                       {item.description}
                     </CardDescription>
                   </CardHeader>
@@ -266,25 +266,21 @@ export default function Landing() {
           </div>
 
           <div className="text-left max-w-5xl mx-auto my-10 p-5">
-            <ul
-              aria-label="How it works"
-              role="feed"
-              className="relative flex flex-col gap-12 py-12 pl-6 text-sm before:absolute before:top-0 before:left-6 before:h-full before:-translate-x-1/2 before:border before:border-dashed before:border-primary after:absolute after:top-6 after:left-6 after:bottom-6 after:-translate-x-1/2 after:border after:border-primary"
-            >
+            <ul className="relative flex flex-col gap-12 py-12 pl-6 text-sm before:absolute before:top-0 before:left-6 before:h-full before:-translate-x-1/2 before:border before:border-dashed before:border-primary after:absolute after:top-6 after:left-6 after:bottom-6 after:-translate-x-1/2 after:border after:border-primary">
               {howWorks.map((item, idx) => (
                 <li
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={idx}
                   className="relative pl-6 before:absolute before:left-0 before:top-2 before:z-10 before:h-5 before:w-5 before:-translate-x-1/2 before:rounded-full before:bg-primary before:ring-2 before:ring-white"
                 >
-                  <Card className="flex flex-col flex-1 gap-2 bg-neutral-50 hover:shadow-xl transition-all duration-300 border-none">
+                  <Card className="flex flex-col flex-1 gap-2 bg-gray-50 hover:shadow-xl transition-all duration-300 border-none">
                     <CardHeader className="space-y-3">
                       <p className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-light font-bold">
                         {idx + 1}.
                       </p>
-                      <CardTitle className="text-2xl text-secondary font-semibold leading-7">
+                      <h2 className="text-2xl text-secondary font-semibold leading-7">
                         {item.title}
-                      </CardTitle>
+                      </h2>
                       <CardDescription className="text-lg">
                         {item.description}
                       </CardDescription>
@@ -333,7 +329,7 @@ export default function Landing() {
             <Accordion type="single" collapsible className="w-full space-y-5">
               {faqs.map((item, idx) => (
                 <AccordionItem
-                  value={`item-${idx + 1}`}
+                  value={`item-${idx}`}
                   // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                   key={idx}
                   className="py-2 px-5 bg-light rounded-md"

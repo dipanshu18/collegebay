@@ -26,7 +26,7 @@ export default async function OthersRequest() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {requests && requests.length > 0 ? (
             requests.map((request) => (
               <RequestCard type="home" key={request.id} request={request} />

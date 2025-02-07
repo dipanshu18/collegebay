@@ -41,8 +41,8 @@ export default async function UserPostDetails({
           <ArrowLeft size={24} />
         </Link>
       </div>
-      <div className="">
-        <div className="w-full max-w-lg mx-auto px-12">
+      <div className="flex flex-col xl:flex-row">
+        <div className="w-full max-w-lg mx-auto px-14">
           <ImageCarousel images={post?.images as string[]} />
         </div>
         <div className="space-y-2 w-full px-5">

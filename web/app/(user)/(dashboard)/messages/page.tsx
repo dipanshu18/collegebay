@@ -34,7 +34,6 @@ export default async function MessagesPage() {
 
   if (response?.success) {
     chats = response.success;
-    console.log(chats);
   }
 
   return (

@@ -38,7 +38,7 @@ export default async function PostDetails({
           <ArrowLeft size={24} />
         </Link>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col xl:flex-row items-center">
         <div className="w-full max-w-lg mx-auto px-14">
           <ImageCarousel images={post?.images as string[]} />
         </div>

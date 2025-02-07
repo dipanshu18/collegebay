@@ -83,7 +83,7 @@ export default async function Profile() {
         </TabsList>
         <TabsContent
           value="posts"
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {userProfile.posts && userProfile.posts.length > 0 ? (
             userProfile.posts.map((item) => (
@@ -97,7 +97,7 @@ export default async function Profile() {
         </TabsContent>
         <TabsContent
           value="requests"
-          className="grid grid-cols-1 md:grid-cols-2 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
         >
           {userProfile.requests && userProfile.requests.length > 0 ? (
             userProfile.requests.map((item) => (

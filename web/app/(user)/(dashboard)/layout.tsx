@@ -67,11 +67,11 @@ export default async function DashboardLayout({
   const count = notifications?.length as number;
 
   return (
-    <div className="flex flex-col min-h-dvh lg:flex-row max-w-5xl mx-auto">
+    <div className="flex flex-col min-h-dvh lg:flex-row">
       <div className="sticky top-0 lg:hidden z-40">
         <Navbar />
       </div>
-      <aside className="hidden sticky h-dvh top-0 w-[250px] border-r p-5 lg:flex flex-col justify-between">
+      <aside className="hidden sticky h-dvh top-0 w-[300px] border-r p-5 lg:flex flex-col justify-between">
         <div>
           <div className="w-fit">
             <Logo />
