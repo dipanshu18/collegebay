@@ -27,6 +27,10 @@ This includes the following packages/apps:
 - `web`: a Next.js app with Tailwind CSS
 - `server`: a Express backend with Prisma and Postgres
 
-# Idea/Mockup
+# Web Mockup
 
 ![collegebay_mockup](https://github.com/user-attachments/assets/0ed84545-c1c0-490d-a4f9-e0e0cf6ce646)
+
+# Mobile Mockup
+
+![collegebay_mobile_mockup](https://github.com/user-attachments/assets/3394f2bd-3dee-4e87-a01c-f552865f4b8f)
