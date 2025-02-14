@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 
-export function UserRequestsScreen() {
+export default function Explore() {
   return (
     <View>
-      <Text>User Requests Screen</Text>
+      <Text>Explore Screen</Text>
     </View>
   );
 }

@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 
-export function CreateListingScreen() {
+export default function Requests() {
   return (
     <View>
-      <Text>Create Listing Screen</Text>
+      <Text>Requests Screen</Text>
     </View>
   );
 }
