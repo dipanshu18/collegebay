@@ -10,11 +10,15 @@ export default function Home() {
       screenOptions={{
         tabBarIndicatorStyle: {
           borderBottomWidth: 4,
-          borderBottomColor: "#52796F",
+          borderBottomColor: "#354F52",
         },
+        tabBarIndicatorContainerStyle: {
+          backgroundColor: "#CAD2C5",
+        },
+
         tabBarLabelStyle: {
           fontSize: 15,
-          color: "#52796F",
+          color: "#354F52",
           fontWeight: "700",
         },
       }}

@@ -24,8 +24,8 @@ export default function Account() {
                 uri: "https://avatars.githubusercontent.com/u/88198352?v=4",
               }}
               style={{
-                width: 100,
-                height: 100,
+                width: 60,
+                height: 60,
                 borderRadius: 100,
               }}
             />
@@ -102,11 +102,15 @@ export default function Account() {
         screenOptions={{
           tabBarIndicatorStyle: {
             borderBottomWidth: 4,
-            borderBottomColor: "#52796F",
+            borderBottomColor: "#354F52",
           },
+          tabBarIndicatorContainerStyle: {
+            backgroundColor: "#CAD2C5",
+          },
+
           tabBarLabelStyle: {
             fontSize: 15,
-            color: "#52796F",
+            color: "#354F52",
             fontWeight: "700",
           },
         }}

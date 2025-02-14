@@ -1,7 +1,7 @@
 import { RequestCard } from "@/components/request-card";
 import { ScrollView, Text, View } from "react-native";
 
-export default function Requests() {
+export default function UserRequests() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -19,7 +19,7 @@ export default function Requests() {
             <RequestCard
               /* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */
               key={idx}
-              type="public"
+              type="user"
             />
           );
         })}

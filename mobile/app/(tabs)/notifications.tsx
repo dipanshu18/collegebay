@@ -1,9 +1,15 @@
-import { Text, View } from "react-native";
+import { NotificationCard } from "@/components/notification-card";
+import { ScrollView, Text, View } from "react-native";
 
 export default function Notifications() {
   return (
-    <View>
-      <Text>Notifications</Text>
-    </View>
+    <ScrollView showsVerticalScrollIndicator={false} style={{ flex: 1 }}>
+      {Array(10)
+        .fill("")
+        .map((_, idx) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          <NotificationCard key={idx} />
+        ))}
+    </ScrollView>
   );
 }

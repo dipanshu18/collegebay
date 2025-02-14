@@ -1,7 +1,8 @@
-import { RequestCard } from "@/components/request-card";
+import { ListingCard } from "@/components/listing-card";
+import { Link } from "expo-router";
 import { ScrollView, Text, View } from "react-native";
 
-export default function Requests() {
+export default function UserListings() {
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -16,11 +17,14 @@ export default function Requests() {
         .fill("")
         .map((_, idx) => {
           return (
-            <RequestCard
+            <Link
               /* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */
               key={idx}
-              type="public"
-            />
+              href={`/user-listings/${idx}`}
+              style={{ marginVertical: 10 }}
+            >
+              <ListingCard />
+            </Link>
           );
         })}
     </ScrollView>
