@@ -1,4 +1,4 @@
-import { Tabs } from "expo-router";
+import { Redirect, Slot, Tabs } from "expo-router";
 import {
   AntDesign,
   Entypo,
@@ -6,10 +6,24 @@ import {
   FontAwesome,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import useAuth from "@/hooks/useAuth";
+import { useEffect } from "react";
+import { deleteValue } from "@/utils/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BottomTabLayout() {
+  const { isAuth, checkAuth } = useAuth();
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  if (!isAuth) {
+    return <Redirect href={"/login"} />;
+  }
+
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -76,6 +90,6 @@ export default function BottomTabLayout() {
           }}
         />
       </Tabs>
-    </>
+    </SafeAreaView>
   );
 }

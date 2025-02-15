@@ -2,8 +2,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Image, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
-import UserListings from "@/app/(dashboard)/user-listings";
-import UserRequests from "@/app/(dashboard)/user-requests";
+import UserListings from "@/app/(home)/user-listings";
+import UserRequests from "@/app/(home)/user-requests";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -11,7 +11,7 @@ export default function Account() {
   return (
     <>
       <View>
-        <View style={{ padding: 15, gap: 5, backgroundColor: "#CAD2C5" }}>
+        <View style={{ padding: 15, gap: 5 }}>
           <View
             style={{
               flexDirection: "row",

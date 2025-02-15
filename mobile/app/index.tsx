@@ -1,8 +1,9 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import useAuth from "@/hooks/useAuth";
-import { Link, Redirect, router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useEffect } from "react";
 import { COLOR } from "@/constants/COLOR";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Landing() {
   const { isAuth, checkAuth } = useAuth();
@@ -12,11 +13,11 @@ export default function Landing() {
   }, [checkAuth]);
 
   if (isAuth) {
-    <Redirect href={"/(dashboard)/(tabs)"} />;
+    return <Redirect href={"/(home)/(tabs)"} />;
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={{ marginHorizontal: "auto" }}>
         <Image
           source={require("@/assets/landing.jpg")}
@@ -31,7 +32,7 @@ export default function Landing() {
       </Text>
 
       <Pressable
-        onPress={() => router.push("/(auth)/signup")}
+        onPress={() => router.push("/signup")}
         style={[styles.button, { backgroundColor: COLOR.primary }]}
       >
         <Text
@@ -47,7 +48,7 @@ export default function Landing() {
       </Pressable>
 
       <Pressable
-        onPress={() => router.push("/(auth)/login")}
+        onPress={() => router.push("/login")}
         style={[styles.button, { backgroundColor: COLOR.light }]}
       >
         <Text
@@ -61,7 +62,7 @@ export default function Landing() {
           I already have an account{" "}
         </Text>
       </Pressable>
-    </View>
+    </SafeAreaView>
   );
 }
 

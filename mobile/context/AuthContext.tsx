@@ -1,4 +1,4 @@
-import { getToken } from "@/utils/auth";
+import { getValue } from "@/utils/auth";
 import React, { useCallback, useEffect, useState } from "react";
 
 interface IAuthContext {
@@ -12,13 +12,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const checkAuth = useCallback(async () => {
-    const token = await getToken("token");
+    const token = await getValue("token");
     setIsAuthenticated(!!token);
   }, []);
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
 
   return (
     <AuthContext.Provider
