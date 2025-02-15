@@ -78,7 +78,7 @@ export async function signup(req: Request, res: Response) {
       res.cookie("uid", result);
       return res
         .status(201)
-        .json({ msg: "Account created!", userId: newUser.id });
+        .json({ msg: "Account created!", token, uid: result });
     }
   } catch (error) {
     console.log("Error:", error);
@@ -142,7 +142,9 @@ export async function login(req: Request, res: Response) {
     const result = await sealData(userExists.id, { password: SEAL_PASSWORD });
     res.cookie("session", token);
     res.cookie("uid", result);
-    return res.status(200).json({ msg: "Credentials verified!" });
+    return res
+      .status(200)
+      .json({ msg: "Credentials verified!", token, uid: result });
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong!" });

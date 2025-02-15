@@ -1,6 +1,6 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import Explore from "../explore";
-import Requests from "../requests";
+import Explore from "@/app/(dashboard)/explore";
+import Requests from "@/app/(dashboard)/requests";
 
 const Tab = createMaterialTopTabNavigator();
 

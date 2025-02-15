@@ -1,6 +1,6 @@
 import { MessageCard } from "@/components/message-card";
 import { Link } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { ScrollView } from "react-native";
 
 export default function Messages() {
   return (

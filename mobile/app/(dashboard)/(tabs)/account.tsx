@@ -2,8 +2,8 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import { Image, Pressable, Text, View } from "react-native";
 import { Link } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
-import UserListings from "../user-listings";
-import UserRequests from "../user-requests";
+import UserListings from "@/app/(dashboard)/user-listings";
+import UserRequests from "@/app/(dashboard)/user-requests";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -11,7 +11,7 @@ export default function Account() {
   return (
     <>
       <View>
-        <View style={{ padding: 15, gap: 5 }}>
+        <View style={{ padding: 15, gap: 5, backgroundColor: "#CAD2C5" }}>
           <View
             style={{
               flexDirection: "row",
@@ -37,11 +37,12 @@ export default function Account() {
                   alignItems: "center",
                 }}
               >
-                <Feather size={24} name="edit" />
+                <Feather size={24} name="edit" color={"#52796F"} />
                 <Text
                   style={{
                     fontSize: 15,
                     fontWeight: 500,
+                    color: "#52796F",
                   }}
                 >
                   Edit profile
@@ -50,7 +51,7 @@ export default function Account() {
             </Link>
           </View>
 
-          <Text style={{ fontSize: 20, fontWeight: "900" }}>
+          <Text style={{ fontSize: 20, fontWeight: "900", color: "#354F52" }}>
             Dipanshu Torawane
           </Text>
           <View
@@ -60,13 +61,12 @@ export default function Account() {
               gap: 5,
             }}
           >
-            <Feather size={24} name="mail" />
+            <Feather size={24} name="mail" color={"#52796F"} />
             <Text
               style={{
                 fontSize: 15,
                 fontWeight: "700",
-                flexDirection: "row",
-                alignItems: "center",
+                color: "#2F3E46",
               }}
             >
               dipanshu.torawane@vit.edu.in
@@ -80,8 +80,10 @@ export default function Account() {
               gap: 5,
             }}
           >
-            <Feather size={24} name="phone" />
-            <Text style={{ fontSize: 15, fontWeight: "700" }}>9345965464</Text>
+            <Feather size={24} name="phone" color={"#52796F"} />
+            <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
+              9345965464
+            </Text>
           </View>
           <View
             style={{
@@ -90,8 +92,8 @@ export default function Account() {
               gap: 5,
             }}
           >
-            <FontAwesome5 size={24} name="building" />
-            <Text style={{ fontSize: 15, fontWeight: "700" }}>
+            <FontAwesome5 size={24} name="building" color={"#52796F"} />
+            <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
               Vidyalankar Institute of Technology, Mumbai
             </Text>
           </View>

@@ -5,13 +5,11 @@ import {
   Feather,
   FontAwesome,
   MaterialCommunityIcons,
-  MaterialIcons,
 } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function TabLayout() {
+export default function BottomTabLayout() {
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <>
       <Tabs
         screenOptions={{
           headerShown: false,
@@ -78,6 +76,6 @@ export default function TabLayout() {
           }}
         />
       </Tabs>
-    </SafeAreaView>
+    </>
   );
 }

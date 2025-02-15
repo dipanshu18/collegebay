@@ -1,83 +1,36 @@
-import { AntDesign } from "@expo/vector-icons";
-import "./globals.css";
-
-import { Link, Stack } from "expo-router";
+import { AuthProvider } from "@/context/AuthContext";
+import { Slot } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useFonts } from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
-    <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          headerTitleAlign: "center",
-          headerStyle: {
-            backgroundColor: "#CAD2C5",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="edit-profile/[id]"
-          options={{
-            title: "Edit profile",
-            headerShown: true,
-            headerLeft: () => (
-              <Link href={"/account"}>
-                <AntDesign size={24} name="arrowleft" color={"#354F52"} />
-              </Link>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="edit-post/[id]"
-          options={{
-            title: "Edit post",
-            headerShown: true,
-            headerLeft: () => (
-              <Link href={"/account"}>
-                <AntDesign size={24} name="arrowleft" color={"#354F52"} />
-              </Link>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="messages/[id]"
-          options={{
-            title: "",
-            headerShown: true,
-            headerLeft: () => (
-              <Link href={"/messages"}>
-                <AntDesign size={24} name="arrowleft" color={"#354F52"} />
-              </Link>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="explore/[id]"
-          options={{
-            title: "",
-            headerShown: true,
-            headerLeft: () => (
-              <Link href={"/"}>
-                <AntDesign size={24} name="arrowleft" color={"#354F52"} />
-              </Link>
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="user-listings/[id]"
-          options={{
-            title: "",
-            headerShown: true,
-            headerLeft: () => (
-              <Link href={"/account"}>
-                <AntDesign size={24} name="arrowleft" color={"#354F52"} />
-              </Link>
-            ),
-          }}
-        />
-      </Stack>
-      <StatusBar style="auto" />
-    </>
+    <SafeAreaProvider>
+      <SafeAreaView>
+        <AuthProvider>
+          <Slot />
+          <StatusBar style="auto" />
+        </AuthProvider>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
