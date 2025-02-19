@@ -1,12 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 const SECRET = process.env.SECRET as string;
-const SEAL_PASSWORD = process.env.SEAL_PASSWORD as string;
 
 import type { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { sealData } from "iron-session";
 
 import { Login, Signup } from "../types/auth";
 import { db } from "../utils/db";
@@ -74,11 +72,10 @@ export async function signup(req: Request, res: Response) {
         SECRET
       );
       res.cookie("session", token);
-      const result = await sealData(newUser.id, { password: SEAL_PASSWORD });
-      res.cookie("uid", result);
+      res.cookie("uid", newUser.id);
       return res
         .status(201)
-        .json({ msg: "Account created!", token, uid: result });
+        .json({ msg: "Account created!", token, uid: newUser.id });
     }
   } catch (error) {
     console.log("Error:", error);
@@ -139,12 +136,11 @@ export async function login(req: Request, res: Response) {
       SECRET
     );
 
-    const result = await sealData(userExists.id, { password: SEAL_PASSWORD });
     res.cookie("session", token);
-    res.cookie("uid", result);
+    res.cookie("uid", userExists.id);
     return res
       .status(200)
-      .json({ msg: "Credentials verified!", token, uid: result });
+      .json({ msg: "Credentials verified!", token, uid: userExists.id });
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong!" });
@@ -153,5 +149,6 @@ export async function login(req: Request, res: Response) {
 
 export async function logout(req: Request, res: Response) {
   res.clearCookie("session");
+  res.clearCookie("uid");
   return res.status(200).json({ msg: "Logging out!" });
 }

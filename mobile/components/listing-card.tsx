@@ -1,7 +1,8 @@
 import { Link } from "expo-router";
+import type { IPost } from "@/api/types";
 import { Image, Text, View } from "react-native";
 
-export function ListingCard() {
+export function ListingCard({ post }: { post: IPost }) {
   return (
     <View
       style={{
@@ -12,7 +13,7 @@ export function ListingCard() {
     >
       <Image
         source={{
-          uri: "https://plus.unsplash.com/premium_photo-1672256330854-98c717493128?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWF0aHxlbnwwfHwwfHx8MA%3D%3D",
+          uri: post?.images[0],
         }}
         style={{
           aspectRatio: 16 / 9,
@@ -21,11 +22,13 @@ export function ListingCard() {
         }}
       />
       <View style={{ padding: 15 }}>
-        <Text style={{ fontSize: 20, fontWeight: "800" }}>Card Title</Text>
+        <Text style={{ fontSize: 20, fontWeight: "800" }}>{post?.title}</Text>
         <Text style={{ fontSize: 15, fontWeight: "400" }}>
-          Card Description
+          {`${post?.description.slice(0, 150)}...`}
         </Text>
-        <Text style={{ fontSize: 15, fontWeight: "300" }}>createdAt</Text>
+        <Text style={{ fontSize: 15, fontWeight: "300" }}>
+          {post?.createdAt.toString()}
+        </Text>
       </View>
     </View>
   );

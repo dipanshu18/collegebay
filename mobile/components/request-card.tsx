@@ -1,7 +1,14 @@
+import type { IUserRequest } from "@/api/types";
 import { Feather, FontAwesome } from "@expo/vector-icons";
 import { Image, Pressable, Text, View } from "react-native";
 
-export function RequestCard({ type }: { type: "user" | "public" }) {
+export function RequestCard({
+  request,
+  type,
+}: {
+  request: IUserRequest;
+  type: "user" | "public";
+}) {
   return (
     <View
       style={{
@@ -13,7 +20,7 @@ export function RequestCard({ type }: { type: "user" | "public" }) {
     >
       <Image
         source={{
-          uri: "https://plus.unsplash.com/premium_photo-1672256330854-98c717493128?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWF0aHxlbnwwfHwwfHx8MA%3D%3D",
+          uri: request?.image,
         }}
         style={{
           aspectRatio: 16 / 9,
@@ -23,14 +30,16 @@ export function RequestCard({ type }: { type: "user" | "public" }) {
       />
       <View style={{ padding: 15, gap: 5 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={{ fontSize: 20, fontWeight: "800" }}>Card Title</Text>
+          <Text style={{ fontSize: 20, fontWeight: "800" }}>
+            {request?.title}
+          </Text>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Text style={{ fontSize: 20, fontWeight: "600" }}>4</Text>
             <FontAwesome size={24} name="chevron-up" />
           </View>
         </View>
         <Text style={{ fontSize: 15, fontWeight: "400" }}>
-          Card Description
+          {request?.description}
         </Text>
 
         <View>
@@ -43,7 +52,7 @@ export function RequestCard({ type }: { type: "user" | "public" }) {
           >
             <Image
               source={{
-                uri: "https://avatars.githubusercontent.com/u/88198352?v=4",
+                uri: request?.user?.image,
               }}
               style={{
                 width: 60,
@@ -53,15 +62,17 @@ export function RequestCard({ type }: { type: "user" | "public" }) {
             />
             <View style={{ flexDirection: "column" }}>
               <Text style={{ fontSize: 15, fontWeight: "900" }}>
-                Dipanshu Torawane
+                {request?.user?.name}
               </Text>
               <Text style={{ fontWeight: "500" }}>
-                Vidyalankar Institute of Technology, Mumbai
+                {request?.user?.college}
               </Text>
             </View>
           </View>
         </View>
-        <Text style={{ fontSize: 15, fontWeight: "300" }}>createdAt</Text>
+        <Text style={{ fontSize: 15, fontWeight: "300" }}>
+          {request?.createdAt.toString()}
+        </Text>
 
         {type === "user" && (
           <Pressable

@@ -1,8 +1,19 @@
+import { getProfile } from "@/api/queries";
 import { ListingCard } from "@/components/listing-card";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
-import { ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function UserListings() {
+  const { data, isLoading, isPending } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfile,
+  });
+
+  if (isLoading && !isPending) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -13,20 +24,23 @@ export default function UserListings() {
         marginBottom: 10,
       }}
     >
-      {Array(5)
-        .fill("")
-        .map((_, idx) => {
+      {data?.posts && data?.posts.length > 0 ? (
+        data?.posts.map((item) => {
           return (
             <Link
-              /* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */
-              key={idx}
-              href={`/user-listings/${idx}`}
+              key={item.id}
+              href={`/user-listings/${item.id}`}
               style={{ marginVertical: 10 }}
             >
-              <ListingCard />
+              <ListingCard post={item} />
             </Link>
           );
-        })}
+        })
+      ) : (
+        <Text style={{ fontSize: 15, fontWeight: "500" }}>
+          No listings posted yet
+        </Text>
+      )}
     </ScrollView>
   );
 }

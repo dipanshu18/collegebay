@@ -24,7 +24,6 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "ioredis": "^5.4.2",
-    "iron-session": "^8.0.4",
     "jsonwebtoken": "^9.0.2",
     "ws": "^8.18.0",
     "zod": "^3.23.8"

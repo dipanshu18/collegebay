@@ -1,11 +1,33 @@
+import { getPosts } from "@/api/queries";
 import { ListingCard } from "@/components/listing-card";
+import { COLOR } from "@/constants/COLOR";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { ScrollView, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 
 export default function Explore() {
   const [selectedCategory, setSelectedCategory] = useState();
+
+  const {
+    data: posts,
+    isLoading,
+    isPending,
+  } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPosts,
+  });
+
+  if (isLoading && !isPending) {
+    return <ActivityIndicator color={COLOR.primary} />;
+  }
 
   return (
     <ScrollView
@@ -50,20 +72,21 @@ export default function Explore() {
           }}
         />
       </View>
-      {Array(5)
-        .fill("")
-        .map((_, idx) => {
+      {posts && posts.length > 0 ? (
+        posts.map((item) => {
           return (
             <Link
-              /* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */
-              key={idx}
-              href={`/explore/${idx}`}
+              key={item.id}
+              href={`/explore/${item.id}`}
               style={{ width: "100%", marginVertical: 15 }}
             >
-              <ListingCard />
+              <ListingCard post={item} />
             </Link>
           );
-        })}
+        })
+      ) : (
+        <Text>No listings posted yet</Text>
+      )}
     </ScrollView>
   );
 }

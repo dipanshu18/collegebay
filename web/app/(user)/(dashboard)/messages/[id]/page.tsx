@@ -4,7 +4,6 @@ import { ArrowLeft } from "lucide-react";
 import { getChat } from "@/actions/chat";
 import type { IChat } from "@/actions/types";
 import { cookies } from "next/headers";
-import { unsealCookie } from "@/utils/unseal";
 import { MessageBox } from "@/components/message-box";
 
 export default async function Chat({
@@ -17,8 +16,7 @@ export default async function Chat({
   const response = await getChat(params.id);
   let chat: IChat | undefined = undefined;
 
-  const sealed_uid = cookies().get("uid")?.value;
-  const userId = (await unsealCookie(sealed_uid as string)) as string;
+  const userId = cookies().get("uid")?.value;
 
   if (response?.error) {
     return console.log(response.error);
@@ -58,7 +56,7 @@ export default async function Chat({
         </div>
       </div>
 
-      <MessageBox chat={chat as IChat} userId={userId} />
+      <MessageBox chat={chat as IChat} userId={userId as string} />
     </div>
   );
 }

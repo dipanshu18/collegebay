@@ -2,13 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { cookies } from "next/headers";
 
-import { unsealCookie } from "@/utils/unseal";
 import { getAllChats } from "@/actions/chat";
 import type { IChat } from "@/actions/types";
 
 export default async function MessagesPage() {
-  const sealed_uid = cookies().get("uid")?.value;
-  const userId = (await unsealCookie(sealed_uid as string)) as string;
+  const userId = cookies().get("uid")?.value;
 
   const response = await getAllChats();
   let chats: IChat[] | [] = [];

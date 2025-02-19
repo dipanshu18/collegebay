@@ -1,7 +1,22 @@
+import { getRequests } from "@/api/queries";
 import { RequestCard } from "@/components/request-card";
-import { ScrollView, Text, View } from "react-native";
+import { COLOR } from "@/constants/COLOR";
+import { useQuery } from "@tanstack/react-query";
+import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function Requests() {
+  const {
+    data: requests,
+    isLoading,
+    isPending,
+  } = useQuery({
+    queryKey: ["requests"],
+    queryFn: getRequests,
+  });
+
+  if (isLoading && !isPending) {
+    return <ActivityIndicator color={COLOR.primary} />;
+  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -12,17 +27,13 @@ export default function Requests() {
         marginBottom: 10,
       }}
     >
-      {Array(5)
-        .fill("")
-        .map((_, idx) => {
-          return (
-            <RequestCard
-              /* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */
-              key={idx}
-              type="public"
-            />
-          );
-        })}
+      {requests && requests.length > 0 ? (
+        requests.map((item) => {
+          return <RequestCard key={item.id} type="public" request={item} />;
+        })
+      ) : (
+        <Text>No requests made yet</Text>
+      )}
     </ScrollView>
   );
 }

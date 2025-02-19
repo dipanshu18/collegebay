@@ -69,8 +69,8 @@ export async function signup({
     if (response.status === 201) {
       const data = await response.data;
 
-      await saveValue("token", data.token);
-      await saveValue("uid", data.uid);
+      saveValue("token", data.token);
+      saveValue("uid", data.uid);
 
       router.replace("/(home)/(tabs)");
     }
@@ -83,7 +83,7 @@ export async function signup({
 }
 
 export async function logout() {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.post(
       `${BASE_URL}/auth/logout`,

@@ -1,13 +1,38 @@
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { Image, Pressable, Text, View } from "react-native";
-import { Link } from "expo-router";
+import {
+  ActivityIndicator,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { Link, router } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import UserListings from "@/app/(home)/user-listings";
 import UserRequests from "@/app/(home)/user-requests";
+import { getProfile } from "@/api/queries";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { logout } from "@/api/mutations";
+import { COLOR } from "@/constants/COLOR";
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function Account() {
+  const { data, isLoading, isPending } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfile,
+  });
+
+  const logoutMutation = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: logout,
+  });
+
+  if (isLoading && !isPending) {
+    return <ActivityIndicator />;
+  }
+
   return (
     <>
       <View>
@@ -21,7 +46,7 @@ export default function Account() {
           >
             <Image
               source={{
-                uri: "https://avatars.githubusercontent.com/u/88198352?v=4",
+                uri: data?.image,
               }}
               style={{
                 width: 60,
@@ -30,29 +55,18 @@ export default function Account() {
               }}
             />
 
-            <Link href={"/edit-profile/1"}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                }}
+            <View>
+              <Pressable
+                onPress={() => logoutMutation.mutate()}
+                style={styles.button}
               >
-                <Feather size={24} name="edit" color={"#52796F"} />
-                <Text
-                  style={{
-                    fontSize: 15,
-                    fontWeight: 500,
-                    color: "#52796F",
-                  }}
-                >
-                  Edit profile
-                </Text>
-              </View>
-            </Link>
+                <Text style={styles.buttonText}>Logout</Text>
+              </Pressable>
+            </View>
           </View>
 
           <Text style={{ fontSize: 20, fontWeight: "900", color: "#354F52" }}>
-            Dipanshu Torawane
+            {data?.name}
           </Text>
           <View
             style={{
@@ -69,7 +83,7 @@ export default function Account() {
                 color: "#2F3E46",
               }}
             >
-              dipanshu.torawane@vit.edu.in
+              {data?.email}
             </Text>
           </View>
 
@@ -82,7 +96,7 @@ export default function Account() {
           >
             <Feather size={24} name="phone" color={"#52796F"} />
             <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
-              9345965464
+              {data?.phoneNo}
             </Text>
           </View>
           <View
@@ -94,7 +108,7 @@ export default function Account() {
           >
             <FontAwesome5 size={24} name="building" color={"#52796F"} />
             <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
-              Vidyalankar Institute of Technology, Mumbai
+              {data?.college}
             </Text>
           </View>
         </View>
@@ -135,3 +149,17 @@ export default function Account() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    backgroundColor: COLOR.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  buttonText: {
+    fontSize: 15,
+    color: "white",
+    fontWeight: "500",
+  },
+});
