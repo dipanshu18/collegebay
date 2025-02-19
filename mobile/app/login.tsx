@@ -1,8 +1,9 @@
 import { login } from "@/api/mutations";
 import { COLOR } from "@/constants/COLOR";
+import useAuth from "@/hooks/useAuth";
 import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
-import { useState } from "react";
+import { Redirect, router } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -15,6 +16,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login() {
+  const { isAuth, login } = useAuth();
+
+  if (isAuth) {
+    return <Redirect href={"/(home)/(tabs)"} />;
+  }
+
   const [credentials, setCredentials] = useState<{
     email: string;
     password: string;

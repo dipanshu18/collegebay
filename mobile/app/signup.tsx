@@ -1,6 +1,6 @@
 import { COLOR } from "@/constants/COLOR";
-import { Feather } from "@expo/vector-icons";
-import { router } from "expo-router";
+import useAuth from "@/hooks/useAuth";
+import { Redirect } from "expo-router";
 import { useState } from "react";
 import {
   Image,
@@ -15,6 +15,12 @@ import RNPickerSelect from "react-native-picker-select";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Signup() {
+  const { isAuth } = useAuth();
+
+  if (isAuth) {
+    return <Redirect href={"/(home)/(tabs)"} />;
+  }
+
   const [selectedCategory, setSelectedCategory] = useState();
 
   return (

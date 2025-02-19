@@ -1,18 +1,11 @@
 import useAuth from "@/hooks/useAuth";
-import { deleteValue } from "@/utils/auth";
 import { AntDesign } from "@expo/vector-icons";
-import { Link, Redirect, Slot, SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { Link, Redirect, SplashScreen, Stack } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function DashboardLayout() {
-  const { isAuth, checkAuth } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { isAuth } = useAuth();
 
   if (!isAuth) {
     return <Redirect href={"/login"} />;

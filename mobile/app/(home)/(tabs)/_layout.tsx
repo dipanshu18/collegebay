@@ -8,15 +8,11 @@ import {
 } from "@expo/vector-icons";
 import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
-import { deleteValue } from "@/utils/auth";
+import { deleteValue } from "@/utils/secure-store";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function BottomTabLayout() {
-  const { isAuth, checkAuth } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { isAuth } = useAuth();
 
   if (!isAuth) {
     return <Redirect href={"/login"} />;

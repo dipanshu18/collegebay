@@ -7,14 +7,13 @@ import {
   Text,
   View,
 } from "react-native";
-import { Link, router } from "expo-router";
 import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import UserListings from "@/app/(home)/user-listings";
 import UserRequests from "@/app/(home)/user-requests";
 import { getProfile } from "@/api/queries";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { logout } from "@/api/mutations";
+import { useQuery } from "@tanstack/react-query";
 import { COLOR } from "@/constants/COLOR";
+import useAuth from "@/hooks/useAuth";
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,10 +23,7 @@ export default function Account() {
     queryFn: getProfile,
   });
 
-  const logoutMutation = useMutation({
-    mutationKey: ["logout"],
-    mutationFn: logout,
-  });
+  const { logout } = useAuth();
 
   if (isLoading && !isPending) {
     return <ActivityIndicator />;
@@ -56,10 +52,7 @@ export default function Account() {
             />
 
             <View>
-              <Pressable
-                onPress={() => logoutMutation.mutate()}
-                style={styles.button}
-              >
+              <Pressable onPress={logout} style={styles.button}>
                 <Text style={styles.buttonText}>Logout</Text>
               </Pressable>
             </View>

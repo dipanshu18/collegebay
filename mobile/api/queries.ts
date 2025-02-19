@@ -1,9 +1,10 @@
-import { getValue } from "@/utils/auth";
+import { getValue } from "@/utils/secure-store";
 import axios, { AxiosError } from "axios";
 import { Alert } from "react-native";
 import type { IChat, IPost, IUserProfile, IUserRequest } from "./types";
 
 export const BASE_URL = "http://10.0.2.2:5000/api/v1";
+// export const BASE_URL = "http://192.168.1.5:5000/api/v1";
 
 export async function getProfile() {
   const token = await getValue("token");

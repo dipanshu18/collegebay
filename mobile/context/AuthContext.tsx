@@ -1,29 +1,62 @@
-import { getValue } from "@/utils/auth";
-import React, { useCallback, useEffect, useState } from "react";
+import { login, logout } from "@/api/mutations";
+import { deleteValue, getValue } from "@/utils/secure-store";
+import { createContext, useCallback, useEffect, useState } from "react";
+import { ActivityIndicator } from "react-native";
 
 interface IAuthContext {
   isAuth: boolean;
-  checkAuth: () => void;
+  login: ({ email, password }: { email: string; password: string }) => void;
+  logout: () => void;
 }
 
-const AuthContext = React.createContext<IAuthContext | undefined>(undefined);
+const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const checkAuth = useCallback(async () => {
-    const token = await getValue("token");
+  function checkAuth() {
+    const token = getValue("token");
     setIsAuthenticated(!!token);
+    setLoading(false);
+  }
+
+  async function loginUser({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }) {
+    setLoading(true);
+    await login({ email, password });
+    setIsAuthenticated(true);
+    setLoading(false);
+  }
+
+  async function logoutUser() {
+    setLoading(true);
+    await logout();
+    await deleteValue("token");
+    await deleteValue("uid");
+    setIsAuthenticated(false);
+    setLoading(false);
+  }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    checkAuth();
   }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        checkAuth,
         isAuth: isAuthenticated,
+        login: loginUser,
+        logout: logoutUser,
       }}
     >
-      {children}
+      {loading ? <ActivityIndicator /> : children}
     </AuthContext.Provider>
   );
 }

@@ -96,7 +96,9 @@ export default function Explore() {
           );
         })
       ) : (
-        <Text>No listings posted yet</Text>
+        <Text style={{ fontSize: 15, fontWeight: "500" }}>
+          No listings posted yet
+        </Text>
       )}
     </ScrollView>
   );

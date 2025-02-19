@@ -1,5 +1,5 @@
 import type { IChat } from "@/api/types";
-import { getValue } from "@/utils/auth";
+import { getValue } from "@/utils/secure-store";
 import { Image, Text, View } from "react-native";
 
 export function MessageCard({ chat }: { chat: IChat }) {

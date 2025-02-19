@@ -1,16 +1,11 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import useAuth from "@/hooks/useAuth";
 import { Redirect, router } from "expo-router";
-import { useEffect } from "react";
 import { COLOR } from "@/constants/COLOR";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Landing() {
-  const { isAuth, checkAuth } = useAuth();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { isAuth } = useAuth();
 
   if (isAuth) {
     return <Redirect href={"/(home)/(tabs)"} />;

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { BASE_URL } from "./queries";
-import { deleteValue, getValue, saveValue } from "@/utils/auth";
+import { deleteValue, getValue, saveValue } from "@/utils/secure-store";
 import { router } from "expo-router";
 import { Alert } from "react-native";
 
@@ -24,10 +24,8 @@ export async function login({
     if (response.status === 200) {
       const data = await response.data;
 
-      await saveValue("token", data.token);
-      await saveValue("uid", data.uid);
-
-      router.replace("/(home)/(tabs)");
+      saveValue("token", data.token);
+      saveValue("uid", data.uid);
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -71,8 +69,6 @@ export async function signup({
 
       saveValue("token", data.token);
       saveValue("uid", data.uid);
-
-      router.replace("/(home)/(tabs)");
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -98,12 +94,7 @@ export async function logout() {
 
     if (response.status === 200) {
       const data = await response.data;
-
-      await deleteValue("token");
-      await deleteValue("uid");
-
       Alert.alert(data.msg);
-      router.replace("/");
     }
   } catch (error) {
     if (error instanceof AxiosError) {
