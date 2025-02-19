@@ -6,7 +6,7 @@ import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function UserListings() {
   const { data, isLoading, isPending } = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["posts"],
     queryFn: getProfile,
   });
 

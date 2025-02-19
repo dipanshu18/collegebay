@@ -88,7 +88,7 @@ export async function getRequests() {
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
-      Alert.alert(errorData);
+      console.log(errorData);
     }
   }
 }

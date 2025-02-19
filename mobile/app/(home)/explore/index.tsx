@@ -6,7 +6,9 @@ import { Link } from "expo-router";
 import { useState } from "react";
 import {
   ActivityIndicator,
+  Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   View,
@@ -14,7 +16,8 @@ import {
 import RNPickerSelect from "react-native-picker-select";
 
 export default function Explore() {
-  const [selectedCategory, setSelectedCategory] = useState();
+  const [searchText, setSearchText] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("ALL");
 
   const {
     data: posts,
@@ -49,6 +52,8 @@ export default function Explore() {
             borderRadius: 10,
             borderColor: "#ced4da",
           }}
+          onChangeText={setSearchText}
+          value={searchText}
         />
 
         <RNPickerSelect
@@ -56,12 +61,14 @@ export default function Explore() {
             label: "Product Category",
           }}
           onValueChange={(value) => setSelectedCategory(value)}
+          value={selectedCategory}
           items={[
-            { label: "NOTES", value: "NOTES" },
-            { label: "EQUIPMENT", value: "EQUIPMENT" },
-            { label: "BOOKS", value: "BOOKS" },
-            { label: "ELECTRONICS", value: "ELECTRONICS" },
-            { label: "FURNITURE", value: "FURNITURE" },
+            { label: "All", value: "ALL" },
+            { label: "Notes", value: "NOTES" },
+            { label: "Equipment", value: "EQUIPMENT" },
+            { label: "Books", value: "BOOKS" },
+            { label: "Electronics", value: "ELECTRONICS" },
+            { label: "Furniture", value: "FURNITURE" },
           ]}
           style={{
             viewContainer: {
@@ -71,6 +78,10 @@ export default function Explore() {
             },
           }}
         />
+
+        <Pressable style={styles.button}>
+          <Text style={styles.buttonText}>Search</Text>
+        </Pressable>
       </View>
       {posts && posts.length > 0 ? (
         posts.map((item) => {
@@ -90,3 +101,17 @@ export default function Explore() {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    paddingVertical: 15,
+    borderRadius: 10,
+    backgroundColor: COLOR.primary,
+  },
+  buttonText: {
+    fontSize: 15,
+    color: "white",
+    textAlign: "center",
+    fontWeight: "500",
+  },
+});

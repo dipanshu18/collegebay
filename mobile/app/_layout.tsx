@@ -9,7 +9,7 @@ import { COLOR } from "@/constants/COLOR";
 import { Feather } from "@expo/vector-icons";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 SplashScreen.preventAutoHideAsync();
 

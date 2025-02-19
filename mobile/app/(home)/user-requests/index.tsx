@@ -1,11 +1,11 @@
 import { getProfile } from "@/api/queries";
 import { RequestCard } from "@/components/request-card";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 
 export default function UserRequests() {
   const { data, isLoading, isPending } = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["requests"],
     queryFn: getProfile,
   });
 

@@ -112,3 +112,51 @@ export async function logout() {
     }
   }
 }
+
+export async function upVoteRequest(id: string) {
+  const token = getValue("token");
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/requests/upvote/${id}`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      router.reload();
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      console.log("Error:", errorData);
+    }
+  }
+}
+
+export async function deleteRequest(id: string) {
+  const token = getValue("token");
+  try {
+    const response = await axios.delete(`${BASE_URL}/requests/${id}`, {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const data = await response.data.msg;
+      Alert.alert(data);
+      router.reload();
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      console.log("Error:", errorData);
+    }
+  }
+}

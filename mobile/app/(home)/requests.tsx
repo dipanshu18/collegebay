@@ -32,7 +32,9 @@ export default function Requests() {
           return <RequestCard key={item.id} type="public" request={item} />;
         })
       ) : (
-        <Text>No requests made yet</Text>
+        <Text style={{ fontSize: 15, fontWeight: "500" }}>
+          No requests made yet
+        </Text>
       )}
     </ScrollView>
   );
