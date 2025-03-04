@@ -2,6 +2,7 @@ import { login, logout } from "@/api/mutations";
 import { deleteValue, getValue } from "@/utils/secure-store";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { ActivityIndicator } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface IAuthContext {
   isAuth: boolean;
@@ -56,7 +57,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         logout: logoutUser,
       }}
     >
-      {loading ? <ActivityIndicator /> : children}
+      {loading ? (
+        <SafeAreaView
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator />
+        </SafeAreaView>
+      ) : (
+        children
+      )}
     </AuthContext.Provider>
   );
 }

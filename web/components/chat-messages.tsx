@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import type { IMessage } from "@/actions/types";
 import { useEffect, useRef } from "react";
+import { cn } from "./lib/utils";
 
 export function ChatMessages({
   messages,
@@ -33,10 +34,17 @@ export function ChatMessages({
                 item.senderId !== userId
                   ? "bg-gray-100 text-secondary"
                   : "bg-primary text-white"
-              } max-w-sm p-3 rounded-lg shadow-md`}
+              } p-3 rounded-md w-[300px] md:w-[500px]`}
             >
-              <p>{item.text}</p>
-              <div className="flex items-center gap-2 mt-2">
+              <p className={cn(item.senderId === userId && "text-right")}>
+                {item.text}
+              </p>
+              <div
+                className={cn(
+                  "flex items-center gap-2 mt-2",
+                  item.senderId === userId && "justify-end"
+                )}
+              >
                 <Image
                   src={item.sender.image}
                   alt="user profile pic"
@@ -50,7 +58,7 @@ export function ChatMessages({
                     item.senderId !== userId ? "text-primary" : "text-white"
                   }`}
                 >
-                  {item.sender.name}
+                  {item.senderId === userId ? "You" : item.sender.name}
                 </h1>
               </div>
             </div>

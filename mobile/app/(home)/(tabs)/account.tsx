@@ -1,154 +1,91 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import { Feather, FontAwesome5 } from "@expo/vector-icons";
-import UserListings from "@/app/(home)/user-listings";
-import UserRequests from "@/app/(home)/user-requests";
-import { getProfile } from "@/api/queries";
-import { useQuery } from "@tanstack/react-query";
 import { COLOR } from "@/constants/COLOR";
 import useAuth from "@/hooks/useAuth";
-
-const Tab = createMaterialTopTabNavigator();
+import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Account() {
-  const { data, isLoading, isPending } = useQuery({
-    queryKey: ["profile"],
-    queryFn: getProfile,
-  });
-
   const { logout } = useAuth();
 
-  if (isLoading && !isPending) {
-    return <ActivityIndicator />;
-  }
-
   return (
-    <>
+    <View style={styles.container}>
       <View>
-        <View style={{ padding: 15, gap: 5 }}>
-          <View
+        <View>
+          <Text style={styles.heading}>Collegebay</Text>
+        </View>
+        <View style={{ gap: 10 }}>
+          <Pressable
             style={{
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
             }}
+            onPress={() => router.push("/profile")}
           >
-            <Image
-              source={{
-                uri: data?.image,
-              }}
-              style={{
-                width: 60,
-                height: 60,
-                borderRadius: 100,
-              }}
-            />
-
-            <View>
-              <Pressable onPress={logout} style={styles.button}>
-                <Text style={styles.buttonText}>Logout</Text>
-              </Pressable>
-            </View>
-          </View>
-
-          <Text style={{ fontSize: 20, fontWeight: "900", color: "#354F52" }}>
-            {data?.name}
-          </Text>
-          <View
+            <Text style={styles.text}>Profile</Text>
+            <Entypo name="chevron-small-right" size={30} color="black" />
+          </Pressable>
+          <Pressable
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 5,
+              justifyContent: "space-between",
             }}
+            onPress={() => router.push("/user-listings")}
           >
-            <Feather size={24} name="mail" color={"#52796F"} />
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: "700",
-                color: "#2F3E46",
-              }}
-            >
-              {data?.email}
-            </Text>
-          </View>
-
-          <View
+            <Text style={styles.text}>Listings</Text>
+            <Entypo name="chevron-small-right" size={30} color="black" />
+          </Pressable>
+          <Pressable
             style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: 5,
+              justifyContent: "space-between",
             }}
+            onPress={() => router.push("/user-requests")}
           >
-            <Feather size={24} name="phone" color={"#52796F"} />
-            <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
-              {data?.phoneNo}
-            </Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 5,
-            }}
-          >
-            <FontAwesome5 size={24} name="building" color={"#52796F"} />
-            <Text style={{ fontSize: 15, fontWeight: "700", color: "#2F3E46" }}>
-              {data?.college}
-            </Text>
-          </View>
+            <Text style={styles.text}>Requests</Text>
+            <Entypo name="chevron-small-right" size={30} color="black" />
+          </Pressable>
         </View>
       </View>
 
-      <Tab.Navigator
-        screenOptions={{
-          tabBarIndicatorStyle: {
-            borderBottomWidth: 4,
-            borderBottomColor: "#354F52",
-          },
-          tabBarIndicatorContainerStyle: {
-            backgroundColor: "#CAD2C5",
-          },
-
-          tabBarLabelStyle: {
-            fontSize: 15,
-            color: "#354F52",
-            fontWeight: "700",
-          },
-        }}
-      >
-        <Tab.Screen
-          name="user-listings"
-          options={{
-            title: "Listings",
-          }}
-          component={UserListings}
-        />
-        <Tab.Screen
-          name="user-requests"
-          options={{
-            title: "Requests",
-          }}
-          component={UserRequests}
-        />
-      </Tab.Navigator>
-    </>
+      <View>
+        <View>
+          <Pressable onPress={logout} style={styles.button}>
+            <MaterialIcons name="logout" size={24} color={"white"} />
+            <Text style={styles.buttonText}>Logout</Text>
+          </Pressable>
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "space-between",
+    padding: 10,
+  },
+  heading: {
+    fontSize: 30,
+    fontWeight: "800",
+    color: COLOR.primary,
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
   button: {
     backgroundColor: COLOR.primary,
-    paddingVertical: 10,
+    paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
   },
   buttonText: {
     fontSize: 15,

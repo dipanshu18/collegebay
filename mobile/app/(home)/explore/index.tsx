@@ -1,4 +1,5 @@
 import { getPosts } from "@/api/queries";
+import { IPost } from "@/api/types";
 import { ListingCard } from "@/components/listing-card";
 import { COLOR } from "@/constants/COLOR";
 import { useQuery } from "@tanstack/react-query";
@@ -19,16 +20,12 @@ export default function Explore() {
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  const {
-    data: posts,
-    isLoading,
-    isPending,
-  } = useQuery({
+  const { data: posts, isLoading } = useQuery({
     queryKey: ["posts"],
     queryFn: getPosts,
   });
 
-  if (isLoading && !isPending) {
+  if (isLoading) {
     return <ActivityIndicator color={COLOR.primary} />;
   }
 

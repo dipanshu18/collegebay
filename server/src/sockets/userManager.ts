@@ -52,7 +52,13 @@ export class UserManager {
 
     const rsocket = onlineUsers[receiverId];
     const usocket = onlineUsers[userId];
-    rsocket.send(JSON.stringify({ event: "new_message", newMessage }));
-    usocket.send(JSON.stringify({ event: "new_message", newMessage }));
+
+    if (rsocket) {
+      rsocket.send(JSON.stringify({ event: "new_message", newMessage }));
+    }
+
+    if (usocket) {
+      usocket.send(JSON.stringify({ event: "new_message", newMessage }));
+    }
   }
 }

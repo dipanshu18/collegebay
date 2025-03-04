@@ -1,13 +1,19 @@
 import { getValue } from "@/utils/secure-store";
 import axios, { AxiosError } from "axios";
 import { Alert } from "react-native";
-import type { IChat, IPost, IUserProfile, IUserRequest } from "./types";
+import type {
+  IChat,
+  IPost,
+  IUserNotification,
+  IUserProfile,
+  IUserRequest,
+} from "./types";
 
-export const BASE_URL = "http://10.0.2.2:5000/api/v1";
-// export const BASE_URL = "http://192.168.1.5:5000/api/v1";
+// export const BASE_URL = "http://10.0.2.2:5000/api/v1";
+export const BASE_URL = "http://192.168.1.5:5000/api/v1";
 
 export async function getProfile() {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.get(`${BASE_URL}/user`, {
       headers: {
@@ -29,7 +35,7 @@ export async function getProfile() {
 }
 
 export async function getPosts() {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.get(`${BASE_URL}/posts`, {
       headers: {
@@ -42,16 +48,20 @@ export async function getPosts() {
       const data = (await response.data.posts) as IPost[];
       return data;
     }
+
+    return [];
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
       Alert.alert(errorData);
     }
+
+    return [];
   }
 }
 
 export async function getPost(id: string) {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.get(`${BASE_URL}/posts/${id}`, {
       headers: {
@@ -73,7 +83,7 @@ export async function getPost(id: string) {
 }
 
 export async function getRequests() {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.get(`${BASE_URL}/requests`, {
       headers: {
@@ -86,16 +96,20 @@ export async function getRequests() {
       const data = (await response.data.requests) as IUserRequest[];
       return data;
     }
+
+    return [];
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
       console.log(errorData);
     }
+
+    return [];
   }
 }
 
 export async function getChats() {
-  const token = await getValue("token");
+  const token = getValue("token");
   try {
     const response = await axios.get(`${BASE_URL}/chats`, {
       headers: {
@@ -108,10 +122,41 @@ export async function getChats() {
       const data = (await response.data.chats) as IChat[];
       return data;
     }
+
+    return [];
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
       Alert.alert(errorData);
     }
+
+    return [];
+  }
+}
+
+export async function getUserNotifications() {
+  const token = getValue("token");
+
+  try {
+    const response = await axios.get(`${BASE_URL}/user/notifications`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      withCredentials: true,
+    });
+
+    if (response.status === 200) {
+      const data = (await response.data.notifications) as IUserNotification[];
+      return data;
+    }
+
+    return [];
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      Alert.alert(errorData);
+    }
+
+    return [];
   }
 }

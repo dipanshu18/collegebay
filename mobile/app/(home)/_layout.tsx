@@ -27,12 +27,51 @@ export default function DashboardLayout() {
       <Stack.Screen name="(tabs)" />
 
       <Stack.Screen
+        name="profile"
+        options={{
+          title: "Your profile",
+          headerShown: true,
+          headerLeft: () => (
+            <Link href={"/account"}>
+              <AntDesign size={24} name="arrowleft" color={"#354F52"} />
+            </Link>
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="user-listings/index"
+        options={{
+          title: "Listings",
+          headerShown: true,
+          headerLeft: () => (
+            <Link href={"/account"}>
+              <AntDesign size={24} name="arrowleft" color={"#354F52"} />
+            </Link>
+          ),
+        }}
+      />
+
+      <Stack.Screen
+        name="user-requests/index"
+        options={{
+          title: "Requests",
+          headerShown: true,
+          headerLeft: () => (
+            <Link href={"/account"}>
+              <AntDesign size={24} name="arrowleft" color={"#354F52"} />
+            </Link>
+          ),
+        }}
+      />
+
+      <Stack.Screen
         name="edit-profile/[id]"
         options={{
           title: "Edit profile",
           headerShown: true,
           headerLeft: () => (
-            <Link href={"/account"}>
+            <Link href={"/profile"}>
               <AntDesign size={24} name="arrowleft" color={"#354F52"} />
             </Link>
           ),
@@ -44,7 +83,7 @@ export default function DashboardLayout() {
           title: "Edit post",
           headerShown: true,
           headerLeft: () => (
-            <Link href={"/account"}>
+            <Link href={"/user-listings"}>
               <AntDesign size={24} name="arrowleft" color={"#354F52"} />
             </Link>
           ),
@@ -80,7 +119,7 @@ export default function DashboardLayout() {
           title: "",
           headerShown: true,
           headerLeft: () => (
-            <Link href={"/account"}>
+            <Link href={"/user-listings"}>
               <AntDesign size={24} name="arrowleft" color={"#354F52"} />
             </Link>
           ),

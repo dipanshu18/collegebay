@@ -7,7 +7,6 @@ import { fetchPost } from "@/actions/post";
 import type { IPost } from "@/actions/types";
 import { toast } from "sonner";
 import Image from "next/image";
-import { unsealCookie } from "@/utils/unseal";
 import { cookies } from "next/headers";
 import { MessageSellerBtn } from "@/components/message-seller-btn";
 
@@ -25,8 +24,7 @@ export default async function PostDetails({
     post = response.success;
   }
 
-  const sealed_uid = cookies().get("uid")?.value;
-  const userId = (await unsealCookie(sealed_uid as string)) as string;
+  const userId = cookies().get("uid")?.value;
 
   return (
     <div className="h-full mb-20 lg:mb-0">
