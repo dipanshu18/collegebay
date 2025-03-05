@@ -1,36 +1,64 @@
-import dotenv from "dotenv";
-dotenv.config();
-const REDIS_URL = process.env.REDIS_URL;
+import "dotenv/config";
+const REDIS_URL = process.env.REDIS_URL as string;
 
 import Redis from "ioredis";
 import type { WebSocket } from "ws";
 import { db } from "../utils/db";
 
-const client = new Redis({});
+const redisClient = new Redis(REDIS_URL);
+const redisPub = redisClient.duplicate();
+const redisSub = redisClient.duplicate();
 
-const onlineUsers: { [userId: string]: WebSocket } = {};
+interface Message {
+  type: string;
+  chatId: string;
+  receiverId: string;
+  userId: string;
+  text: string;
+}
+
+const localOnlineUsers: { [userId: string]: WebSocket } = {};
+
+redisSub.subscribe("chat-messages");
+
+redisSub.on("message", (channel, message) => {
+  if (channel === "chat-messages") {
+    const parsedMessage = JSON.parse(message);
+    const rSocket = localOnlineUsers[parsedMessage.receiverId];
+
+    if (rSocket) {
+      rSocket.send(
+        JSON.stringify({
+          event: "new_message",
+          newMessage: parsedMessage.newMessage,
+        })
+      );
+    }
+  }
+});
 
 export class UserManager {
   constructor(userId: string, socket: WebSocket) {
-    onlineUsers[userId] = socket;
-    client.sadd("online_users", userId);
+    localOnlineUsers[userId] = socket;
+    redisClient.sadd("online-users", userId);
+
+    socket.on("close", async () => {
+      delete localOnlineUsers[userId];
+      await redisClient.srem("online-users", userId);
+    });
   }
 
   async removeUser(userId: string) {
-    delete onlineUsers[userId];
-    await client.srem("online_users", userId);
+    delete localOnlineUsers[userId];
+    await redisClient.srem("online-users", userId);
   }
 
   async isUserOnline(userId: string) {
-    console.log(userId);
-    return client.sismember("online_users", userId);
+    const result = (await redisClient.sismember("online-users", userId)) === 1;
+    return result;
   }
 
-  async sendMessage(
-    receiverId: string,
-    userId: string,
-    message: { type: string; chatId: string; userId: string; text: string }
-  ) {
+  async sendMessage(message: Message) {
     const newMessage = await db.message.create({
       data: {
         type: "TEXT",
@@ -50,15 +78,22 @@ export class UserManager {
       },
     });
 
-    const rsocket = onlineUsers[receiverId];
-    const usocket = onlineUsers[userId];
-
-    if (rsocket) {
-      rsocket.send(JSON.stringify({ event: "new_message", newMessage }));
+    if (localOnlineUsers[message.userId]) {
+      localOnlineUsers[message.userId].send(
+        JSON.stringify({ event: "new_message", newMessage })
+      );
     }
 
-    if (usocket) {
-      usocket.send(JSON.stringify({ event: "new_message", newMessage }));
+    const isReceiverOnline = await this.isUserOnline(message.receiverId);
+    if (isReceiverOnline) {
+      redisPub.publish(
+        "chat-messages",
+        JSON.stringify({
+          receiverId: message.receiverId,
+          userId: message.userId,
+          newMessage,
+        })
+      );
     }
   }
 }

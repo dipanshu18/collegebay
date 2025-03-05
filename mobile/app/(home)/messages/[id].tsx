@@ -1,12 +1,10 @@
-import { BASE_URL } from "@/api/queries";
-import { IChat, IMessage } from "@/api/types";
 import { COLOR } from "@/constants/COLOR";
 import useSocket from "@/hooks/useSocket";
 import { getValue } from "@/utils/secure-store";
 import { Feather } from "@expo/vector-icons";
-import axios from "axios";
-import { router, useLocalSearchParams } from "expo-router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { formatDistanceToNow } from "date-fns";
+import { useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Image,
@@ -34,7 +32,7 @@ export default function ChatBox() {
   useEffect(() => {
     setTimeout(() => {
       messagesEndRef.current?.scrollToEnd({ animated: true });
-    }, 50);
+    }, 100);
   }, []);
 
   return (
@@ -46,66 +44,82 @@ export default function ChatBox() {
             data={messages}
             keyExtractor={(item) => item.id.toString()}
             onContentSizeChange={() => {
-              setTimeout(() => {
-                messagesEndRef.current?.scrollToEnd({ animated: true });
-              }, 50);
+              messagesEndRef.current?.scrollToEnd({ animated: true });
             }}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => {
               return (
                 <View
                   style={[
-                    {
-                      gap: 5,
-                      borderRadius: 10,
-                      marginVertical: 5,
-                      padding: 10,
-                      width: "90%",
-                    },
+                    { flexDirection: "row", alignItems: "center", gap: 3 },
                     item.senderId === userId
-                      ? {
-                          backgroundColor: COLOR.primary,
-                          marginLeft: "auto",
-                        }
-                      : { backgroundColor: "#E5E7EB", marginRight: "auto" },
+                      ? { flexDirection: "row-reverse" }
+                      : { justifyContent: "flex-start" },
                   ]}
                 >
-                  <Text
-                    style={[
-                      { color: "white", fontSize: 20, fontWeight: "500" },
-                      item.senderId === userId && { textAlign: "right" },
-                      item.senderId !== userId && { color: COLOR.primary },
-                    ]}
-                  >
-                    {item.text}
-                  </Text>
+                  <Image
+                    source={{ uri: item.sender.image }}
+                    width={30}
+                    height={30}
+                    style={{ borderRadius: 100 }}
+                  />
                   <View
                     style={[
                       {
-                        flexDirection: "row",
-                        alignItems: "center",
                         gap: 5,
+                        borderRadius: 10,
+                        marginVertical: 5,
+                        padding: 10,
+                        width: "60%",
                       },
-                      item.senderId === userId && { marginLeft: "auto" },
+                      item.senderId === userId
+                        ? {
+                            backgroundColor: COLOR.primary,
+                            marginLeft: "auto",
+                          }
+                        : { backgroundColor: "#E5E7EB", marginRight: "auto" },
                     ]}
                   >
-                    <Image
-                      source={{ uri: item.sender.image }}
-                      width={30}
-                      height={30}
-                      style={{ borderRadius: 100 }}
-                    />
-                    <Text
+                    <View
                       style={[
                         {
-                          color: "white",
-                          fontSize: 15,
-                          fontWeight: "700",
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: 5,
                         },
+                        item.senderId === userId && { marginLeft: "auto" },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          {
+                            color: "white",
+                            fontSize: 12,
+                            fontWeight: "700",
+                          },
+                          item.senderId !== userId && { color: COLOR.primary },
+                        ]}
+                      >
+                        {item.senderId === userId ? "You" : item.sender.name}
+                      </Text>
+                    </View>
+                    <Text
+                      style={[
+                        { color: "white", fontSize: 15, fontWeight: "400" },
+                        item.senderId === userId && { textAlign: "right" },
                         item.senderId !== userId && { color: COLOR.primary },
                       ]}
                     >
-                      {item.senderId === userId ? "You" : item.sender.name}
+                      {item.text}
+                    </Text>
+                    <Text
+                      style={[
+                        { color: "white", fontSize: 11, fontWeight: "500" },
+                        item.senderId === userId && { textAlign: "right" },
+                        item.senderId !== userId && { color: COLOR.primary },
+                      ]}
+                    >
+                      {formatDistanceToNow(item.createdAt, { addSuffix: true })}
                     </Text>
                   </View>
                 </View>

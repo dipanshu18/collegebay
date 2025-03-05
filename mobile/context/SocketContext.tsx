@@ -61,8 +61,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }
 
   useEffect(() => {
-    // const ws = new WebSocket("ws://10.0.2.2:7777");
-    const ws = new WebSocket("ws://192.168.1.5:7777");
+    const ws = new WebSocket("ws://10.0.2.2:7777");
+    // const ws = new WebSocket("ws://192.168.1.5:7777");
 
     setSocket(ws);
 

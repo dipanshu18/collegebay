@@ -22,6 +22,7 @@ export function MessageBox({ chat, userId }: IMessageBoxProps) {
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
+      console.log(data);
       if (data.event === "new_message") {
         setMessages((prev) => [...prev, data.newMessage]);
       }

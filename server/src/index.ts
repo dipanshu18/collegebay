@@ -1,3 +1,7 @@
+import "dotenv/config";
+const PORT = process.env.PORT as string;
+const WS_PORT = Number(process.env.WS_PORT as string);
+
 import http from "node:http";
 import express, {
   type Request,
@@ -19,14 +23,11 @@ import { requestRouter } from "./routers/request.router";
 import { chatRouter } from "./routers/chat.router";
 import { checkAuth } from "./utils/auth";
 
-import dotenv from "dotenv";
 import { UserManager } from "./sockets/userManager";
-dotenv.config();
-const PORT = process.env.PORT;
 
 const app = express();
 const wss = new WebSocketServer({
-  port: 7777,
+  port: WS_PORT,
 });
 
 app.use(express.json());
@@ -70,7 +71,8 @@ wss.on("connection", async (socket, request) => {
     const { event, text, receiverId, chatId } = decoded;
 
     if (event === "new_message") {
-      await user.sendMessage(receiverId, auth.id, {
+      await user.sendMessage({
+        receiverId,
         chatId,
         text,
         type: "new_message",
