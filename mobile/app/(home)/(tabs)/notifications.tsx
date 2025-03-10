@@ -24,7 +24,7 @@ export default function Notifications() {
   console.log(data);
 
   return (
-    <View>
+    <View style={{ padding: 10 }}>
       {data && data.length > 0 ? (
         <FlatList
           data={data}
@@ -80,7 +80,9 @@ export default function Notifications() {
           }}
         />
       ) : (
-        <Text>No notifications yet</Text>
+        <Text style={{ fontSize: 15, fontWeight: 500 }}>
+          No notifications yet
+        </Text>
       )}
     </View>
   );

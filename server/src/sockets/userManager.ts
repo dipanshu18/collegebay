@@ -26,14 +26,12 @@ redisSub.on("message", (channel, message) => {
     const parsedMessage = JSON.parse(message);
     const rSocket = localOnlineUsers[parsedMessage.receiverId];
 
-    if (rSocket) {
-      rSocket.send(
-        JSON.stringify({
-          event: "new_message",
-          newMessage: parsedMessage.newMessage,
-        })
-      );
-    }
+    rSocket.send(
+      JSON.stringify({
+        event: "new_message",
+        newMessage: parsedMessage.newMessage,
+      })
+    );
   }
 });
 

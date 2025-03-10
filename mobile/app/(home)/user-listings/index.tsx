@@ -23,7 +23,7 @@ export default function UserListings() {
 
   return (
     <>
-      <View style={{ paddingHorizontal: 20, marginTop: 10 }}>
+      <View style={{ padding: 10 }}>
         {data?.posts && data?.posts.length > 0 ? (
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -41,7 +41,7 @@ export default function UserListings() {
             }}
           />
         ) : (
-          <Text style={{ fontSize: 15, fontWeight: "500" }}>
+          <Text style={{ fontSize: 15, fontWeight: 500, textAlign: "center" }}>
             No listings posted yet
           </Text>
         )}

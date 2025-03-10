@@ -28,7 +28,7 @@ export default function UserRequests() {
           return <RequestCard key={item.id} type="user" request={item} />;
         })
       ) : (
-        <Text style={{ fontSize: 15, fontWeight: "500" }}>
+        <Text style={{ fontSize: 15, fontWeight: 500, textAlign: "center" }}>
           No requests made yet
         </Text>
       )}

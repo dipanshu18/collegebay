@@ -3,7 +3,7 @@ import useSocket from "@/hooks/useSocket";
 import { getValue } from "@/utils/secure-store";
 import { Feather } from "@expo/vector-icons";
 import { formatDistanceToNow } from "date-fns";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -14,6 +14,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ChatBox() {
   const userId = getValue("uid");
@@ -36,7 +37,33 @@ export default function ChatBox() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+        <Feather
+          onPress={() => router.back()}
+          name="arrow-left"
+          size={24}
+          color={COLOR.primary}
+        />
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+          <Image
+            source={{
+              uri: chat?.participants.filter((p) => p.id !== userId)[0].image,
+            }}
+            width={50}
+            style={{ borderRadius: 100 }}
+            height={50}
+          />
+          <View>
+            <Text
+              style={{ fontSize: 20, fontWeight: 600, color: COLOR.primary }}
+            >
+              {chat?.participants.filter((p) => p.id !== userId)[0].name}
+            </Text>
+          </View>
+        </View>
+      </View>
+
       <View style={{ flex: 1 }}>
         {chat?.messages && chat.messages.length > 0 ? (
           <FlatList
@@ -164,7 +191,7 @@ export default function ChatBox() {
           <Feather name="send" size={25} color={"white"} />
         </Pressable>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

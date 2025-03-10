@@ -1,4 +1,3 @@
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import {
   ActivityIndicator,
   Image,
@@ -12,8 +11,6 @@ import { Feather, FontAwesome5 } from "@expo/vector-icons";
 import { getProfile } from "@/api/queries";
 import { useQuery } from "@tanstack/react-query";
 import { COLOR } from "@/constants/COLOR";
-import useAuth from "@/hooks/useAuth";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 
 export default function Profile() {
@@ -21,8 +18,6 @@ export default function Profile() {
     queryKey: ["profile"],
     queryFn: getProfile,
   });
-
-  const { logout } = useAuth();
 
   if (isLoading && !isPending) {
     return <ActivityIndicator />;

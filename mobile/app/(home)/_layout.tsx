@@ -93,7 +93,7 @@ export default function DashboardLayout() {
         name="messages/[id]"
         options={{
           title: "",
-          headerShown: true,
+          headerShown: false,
           headerLeft: () => (
             <Link href={"/messages"}>
               <AntDesign size={24} name="arrowleft" color={"#354F52"} />

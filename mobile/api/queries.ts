@@ -71,7 +71,7 @@ export async function getPost(id: string) {
     });
 
     if (response.status === 200) {
-      const data = (await response.data) as IPost;
+      const data = (await response.data.post) as IPost;
       return data;
     }
   } catch (error) {
