@@ -69,8 +69,6 @@ export class UserManager {
           select: {
             id: true,
             name: true,
-            image: true,
-            college: true,
           },
         },
       },

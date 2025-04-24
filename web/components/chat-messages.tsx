@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import type { IMessage } from "@/actions/types";
 import { useEffect, useRef } from "react";
 import { cn } from "./lib/utils";
@@ -15,10 +13,18 @@ export function ChatMessages({
   userId: string;
 }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const previousMessageCount = useRef(messages.length);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, []);
+
+  useEffect(() => {
+    if (messages.length !== previousMessageCount.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      previousMessageCount.current = messages.length;
+    }
+  }, [messages.length]);
 
   return (
     <div className="grid grid-cols-1 gap-3">
@@ -32,14 +38,6 @@ export function ChatMessages({
                 : "ml-auto flex-row-reverse"
             }`}
           >
-            <Image
-              src={item.sender.image}
-              alt="user profile pic"
-              width={200}
-              height={200}
-              quality={100}
-              className="w-10 h-10 rounded-full"
-            />
             <div
               className={`${
                 item.senderId !== userId
@@ -82,13 +80,15 @@ export function ChatMessages({
           </div>
         ))
       ) : (
-        <div className="text-center">
-          <h1 className="text-lg font-bold">
+        <div className="text-center h-[60dvh] flex flex-col items-center justify-center">
+          <h1 className="text-2xl font-bold">
             Start the conversation by sending {`"`}Hi{`"`}
           </h1>
-          <p>Do not pay upfront with any links.</p>
-          <p>Always do pay when the product is received.</p>
-          <p>
+          <p className="text-xl font-semibold">
+            Do not pay upfront with any links.
+          </p>
+          <p className="text-lg">Always do pay when the product is received.</p>
+          <p className="my-5 text-lg">
             Reach out us if any seller is trying to pay upfront with proper
             messages screenshot to report them
           </p>

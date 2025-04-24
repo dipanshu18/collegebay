@@ -1,10 +1,11 @@
 import { getPosts } from "@/api/queries";
-import { IPost } from "@/api/types";
+import type { IPost } from "@/api/types";
+import { queryClient } from "@/app/_layout";
 import { ListingCard } from "@/components/listing-card";
 import { COLOR } from "@/constants/COLOR";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -13,17 +14,55 @@ import {
   Text,
   TextInput,
   View,
+  RefreshControl,
 } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 
 export default function Explore() {
+  const [refreshing, setRefreshing] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("ALL");
 
-  const { data: posts, isLoading } = useQuery({
+  const [originalPosts, setOriginalPosts] = useState<IPost[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<IPost[]>([]);
+
+  const { data: posts, isLoading } = useQuery<IPost[]>({
     queryKey: ["posts"],
     queryFn: getPosts,
   });
+
+  useEffect(() => {
+    if (posts) {
+      setOriginalPosts(posts);
+      setFilteredPosts(posts);
+    }
+  }, [posts]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(async () => {
+      const updatedPosts = await getPosts();
+      setOriginalPosts(updatedPosts);
+      setFilteredPosts(updatedPosts);
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
+  const handleSearch = () => {
+    const filtered = originalPosts.filter((post) => {
+      const matchesCategory =
+        selectedCategory === "ALL" || post.category === selectedCategory;
+      const matchesSearch =
+        post.title.toLowerCase().includes(searchText.toLowerCase()) ||
+        post.description.toLowerCase().includes(searchText.toLowerCase());
+
+      return matchesCategory && matchesSearch;
+    });
+
+    setFilteredPosts(filtered);
+
+    setSearchText("");
+  };
 
   if (isLoading) {
     return <ActivityIndicator color={COLOR.primary} />;
@@ -38,6 +77,9 @@ export default function Explore() {
         gap: 10,
         marginBottom: 10,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <View style={{ gap: 15 }}>
         <TextInput
@@ -76,25 +118,24 @@ export default function Explore() {
           }}
         />
 
-        <Pressable style={styles.button}>
+        <Pressable style={styles.button} onPress={handleSearch}>
           <Text style={styles.buttonText}>Search</Text>
         </Pressable>
       </View>
-      {posts && posts.length > 0 ? (
-        posts.map((item) => {
-          return (
-            <Link
-              key={item.id}
-              href={`/explore/${item.id}`}
-              style={{ width: "100%", marginVertical: 15 }}
-            >
-              <ListingCard post={item} />
-            </Link>
-          );
-        })
+
+      {filteredPosts.length > 0 ? (
+        filteredPosts.map((item) => (
+          <Link
+            key={item.id}
+            href={`/explore/${item.id}`}
+            style={{ width: "100%", marginVertical: 15 }}
+          >
+            <ListingCard post={item} />
+          </Link>
+        ))
       ) : (
-        <Text style={{ fontSize: 15, fontWeight: "500" }}>
-          No listings posted yet
+        <Text style={{ fontSize: 15, fontWeight: "500", marginTop: 20 }}>
+          No results found
         </Text>
       )}
     </ScrollView>

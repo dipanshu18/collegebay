@@ -84,12 +84,12 @@ export default function ChatBox() {
                       : { justifyContent: "flex-start" },
                   ]}
                 >
-                  <Image
+                  {/* <Image
                     source={{ uri: item.sender.image }}
                     width={30}
                     height={30}
                     style={{ borderRadius: 100 }}
-                  />
+                  /> */}
                   <View
                     style={[
                       {

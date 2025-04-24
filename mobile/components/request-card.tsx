@@ -19,7 +19,6 @@ export function RequestCard({
     mutationKey: ["upvote", request.id],
     mutationFn: () => upVoteRequest(request.id),
     onSuccess: () => {
-      router.reload();
       queryClient.invalidateQueries({
         queryKey: ["requests"],
       });

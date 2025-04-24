@@ -2,9 +2,29 @@ import { getRequests } from "@/api/queries";
 import { RequestCard } from "@/components/request-card";
 import { COLOR } from "@/constants/COLOR";
 import { useQuery } from "@tanstack/react-query";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { queryClient } from "../_layout";
+import { useCallback, useState } from "react";
 
 export default function Requests() {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["requests"],
+      });
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const {
     data: requests,
     isLoading,
@@ -26,6 +46,9 @@ export default function Requests() {
         gap: 10,
         marginBottom: 10,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       {requests && requests.length > 0 ? (
         requests.map((item) => {

@@ -39,23 +39,11 @@ export function MessageInput({
     router.refresh();
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Prevents newline
-      handleSendMessage();
-    }
-  }
-
   return (
     <div className="sticky bottom-0 mb-20 lg:mb-0 px-2 pb-2 border-r border-gray-100 flex gap-2 items-center">
       <div className="w-full relative">
         <form onSubmit={handleSendMessage}>
-          <Textarea
-            onKeyDown={handleKeyDown}
-            rows={5}
-            placeholder="your message"
-            ref={message}
-          />
+          <Textarea rows={5} placeholder="your message" ref={message} />
           {pending ? (
             <Button>
               <Spinner />

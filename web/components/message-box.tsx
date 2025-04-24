@@ -33,7 +33,7 @@ export function MessageBox({ chat, userId }: IMessageBoxProps) {
         ws.close();
       }
     };
-  }, [messages]);
+  }, []);
 
   return (
     <>
