@@ -6,7 +6,7 @@ import { Feather, FontAwesome } from "@expo/vector-icons";
 import { useMutation } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { router } from "expo-router";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export function RequestCard({
   request,
@@ -29,7 +29,6 @@ export function RequestCard({
     mutationKey: ["delete-request", request.id],
     mutationFn: () => deleteRequest(request.id),
     onSuccess: () => {
-      router.reload();
       queryClient.invalidateQueries({
         queryKey: ["requests"],
       });
@@ -128,7 +127,21 @@ export function RequestCard({
               backgroundColor: "#c1121f",
               borderRadius: 10,
             }}
-            onPress={() => deleteRequestMutation.mutate()}
+            onPress={() => {
+              Alert.alert("Are you sure want to delete this request?", "", [
+                {
+                  text: "Cancel",
+                  onPress: () => {},
+                },
+                {
+                  text: "Delete",
+                  style: "destructive",
+                  onPress: () => {
+                    deleteRequestMutation.mutate();
+                  },
+                },
+              ]);
+            }}
           >
             <Feather size={24} name="trash" color={"white"} />
             <Text style={{ color: "white", fontSize: 15, fontWeight: "500" }}>

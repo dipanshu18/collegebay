@@ -34,7 +34,7 @@ export function MessageSellerBtn({ sellerId }: { sellerId: string }) {
     <form onSubmit={handleMessageSeller}>
       <Button
         disabled={pending}
-        className="w-full bg-primary text-white hover:bg-accent"
+        className="w-full max-w-md bg-primary text-white hover:bg-accent"
       >
         {pending ? (
           "Initiating chat"

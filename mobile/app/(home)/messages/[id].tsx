@@ -22,6 +22,7 @@ export default function ChatBox() {
   const { id } = useLocalSearchParams();
 
   const { chat, messages, getChat, handleSendMessage } = useSocket();
+  const previousMessageCount = useRef(messages.length);
 
   useEffect(() => {
     getChat(id as string);
@@ -35,6 +36,13 @@ export default function ChatBox() {
       messagesEndRef.current?.scrollToEnd({ animated: true });
     }, 100);
   }, []);
+
+  useEffect(() => {
+    if (messages.length !== previousMessageCount.current) {
+      messagesEndRef.current?.scrollToEnd({ animated: true });
+      previousMessageCount.current = messages.length;
+    }
+  }, [messages.length]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -84,12 +92,6 @@ export default function ChatBox() {
                       : { justifyContent: "flex-start" },
                   ]}
                 >
-                  {/* <Image
-                    source={{ uri: item.sender.image }}
-                    width={30}
-                    height={30}
-                    style={{ borderRadius: 100 }}
-                  /> */}
                   <View
                     style={[
                       {

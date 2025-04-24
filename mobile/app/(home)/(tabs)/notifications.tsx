@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
+  Pressable,
   ScrollView,
   Text,
   View,
@@ -30,17 +31,16 @@ export default function Notifications() {
           data={data}
           renderItem={({ item }) => {
             return (
-              <View
-                style={{
+              <Pressable
+                style={({ pressed }) => ({
+                  backgroundColor: pressed ? "lightgrey" : "transparent", // Light gray on press
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  paddingTop: 10,
+                  paddingVertical: 10,
                   paddingHorizontal: 10,
-                  marginVertical: 5,
-                  borderTopWidth: 0.5,
-                  borderColor: "lightgrey",
-                }}
+                  borderRadius: 10,
+                })}
               >
                 <View
                   style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
@@ -75,7 +75,7 @@ export default function Notifications() {
                   </View>
                 </View>
                 <View>{!item.read && <Entypo name="check" size={24} />}</View>
-              </View>
+              </Pressable>
             );
           }}
         />

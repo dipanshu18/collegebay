@@ -31,6 +31,9 @@ export async function getAllChats(req: Request, res: Response) {
               },
             },
           },
+          orderBy: {
+            createdAt: "asc",
+          },
         },
         participants: {
           select: {

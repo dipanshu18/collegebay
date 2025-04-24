@@ -38,13 +38,7 @@ export default function Messages() {
       {chats && chats.length > 0 ? (
         <FlatList
           data={chats}
-          renderItem={({ item }) => {
-            return (
-              <Link href={`/messages/${item.id}`} style={{ flex: 1 }}>
-                <MessageCard chat={item} />
-              </Link>
-            );
-          }}
+          renderItem={({ item }) => <MessageCard chat={item} />}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }

@@ -43,8 +43,7 @@ export default async function MessagesPage() {
       </div>
 
       <div className="flex-1 w-full flex overflow-hidden">
-        {/* Sidebar */}
-        <div className="flex-1 border-t w-full overflow-y-auto scrollbar-thin">
+        <div className="flex-1 divide-y border-t w-full overflow-y-auto scrollbar-thin">
           {chats && chats.length > 0 ? (
             chats.map((item) => (
               <Link
@@ -52,7 +51,7 @@ export default async function MessagesPage() {
                 href={`/messages/${item.id}`}
                 className="block"
               >
-                <div className="flex items-center gap-3 border-b p-5 hover:bg-gray-100">
+                <div className="flex items-center gap-3 p-5 hover:bg-gray-100">
                   <Image
                     src={
                       item.participants.filter((user) => user.id !== userId)[0]

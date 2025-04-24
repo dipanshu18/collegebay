@@ -1,10 +1,14 @@
+import { startChat } from "@/api/mutations";
 import { getPost } from "@/api/queries";
 import { COLOR } from "@/constants/COLOR";
 import { getValue } from "@/utils/secure-store";
 import { useQuery } from "@tanstack/react-query";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
+  Dimensions,
   Image,
   Pressable,
   ScrollView,
@@ -13,7 +17,32 @@ import {
   View,
 } from "react-native";
 
+import { useSharedValue } from "react-native-reanimated";
+import Carousel, {
+  type ICarouselInstance,
+  Pagination,
+} from "react-native-reanimated-carousel";
+
+const { width } = Dimensions.get("window");
+
 export default function PostDetails() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
+  const ref = useRef<ICarouselInstance>(null);
+  const progress = useSharedValue<number>(0);
+
+  const onPressPagination = (index: number) => {
+    ref.current?.scrollTo({
+      /**
+       * Calculate the difference between the current index and the target index
+       * to ensure that the carousel scrolls to the nearest index
+       */
+      count: index - progress.value,
+      animated: true,
+    });
+  };
+
   const userId = getValue("uid");
   const { id } = useLocalSearchParams();
 
@@ -25,65 +54,128 @@ export default function PostDetails() {
   if (isLoading) {
     return <ActivityIndicator color={COLOR.primary} />;
   }
+
+  async function handleMessageSeller() {
+    setLoading(true);
+
+    try {
+      const response = await startChat(post?.user.id as string);
+
+      if (response?.error) {
+        return Alert.alert(response.error);
+      }
+
+      if (response?.success === "REDIRECT") {
+        return router.push(`/messages/${response.chatId}`);
+      }
+      return router.push(`/messages/${response?.success}`);
+    } catch (error) {
+      console.log("ERROR:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
-    <ScrollView style={{ padding: 20 }}>
-      <View>
-        <Image
-          source={{
-            uri: post?.images[0],
-          }}
-          style={{ aspectRatio: 16 / 9, borderRadius: 10 }}
+    <ScrollView>
+      <View style={{ flex: 1, marginVertical: 10 }}>
+        <Carousel
+          ref={ref}
+          width={width}
+          height={width / 1.5}
+          data={post?.images as string[]}
+          onProgressChange={progress}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                source={{
+                  uri: item,
+                }}
+                style={{
+                  marginHorizontal: "auto",
+                  height: 350,
+                  width,
+                  padding: 10,
+                  objectFit: "contain",
+                }}
+              />
+            </View>
+          )}
+        />
+
+        <Pagination.Basic
+          progress={progress}
+          data={post?.images as string[]}
+          dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
+          containerStyle={{ gap: 5, marginTop: 10 }}
+          onPress={onPressPagination}
         />
       </View>
-      <View style={{ gap: 10, marginVertical: 10 }}>
-        <Text style={{ fontSize: 20, fontWeight: 700 }}>{post?.title}</Text>
-        <Text style={{ fontSize: 15 }}>{post?.description}</Text>
-        <Text style={{ fontSize: 20, fontWeight: 800 }}>Rs. {post?.price}</Text>
-      </View>
 
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 5,
-          marginVertical: 10,
-        }}
-      >
-        <Image
-          source={{
-            uri: post?.user.image,
+      <View style={{ paddingHorizontal: 20 }}>
+        <View style={{ gap: 10, marginVertical: 10 }}>
+          <Text style={{ fontSize: 20, fontWeight: 700 }}>{post?.title}</Text>
+          <Text style={{ fontSize: 15 }}>{post?.description}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 800 }}>
+            Rs. {post?.price}
+          </Text>
+        </View>
+
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 5,
+            marginVertical: 10,
           }}
-          width={50}
-          height={50}
-          style={{ borderRadius: 100 }}
-        />
+        >
+          <Image
+            source={{
+              uri: post?.user.image,
+            }}
+            width={50}
+            height={50}
+            style={{ borderRadius: 100 }}
+          />
 
-        <View>
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: 700,
-            }}
-          >
-            {post?.user.name}
-          </Text>
-          <Text
-            style={{
-              fontWeight: 400,
-            }}
-          >
-            {post?.user.college}
-          </Text>
+          <View>
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: 700,
+              }}
+            >
+              {post?.user.name}
+            </Text>
+            <Text
+              style={{
+                fontWeight: 400,
+              }}
+            >
+              {post?.user.college}
+            </Text>
+          </View>
         </View>
+
+        {post?.user.id !== userId && (
+          <View>
+            <Pressable
+              style={styles.btn}
+              onPress={handleMessageSeller}
+              disabled={loading}
+            >
+              <Text style={styles.btnText}>
+                {loading ? "Initializing chat..." : "Message"}
+              </Text>
+            </Pressable>
+          </View>
+        )}
       </View>
-
-      {post?.user.id !== userId && (
-        <View>
-          <Pressable style={styles.btn}>
-            <Text style={styles.btnText}>Message</Text>
-          </Pressable>
-        </View>
-      )}
     </ScrollView>
   );
 }

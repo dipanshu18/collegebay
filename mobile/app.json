@@ -30,6 +30,12 @@
         {
           "fonts": ["./assets/fonts/Roboto-Regular.ttf"]
         }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
       ]
     ],
     "experiments": {

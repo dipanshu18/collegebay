@@ -1,9 +1,29 @@
 import { getProfile } from "@/api/queries";
+import { queryClient } from "@/app/_layout";
 import { RequestCard } from "@/components/request-card";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { ActivityIndicator, ScrollView, Text, View } from "react-native";
+import { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 
 export default function UserRequests() {
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["requests"],
+      });
+      setRefreshing(false);
+    }, 2000);
+  }, []);
+
   const { data, isLoading, isPending } = useQuery({
     queryKey: ["requests"],
     queryFn: getProfile,
@@ -17,11 +37,13 @@ export default function UserRequests() {
     <ScrollView
       showsVerticalScrollIndicator={false}
       style={{
-        padding: 10,
-        flex: 1,
+        paddingHorizontal: 10,
+        // flex: 1,
         gap: 10,
-        marginBottom: 10,
       }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       {data?.requests && data.requests.length > 0 ? (
         data.requests.map((item) => {

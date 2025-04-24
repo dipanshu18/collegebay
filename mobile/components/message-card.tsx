@@ -1,23 +1,26 @@
 import type { IChat } from "@/api/types";
 import { getValue } from "@/utils/secure-store";
-import { Image, Text, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Image, Pressable, Text, View } from "react-native";
 
 export function MessageCard({ chat }: { chat: IChat }) {
+  const router = useRouter();
   const userId = getValue("uid");
   const reciever = chat.participants.filter((p) => p.id !== userId)[0];
   const lastMessage = chat.messages[chat.messages.length - 1];
 
   return (
-    <View
-      style={{
+    <Pressable
+      style={({ pressed }) => ({
         width: "100%",
+        backgroundColor: pressed ? "lightgrey" : "transparent",
         flexDirection: "row",
         alignItems: "center",
+        borderRadius: 10,
         gap: 5,
-        borderTopWidth: 1,
-        borderTopColor: "lightgrey",
         padding: 10,
-      }}
+      })}
+      onPress={() => router.push(`/messages/${chat.id}`)}
     >
       <Image
         source={{
@@ -36,6 +39,6 @@ export function MessageCard({ chat }: { chat: IChat }) {
           {lastMessage.text}
         </Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
