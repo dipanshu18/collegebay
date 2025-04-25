@@ -1,6 +1,7 @@
 import express from "express";
 
 import {
+  createFeedbackForPost,
   createPost,
   deletePost,
   editPost,
@@ -19,6 +20,8 @@ postRouter.get("/filters", getFilteredPosts);
 postRouter.get("/:id", getPost);
 
 postRouter.post("/", createPost);
+
+postRouter.post("/feedback/:id", createFeedbackForPost);
 
 postRouter.patch("/:id/sold", postSold);
 

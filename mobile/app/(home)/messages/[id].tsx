@@ -156,8 +156,29 @@ export default function ChatBox() {
             }}
           />
         ) : (
-          <View>
-            <Text>No messages yet</Text>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 10,
+            }}
+          >
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ fontSize: 20, fontWeight: "800" }}>
+                Start the conversation by sending "Hi".
+              </Text>
+              <Text style={{ fontSize: 18, fontWeight: "600" }}>
+                Do not pay upfront with any links.
+              </Text>
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                Always do pay when the product is received.{" "}
+              </Text>
+            </View>
+            <Text style={{ textAlign: "center", fontSize: 15 }}>
+              Reach out us if any seller is trying to pay upfront with proper
+              messages screenshot to report them
+            </Text>
           </View>
         )}
       </View>

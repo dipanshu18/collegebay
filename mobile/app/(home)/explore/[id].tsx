@@ -59,7 +59,7 @@ export default function PostDetails() {
     setLoading(true);
 
     try {
-      const response = await startChat(post?.user.id as string);
+      const response = await startChat(post?.seller.id as string);
 
       if (response?.error) {
         return Alert.alert(response.error);
@@ -136,7 +136,7 @@ export default function PostDetails() {
         >
           <Image
             source={{
-              uri: post?.user.image,
+              uri: post?.seller.image,
             }}
             width={50}
             height={50}
@@ -150,19 +150,19 @@ export default function PostDetails() {
                 fontWeight: 700,
               }}
             >
-              {post?.user.name}
+              {post?.seller.name}
             </Text>
             <Text
               style={{
                 fontWeight: 400,
               }}
             >
-              {post?.user.college}
+              {post?.seller.college}
             </Text>
           </View>
         </View>
 
-        {post?.user.id !== userId && (
+        {post?.seller.id !== userId && post?.isAvailable && (
           <View>
             <Pressable
               style={styles.btn}

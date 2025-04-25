@@ -26,7 +26,7 @@ export default function Landing() {
         rem!
       </Text>
 
-      <Pressable
+      {/* <Pressable
         onPress={() => router.push("/signup")}
         style={[styles.button, { backgroundColor: COLOR.primary }]}
       >
@@ -40,7 +40,7 @@ export default function Landing() {
         >
           Let's get started
         </Text>
-      </Pressable>
+      </Pressable> */}
 
       <Pressable
         onPress={() => router.push("/login")}

@@ -6,7 +6,7 @@ export interface IPost {
   images: string[];
   isAvailable: boolean;
   isApproved: boolean;
-  user: {
+  seller: {
     id: string;
     image: string;
     name: string;

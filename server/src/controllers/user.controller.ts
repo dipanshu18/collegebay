@@ -24,6 +24,11 @@ export async function getUser(req: Request, res: Response) {
         email: true,
         name: true,
         posts: true,
+        purchasedItems: {
+          include: {
+            feeback: true,
+          },
+        },
         phoneNo: true,
         college: true,
         requests: {
@@ -70,6 +75,7 @@ export async function getUserNotifications(req: Request, res: Response) {
     const notifications = await db.notification.findMany({
       where: {
         targetId: user?.id,
+        read: false,
       },
       include: {
         action: {
@@ -206,7 +212,7 @@ export async function deleteUser(req: Request, res: Response) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    const posts = await db.post.findMany({ where: { userId: id } });
+    const posts = await db.post.findMany({ where: { sellerId: id } });
 
     if (posts.length > 0) {
       return res.status(400).json({ msg: "Delete all your listings first" });

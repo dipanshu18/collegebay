@@ -34,14 +34,8 @@ export function UserRequestActionsBtn({
     return router.refresh();
   }
 
-  async function handleContactUser(e: FormEvent) {
-    e.preventDefault();
-  }
-
   return (
-    <form
-      onSubmit={type === "profile" ? handleDeleteRequest : handleContactUser}
-    >
+    <form onSubmit={type === "profile" ? handleDeleteRequest : undefined}>
       <Button
         type="submit"
         disabled={pending}
@@ -51,27 +45,15 @@ export function UserRequestActionsBtn({
         )}
         variant={type === "profile" ? "destructive" : "default"}
       >
-        {type === "profile" ? (
-          <div className="flex items-center gap-2">
-            {pending ? (
-              "Deleting..."
-            ) : (
-              <>
-                <Trash2 /> Delete
-              </>
-            )}
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            {pending ? (
-              "Connecting..."
-            ) : (
-              <>
-                <Contact /> Contact
-              </>
-            )}
-          </div>
-        )}
+        <div className="flex items-center gap-2">
+          {pending ? (
+            "Deleting..."
+          ) : (
+            <>
+              <Trash2 /> Delete
+            </>
+          )}
+        </div>
       </Button>
     </form>
   );

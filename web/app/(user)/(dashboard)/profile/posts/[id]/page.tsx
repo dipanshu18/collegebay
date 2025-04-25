@@ -12,24 +12,40 @@ import {
 
 import { EditProductListingForm } from "@/components/edit-listing-form";
 import { fetchPost } from "@/actions/post";
-import { ConfirmButton } from "@/components/confirm-button";
-import type { IPost } from "@/actions/types";
+import { MarkPostSoldForm } from "@/components/mark-post-sold-form";
+import type { IChat, IPost } from "@/actions/types";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Star } from "lucide-react";
+import { ConfirmButton } from "@/components/confirm-btn";
+import { getAllChats } from "@/actions/chat";
+import { cookies } from "next/headers";
 
 export default async function UserPostDetails({
   params,
 }: {
   params: { id: string };
 }) {
+  const userId = cookies().get("uid")?.value;
+
   const response = await fetchPost(params.id);
+  const fetchChatResponse = await getAllChats();
   let post: IPost | undefined = undefined;
+  let chats: IChat[] = [];
 
   if (response?.error) return toast.error(response.error);
 
   if (response?.success) {
-    post = response.success;
+    post = response.success.post;
+    console.log(post?.feeback);
   }
+
+  if (fetchChatResponse?.success) {
+    chats = fetchChatResponse?.success;
+  }
+
+  chats = chats.filter(
+    (chat) => chat.participants.filter((p) => p.id !== userId)[0]
+  );
 
   return (
     <>
@@ -60,7 +76,7 @@ export default async function UserPostDetails({
           </Link>
         )}
 
-        <Dialog>
+        {/* <Dialog>
           <DialogTrigger asChild>
             <Button className="w-full" variant="destructive">
               Delete Post
@@ -75,11 +91,11 @@ export default async function UserPostDetails({
                 </span>
               </DialogDescription>
             </DialogHeader>
-            <ConfirmButton postId={params.id} type="delete" />
+            <ConfirmButton postId={params.id} />
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
 
-        {post?.isAvailable && (
+        {post?.isAvailable && chats.length > 0 && (
           <Dialog>
             <DialogTrigger asChild>
               <Button className="w-full dark:bg-neutral-600" variant="outline">
@@ -88,18 +104,34 @@ export default async function UserPostDetails({
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] dark:bg-black">
               <DialogHeader>
-                <DialogTitle>Set your post as Sold</DialogTitle>
+                <DialogTitle className="tracking-normal text-lg font-semibold">
+                  Are you sure you want to set your product listing as sold?
+                </DialogTitle>
                 <DialogDescription className="space-y-2">
-                  <span>
-                    Are you sure you want to set your product listing as sold?
-                  </span>
-                  <ConfirmButton postId={params.id} type="sold" />
+                  <MarkPostSoldForm postId={params.id} chats={chats} />
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
           </Dialog>
         )}
       </div>
+
+      {post?.feeback && (
+        <div className="pl-5">
+          <h1 className="text-xl font-bold text-primary mb-2">Feedback</h1>
+          <div className="flex items-center gap-2">
+            <p className="flex items-center text-yellow-400">
+              {[...Array(post.feeback.rating)].map((_, idx) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                <Star key={idx} />
+              ))}{" "}
+            </p>
+            {post.feeback.text && (
+              <p className="text-lg">{post.feeback.text}</p>
+            )}
+          </div>
+        </div>
+      )}
     </>
   );
 }

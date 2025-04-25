@@ -6,7 +6,7 @@ export interface IPost {
   images: string[];
   isAvailable: boolean;
   isApproved: boolean;
-  user: {
+  seller: {
     id: string;
     image: string;
     name: string;
@@ -15,6 +15,15 @@ export interface IPost {
     phoneNo: string;
   };
   category: string;
+  feeback: {
+    id: string;
+    postId: string;
+    customerId: string;
+    rating: number;
+    text: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,6 +37,7 @@ export interface IUserProfile {
   phoneNo: string;
   posts: IPost[];
   requests: IUserRequest[];
+  purchasedItems: IPost[];
 }
 
 export interface IUserRequest {

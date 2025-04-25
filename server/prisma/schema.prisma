@@ -9,23 +9,25 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  name          String
-  email         String         @unique
-  password      String
-  college       String
-  phoneNo       String
-  image         String
-  role          Role           @default(USER)
-  posts         Post[]
-  requests      Request[]
-  upVotes       UpVote[]
-  chats         Chat[]
-  messages      Message[]
-  notifications Notification[] @relation("user-notifications")
-  action        Notification[] @relation("which-user")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
+  id             String         @id @default(uuid())
+  name           String
+  email          String         @unique
+  password       String
+  college        String
+  phoneNo        String
+  image          String
+  role           Role           @default(USER)
+  posts          Post[]         @relation("seller")
+  requests       Request[]
+  upVotes        UpVote[]
+  chats          Chat[]
+  messages       Message[]
+  notifications  Notification[] @relation("user-notifications")
+  action         Notification[] @relation("which-user")
+  purchasedItems Post[]         @relation("customer")
+  feedbacks      Feedback[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 model Post {
@@ -38,10 +40,25 @@ model Post {
   isAvailable  Boolean      @default(true)
   isApproved   Boolean      @default(false)
   adminMessage String?
-  user         User         @relation(fields: [userId], references: [id])
-  userId       String
+  seller       User         @relation(fields: [sellerId], references: [id], name: "seller")
+  sellerId     String
+  soldTo       User?        @relation(fields: [soldToUserId], references: [id], name: "customer")
+  soldToUserId String?
+  feeback      Feedback?    @relation("postFeedback")
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
+}
+
+model Feedback {
+  id         String   @id @default(uuid())
+  post       Post     @relation(fields: [postId], references: [id], name: "postFeedback")
+  postId     String   @unique
+  customer   User     @relation(fields: [customerId], references: [id])
+  customerId String
+  rating     Int
+  text       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Request {

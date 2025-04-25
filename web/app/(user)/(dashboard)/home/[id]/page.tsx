@@ -17,11 +17,15 @@ export default async function PostDetails({
 }) {
   const response = await fetchPost(params.id);
   let post: IPost | undefined = undefined;
+  let sellerStats:
+    | { totalSoldWithRating: number; averageRating: number }
+    | undefined = undefined;
 
   if (response?.error) return toast.error(response.error);
 
   if (response?.success) {
-    post = response.success;
+    post = response.success.post;
+    sellerStats = response.success.sellerStats;
   }
 
   const userId = cookies().get("uid")?.value;
@@ -48,31 +52,40 @@ export default async function PostDetails({
           <p className="flex items-center font-extrabold text-2xl text-primary">
             <IndianRupee /> {post?.price}
           </p>
-          <div>
-            <h1 className="text-lg font-semibold text-secondary">Sold by:</h1>
-            <div className="flex items-center gap-2">
-              <Image
-                src={post?.user.image as string}
-                alt={`${post?.user.name} profile picture`}
-                width={100}
-                height={100}
-                quality={100}
-                className="w-14 h-14 rounded-full object-cover"
-              />
-              <div>
-                <h1 className="text-lg font-semibold text-secondary">
-                  {post?.user.name}
-                </h1>
-                <h2 className="text-lg font-semibold text-secondary">
-                  {post?.user.college}
-                </h2>
-              </div>
-            </div>
-          </div>
 
-          {post?.user.id !== userId && post?.isAvailable && (
-            <MessageSellerBtn sellerId={post?.user.id as string} />
+          {post?.seller.id !== userId && post?.isAvailable && (
+            <MessageSellerBtn sellerId={post?.seller.id as string} />
           )}
+        </div>
+      </div>
+
+      <div className="max-w-xl mx-auto md:mx-0">
+        <h1 className="text-xl text-center mt-5 mb-2 md:text-left font-semibold text-secondary pl-5">
+          Seller Info:
+        </h1>
+        <div className="md:flex md:items-center md:gap-2 p-5 pt-0">
+          <Image
+            src={post?.seller.image as string}
+            alt={`${post?.seller.name} profile picture`}
+            width={500}
+            height={500}
+            quality={100}
+            className="w-44 h-44 rounded-full object-cover mx-auto md:mx-0"
+          />
+          <div>
+            <h1 className="text-xl font-semibold text-secondary">
+              {post?.seller.name}
+            </h1>
+            <h2 className="text-lg font-medium text-secondary">
+              {post?.seller.college}
+            </h2>
+            <p className="text-lg font-medium text-accent">
+              Avg. rating: {sellerStats?.averageRating}
+            </p>
+            <p className="text-lg font-medium text-accent">
+              Total items sold: {sellerStats?.totalSoldWithRating}
+            </p>
+          </div>
         </div>
       </div>
 

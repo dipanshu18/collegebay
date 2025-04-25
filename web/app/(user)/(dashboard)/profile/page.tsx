@@ -10,6 +10,7 @@ import { ArrowLeft, Mail, Phone, School, SquarePen } from "lucide-react";
 import { PostCard } from "@/components/post-card";
 import { RequestCard } from "@/components/request-card";
 import { toast } from "sonner";
+import { PurchasedCard } from "@/components/purchased-card";
 
 async function profile() {
   const response = await fetchUserProfile();
@@ -23,6 +24,10 @@ async function profile() {
 
 export default async function Profile() {
   const userProfile = (await profile()) as IUserProfile;
+
+  console.log();
+  console.log("USERPROFILE:", userProfile);
+  console.log();
 
   return (
     <div className="p-4 mb-20 lg:mb-0">
@@ -80,6 +85,9 @@ export default async function Profile() {
           <TabsTrigger value="requests" className="w-full px-10">
             Requests
           </TabsTrigger>
+          <TabsTrigger value="purchased" className="w-full px-10">
+            Purchased
+          </TabsTrigger>
         </TabsList>
         <TabsContent
           value="posts"
@@ -106,6 +114,21 @@ export default async function Profile() {
           ) : (
             <h1 className="my-5 text-lg font-bold w-full col-span-3">
               You haven{`'`}t requested any resource yet
+            </h1>
+          )}
+        </TabsContent>
+        <TabsContent
+          value="purchased"
+          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5"
+        >
+          {userProfile.purchasedItems &&
+          userProfile.purchasedItems.length > 0 ? (
+            userProfile.purchasedItems.map((item) => (
+              <PurchasedCard key={item.id} post={item} />
+            ))
+          ) : (
+            <h1 className="my-5 text-lg font-bold w-full col-span-3">
+              You haven{`'`}t purchased any resource yet
             </h1>
           )}
         </TabsContent>

@@ -26,7 +26,7 @@ export default function Messages() {
   }, []);
 
   return (
-    <View style={{ paddingHorizontal: 20 }}>
+    <View>
       {chats && chats.length > 0 ? (
         <FlatList
           data={chats}

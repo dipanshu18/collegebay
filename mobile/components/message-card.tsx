@@ -34,9 +34,15 @@ export function MessageCard({ chat }: { chat: IChat }) {
       />
       <View>
         <Text style={{ fontSize: 20, fontWeight: "800" }}>{reciever.name}</Text>
-        <Text style={{ fontSize: 15, fontWeight: "300" }}>
-          {lastMessage.senderId === userId ? "you" : reciever.name}:{" "}
-          {lastMessage.text}
+        <Text style={{ fontSize: 15, fontWeight: "300", maxWidth: "90%" }}>
+          {lastMessage
+            ? lastMessage.senderId === userId
+              ? "you: "
+              : `${reciever.name}: `
+            : null}
+          {lastMessage
+            ? lastMessage.text
+            : "Start conversation by sending the first message"}
         </Text>
       </View>
     </Pressable>

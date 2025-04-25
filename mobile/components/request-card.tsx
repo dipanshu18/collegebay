@@ -78,7 +78,7 @@ export function RequestCard({
             </Pressable>
           </View>
         </View>
-        <Text style={{ fontSize: 12, fontWeight: "500" }}>
+        <Text style={{ fontSize: 15, fontWeight: "500" }}>
           {request?.description}
         </Text>
 

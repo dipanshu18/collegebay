@@ -9,13 +9,7 @@ import type { FormEvent } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-export function ConfirmButton({
-  postId,
-  type,
-}: {
-  postId: string;
-  type: "delete" | "sold";
-}) {
+export function ConfirmButton({ postId }: { postId: string }) {
   const router = useRouter();
   const { pending } = useFormStatus();
 
@@ -33,29 +27,15 @@ export function ConfirmButton({
     return router.push("/profile");
   }
 
-  async function handlePostSold(e: FormEvent) {
-    e.preventDefault();
-
-    const response = await postSold(postId);
-
-    if (response?.error) {
-      const errorMsg = response.error;
-      return toast.error(errorMsg);
-    }
-
-    toast.success(response?.success);
-    return router.push("/profile");
-  }
-
   return (
-    <form onSubmit={type === "delete" ? handlePostDelete : handlePostSold}>
+    <form onSubmit={handlePostDelete}>
       <Button
         disabled={pending}
         className="w-20 flex gap-4"
         type="submit"
-        variant={type === "delete" ? "destructive" : "default"}
+        variant={"destructive"}
       >
-        {pending ? "Submitting..." : "Confirm"}
+        {pending ? "Deleting..." : "Confirm"}
       </Button>
     </form>
   );

@@ -134,7 +134,7 @@ export async function approvePost(req: Request, res: Response) {
         isApproved: true,
       },
       include: {
-        user: true,
+        seller: true,
       },
     });
 
@@ -142,7 +142,7 @@ export async function approvePost(req: Request, res: Response) {
       data: {
         message: `Admin has verified and approved your post for ${post.title}`,
         actionId: adminId,
-        targetId: post.userId,
+        targetId: post.sellerId,
         targetType: "ADMIN_APPROVE",
       },
     });
@@ -174,7 +174,7 @@ export async function rejectPost(req: Request, res: Response) {
         isApproved: false,
       },
       include: {
-        user: true,
+        seller: true,
       },
     });
 
@@ -182,7 +182,7 @@ export async function rejectPost(req: Request, res: Response) {
       data: {
         message: `Admin has reject your post for ${post.title} and the reason is "${post.adminMessage}"`,
         actionId: adminId,
-        targetId: post.userId,
+        targetId: post.sellerId,
         targetType: "ADMIN_REJECT",
       },
     });

@@ -96,9 +96,22 @@ export default function Notifications() {
           }}
         />
       ) : (
-        <Text style={{ fontSize: 15, fontWeight: 500 }}>
-          No notifications yet
-        </Text>
+        <View
+          style={{
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: 500,
+            }}
+          >
+            No notifications yet
+          </Text>
+        </View>
       )}
     </View>
   );

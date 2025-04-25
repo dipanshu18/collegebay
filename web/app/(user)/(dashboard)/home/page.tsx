@@ -81,7 +81,7 @@ export default async function Home({
         </div>
       </div>
 
-      <Pagination>
+      {/* <Pagination>
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious href="#" />
@@ -96,7 +96,7 @@ export default async function Home({
             <PaginationNext href="#" />
           </PaginationItem>
         </PaginationContent>
-      </Pagination>
+      </Pagination> */}
     </div>
   );
 }

@@ -14,6 +14,7 @@ import { RequestCard } from "@/components/request-card";
 
 export default async function OthersRequest() {
   const requests = (await fetchRequests()) as IUserRequest[];
+  console.log(requests);
 
   return (
     <div className="p-5 mb-20 lg:mb-0 flex flex-col h-full justify-between">
@@ -39,7 +40,7 @@ export default async function OthersRequest() {
         </div>
       </div>
 
-      <Pagination>
+      {/* <Pagination>
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious href="#" />
@@ -54,7 +55,7 @@ export default async function OthersRequest() {
             <PaginationNext href="#" />
           </PaginationItem>
         </PaginationContent>
-      </Pagination>
+      </Pagination> */}
     </div>
   );
 }

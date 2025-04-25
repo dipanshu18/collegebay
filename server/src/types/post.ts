@@ -63,3 +63,8 @@ export const UpdatePostSchema = z.object({
       { message: "You can upload a maximum of 4 images." }
     ),
 });
+
+export const PostFeedbackSchema = z.object({
+  rating: z.number().min(1).max(5),
+  remark: z.string().optional(),
+});

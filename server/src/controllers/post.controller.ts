@@ -3,7 +3,11 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import type { Request, Response } from "express";
-import { CreatePostSchema, UpdatePostSchema } from "../types/post";
+import {
+  CreatePostSchema,
+  PostFeedbackSchema,
+  UpdatePostSchema,
+} from "../types/post";
 import type { z } from "zod";
 import { db } from "../utils/db";
 
@@ -36,7 +40,7 @@ export async function getPost(req: Request, res: Response) {
     const post = await db.post.findUnique({
       where: { id },
       include: {
-        user: {
+        seller: {
           select: {
             id: true,
             college: true,
@@ -46,6 +50,7 @@ export async function getPost(req: Request, res: Response) {
             phoneNo: true,
           },
         },
+        feeback: true,
       },
     });
 
@@ -53,7 +58,42 @@ export async function getPost(req: Request, res: Response) {
       return res.status(404).json({ msg: "No post found" });
     }
 
-    return res.status(200).json({ post });
+    const soldPostsWithFeedback = await db.post.findMany({
+      where: {
+        sellerId: post.seller.id,
+        isAvailable: false,
+        soldToUserId: { not: null },
+        feeback: { NOT: undefined },
+      },
+      select: {
+        feeback: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+    });
+
+    const ratings = soldPostsWithFeedback
+      .map((p) => p.feeback?.rating)
+      .filter((rating): rating is number => typeof rating === "number"); // type guard
+
+    const totalRatings = ratings.length;
+
+    const averageRating =
+      totalRatings > 0
+        ? Number.parseFloat(
+            (ratings.reduce((a, b) => a + b, 0) / totalRatings).toFixed(2)
+          )
+        : null;
+
+    return res.status(200).json({
+      post,
+      sellerStats: {
+        totalSoldWithRating: totalRatings,
+        averageRating,
+      },
+    });
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong" });
@@ -140,7 +180,7 @@ export async function createPost(req: Request, res: Response) {
         images,
         price,
         category,
-        userId,
+        sellerId: userId,
       },
     });
 
@@ -156,12 +196,20 @@ export async function createPost(req: Request, res: Response) {
 export async function postSold(req: Request, res: Response) {
   try {
     const { id: userId } = req.user as { id: string };
-    const { id: postId } = req.params;
+    const postId = req.params.id;
+    const { customerId } = req.body;
+
+    const customerExists = await db.user.findFirst({
+      where: { id: customerId },
+    });
+
+    if (!customerExists)
+      return res.status(404).json({ msg: "Customer does not exists" });
 
     const postExists = await db.post.findUnique({
       where: {
         id: postId,
-        userId,
+        sellerId: userId,
       },
     });
 
@@ -171,12 +219,41 @@ export async function postSold(req: Request, res: Response) {
     const postSold = await db.post.update({
       where: {
         id: postId,
-        userId,
+        sellerId: userId,
       },
       data: {
         isAvailable: false,
+        soldToUserId: customerId,
       },
     });
+
+    const chatToDelete = await db.chat.findFirst({
+      where: {
+        participants: {
+          every: {
+            id: {
+              in: [userId, customerId],
+            },
+          },
+        },
+      },
+    });
+
+    if (chatToDelete) {
+      // Delete all messages in the chat first (in case cascade isn't configured)
+      await db.message.deleteMany({
+        where: {
+          chatId: chatToDelete.id,
+        },
+      });
+
+      // Then delete the chat
+      await db.chat.delete({
+        where: {
+          id: chatToDelete.id,
+        },
+      });
+    }
 
     if (postSold) {
       return res.status(200).json({ msg: "Updated post status" });
@@ -190,7 +267,7 @@ export async function postSold(req: Request, res: Response) {
 export async function editPost(req: Request, res: Response) {
   try {
     const { id } = req.user as { id: string };
-    const { id: postId } = req.params;
+    const postId = req.params.id;
 
     if (!id) {
       return res.status(404).json({ msg: "User not found" });
@@ -245,12 +322,12 @@ export async function editPost(req: Request, res: Response) {
 export async function deletePost(req: Request, res: Response) {
   try {
     const { id: userId } = req.user as { id: string };
-    const { id: postId } = req.params;
+    const postId = req.params.id;
 
     const postExists = await db.post.findUnique({
       where: {
         id: postId,
-        userId,
+        sellerId: userId,
       },
     });
 
@@ -260,9 +337,59 @@ export async function deletePost(req: Request, res: Response) {
 
     // TODO: delete from cloudinary
 
-    await db.post.delete({ where: { id: postId, userId } });
+    await db.post.delete({ where: { id: postId, sellerId: userId } });
 
     return res.status(200).json({ msg: "Post deleted" });
+  } catch (error) {
+    console.log("Error:", error);
+    return res.status(500).json({ msg: "Something went wrong" });
+  }
+}
+
+export async function createFeedbackForPost(req: Request, res: Response) {
+  try {
+    const postId = req.params.id;
+    const { id: userId } = req.user as { id: string };
+
+    const postExists = await db.post.findUnique({
+      where: {
+        id: postId,
+        soldToUserId: userId,
+      },
+    });
+
+    if (!postExists) {
+      return res.status(404).json({ msg: "Post not found" });
+    }
+
+    const result = PostFeedbackSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res
+        .status(400)
+        .json({ msg: "Please enter all the required fields" });
+    }
+
+    const { rating, remark } = result.data;
+
+    const feedback = await db.feedback.create({
+      data: {
+        rating,
+        text: remark ?? "",
+        postId,
+        customerId: userId,
+      },
+    });
+
+    if (feedback) {
+      return res
+        .status(201)
+        .json({ msg: "Feedback submitted successfully..." });
+    }
+
+    return res
+      .status(400)
+      .json({ msg: "Unable to submit feedback with the given data!" });
   } catch (error) {
     console.log("Error:", error);
     return res.status(500).json({ msg: "Something went wrong" });

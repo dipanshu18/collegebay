@@ -42,7 +42,8 @@ export async function fetchPost(postId: string) {
     });
 
     if (response.status === 200) {
-      const data = await response.data.post;
+      const data = await response.data;
+      console.log(data);
       return { success: data };
     }
   } catch (error) {
@@ -151,12 +152,12 @@ export async function updatePost(
   }
 }
 
-export async function postSold(postId: string) {
+export async function postSold(postId: string, customerId: string) {
   const session = cookies().get("session")?.value;
   try {
     const response = await axios.patch(
       `${BASE_URL}/posts/${postId}/sold`,
-      {},
+      { customerId },
       {
         withCredentials: true,
         headers: {
@@ -168,6 +169,40 @@ export async function postSold(postId: string) {
     if (response.status === 200) {
       const data = await response.data.msg;
       console.log(data);
+      return { success: data };
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      return { error: errorData };
+    }
+  }
+}
+
+export async function sendFeedback({
+  postId,
+  rating,
+  remark,
+}: {
+  postId: string;
+  rating: number;
+  remark?: string;
+}) {
+  const session = cookies().get("session")?.value;
+  try {
+    const response = await axios.post(
+      `${BASE_URL}/posts/feedback/${postId}`,
+      { rating, remark },
+      {
+        withCredentials: true,
+        headers: {
+          Cookie: `session=${session}`,
+        },
+      }
+    );
+
+    if (response.status === 201) {
+      const data = await response.data.msg;
       return { success: data };
     }
   } catch (error) {
