@@ -1,37 +1,53 @@
+import { markAsRead } from "@/api/mutations";
 import { getUserNotifications } from "@/api/queries";
-import { NotificationCard } from "@/components/notification-card";
+import type { IUserNotification } from "@/api/types";
 import { Entypo } from "@expo/vector-icons";
-import { useQuery } from "@tanstack/react-query";
+import { router } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Image,
   Pressable,
-  ScrollView,
+  RefreshControl,
   Text,
   View,
 } from "react-native";
 
 export default function Notifications() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["userNotifications"],
-    queryFn: getUserNotifications,
-  });
+  const [refreshing, setRefreshing] = useState(false);
+  const [notifications, setNotifications] = useState<IUserNotification[]>();
 
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(async () => {
+      const result = await getUserNotifications();
+      setNotifications(result);
+      setRefreshing(false);
+    }, 2000);
+  }, []);
 
-  console.log(data);
+  useEffect(() => {
+    (async () => {
+      const result = await getUserNotifications();
+      setNotifications(result);
+    })();
+  }, []);
 
   return (
     <View style={{ padding: 10 }}>
-      {data && data.length > 0 ? (
+      {notifications && notifications.length > 0 ? (
         <FlatList
-          data={data}
+          data={notifications}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
           renderItem={({ item }) => {
             return (
               <Pressable
+                onPress={async () => {
+                  await markAsRead(item.id);
+                  router.reload();
+                }}
                 style={({ pressed }) => ({
                   backgroundColor: pressed ? "lightgrey" : "transparent", // Light gray on press
                   flexDirection: "row",

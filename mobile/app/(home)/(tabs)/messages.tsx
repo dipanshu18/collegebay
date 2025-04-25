@@ -1,40 +1,32 @@
 import { getChats } from "@/api/queries";
-import { queryClient } from "@/app/_layout";
+import type { IChat } from "@/api/types";
 import { MessageCard } from "@/components/message-card";
-import { useQuery } from "@tanstack/react-query";
-import { Link } from "expo-router";
-import { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  RefreshControl,
-  Text,
-} from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { FlatList, RefreshControl, Text, View } from "react-native";
 
 export default function Messages() {
   const [refreshing, setRefreshing] = useState(false);
 
+  const [chats, setChats] = useState<IChat[]>([]);
+
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ["chats"],
-      });
+      const result = await getChats();
+      setChats(result);
       setRefreshing(false);
     }, 2000);
   }, []);
 
-  const { data: chats, isLoading } = useQuery({
-    queryKey: ["chats"],
-    queryFn: getChats,
-  });
-
-  if (isLoading) {
-    return <ActivityIndicator />;
-  }
+  useEffect(() => {
+    (async () => {
+      const result = await getChats();
+      setChats(result);
+    })();
+  }, []);
 
   return (
-    <>
+    <View style={{ paddingHorizontal: 20 }}>
       {chats && chats.length > 0 ? (
         <FlatList
           data={chats}
@@ -46,6 +38,6 @@ export default function Messages() {
       ) : (
         <Text>No messages yet</Text>
       )}
-    </>
+    </View>
   );
 }

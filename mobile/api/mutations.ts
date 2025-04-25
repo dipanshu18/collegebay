@@ -249,3 +249,29 @@ export async function startChat(withUserId: string) {
     }
   }
 }
+
+export async function markAsRead(id: string) {
+  const token = getValue("token");
+  try {
+    const response = await axios.patch(
+      `${BASE_URL}/user/notifications/${id}`,
+      {},
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      const data = await response.data.msg;
+      return Alert.alert(data);
+    }
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      const errorData = await error.response?.data.msg;
+      return { error: errorData };
+    }
+  }
+}

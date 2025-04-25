@@ -39,14 +39,23 @@ export default function Profile() {
                 uri: data?.image,
               }}
               style={{
-                width: 60,
-                height: 60,
+                width: 200,
+                height: 200,
                 borderRadius: 100,
+                marginHorizontal: "auto",
               }}
             />
           </View>
 
-          <Text style={{ fontSize: 20, fontWeight: "900", color: "#354F52" }}>
+          <Text
+            style={{
+              fontSize: 25,
+              textAlign: "center",
+              fontWeight: "900",
+              color: "#354F52",
+              marginBottom: 20,
+            }}
+          >
             {data?.name}
           </Text>
           <View
@@ -95,7 +104,7 @@ export default function Profile() {
         </View>
       </View>
 
-      <View>
+      {/* <View>
         <View>
           <Pressable
             style={styles.button}
@@ -105,7 +114,7 @@ export default function Profile() {
             <Text style={styles.buttonText}>Edit profile</Text>
           </Pressable>
         </View>
-      </View>
+      </View> */}
     </View>
   );
 }

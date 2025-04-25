@@ -1,19 +1,13 @@
 import { getRequests } from "@/api/queries";
 import { RequestCard } from "@/components/request-card";
-import { COLOR } from "@/constants/COLOR";
-import { useQuery } from "@tanstack/react-query";
-import {
-  ActivityIndicator,
-  RefreshControl,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { RefreshControl, ScrollView, Text } from "react-native";
 import { queryClient } from "../_layout";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { IUserRequest } from "@/api/types";
 
 export default function Requests() {
   const [refreshing, setRefreshing] = useState(false);
+  const [requests, setRequests] = useState<IUserRequest[]>([]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -25,18 +19,13 @@ export default function Requests() {
     }, 2000);
   }, []);
 
-  const {
-    data: requests,
-    isLoading,
-    isPending,
-  } = useQuery({
-    queryKey: ["requests"],
-    queryFn: getRequests,
-  });
+  useEffect(() => {
+    (async () => {
+      const result = await getRequests();
+      setRequests(result);
+    })();
+  }, []);
 
-  if (isLoading && !isPending) {
-    return <ActivityIndicator color={COLOR.primary} />;
-  }
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

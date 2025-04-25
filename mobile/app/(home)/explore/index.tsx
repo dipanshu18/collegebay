@@ -1,13 +1,10 @@
 import { getPosts } from "@/api/queries";
 import type { IPost } from "@/api/types";
-import { queryClient } from "@/app/_layout";
 import { ListingCard } from "@/components/listing-card";
 import { COLOR } from "@/constants/COLOR";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -26,17 +23,14 @@ export default function Explore() {
   const [originalPosts, setOriginalPosts] = useState<IPost[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<IPost[]>([]);
 
-  const { data: posts, isLoading } = useQuery<IPost[]>({
-    queryKey: ["posts"],
-    queryFn: getPosts,
-  });
-
   useEffect(() => {
-    if (posts) {
-      setOriginalPosts(posts);
-      setFilteredPosts(posts);
-    }
-  }, [posts]);
+    (async () => {
+      const result = await getPosts();
+
+      setOriginalPosts(result);
+      setFilteredPosts(result);
+    })();
+  }, []);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -63,10 +57,6 @@ export default function Explore() {
 
     setSearchText("");
   };
-
-  if (isLoading) {
-    return <ActivityIndicator color={COLOR.primary} />;
-  }
 
   return (
     <ScrollView
