@@ -66,6 +66,19 @@ export default function DashboardLayout() {
       />
 
       <Stack.Screen
+        name="user-purchased/index"
+        options={{
+          title: "Purchased items",
+          headerShown: true,
+          headerLeft: () => (
+            <Link href={"/account"}>
+              <AntDesign size={24} name="arrowleft" color={"#354F52"} />
+            </Link>
+          ),
+        }}
+      />
+
+      <Stack.Screen
         name="edit-profile/[id]"
         options={{
           title: "Edit profile",

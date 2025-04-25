@@ -28,6 +28,7 @@ export interface IUserProfile {
   phoneNo: string;
   posts: IPost[];
   requests: IUserRequest[];
+  purchasedItems: IPost[];
 }
 
 export interface IUserRequest {

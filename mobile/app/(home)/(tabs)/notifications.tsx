@@ -34,7 +34,7 @@ export default function Notifications() {
   }, []);
 
   return (
-    <View style={{ padding: 10 }}>
+    <View>
       {notifications && notifications.length > 0 ? (
         <FlatList
           data={notifications}

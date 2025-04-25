@@ -46,7 +46,7 @@ export default function PostDetails() {
   const userId = getValue("uid");
   const { id } = useLocalSearchParams();
 
-  const { data: post, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["post", id],
     queryFn: async () => await getPost(id as string),
   });
@@ -55,11 +55,13 @@ export default function PostDetails() {
     return <ActivityIndicator color={COLOR.primary} />;
   }
 
+  console.log(data);
+
   async function handleMessageSeller() {
     setLoading(true);
 
     try {
-      const response = await startChat(post?.seller.id as string);
+      const response = await startChat(data?.post?.seller.id as string);
 
       if (response?.error) {
         return Alert.alert(response.error);
@@ -83,7 +85,7 @@ export default function PostDetails() {
           ref={ref}
           width={width}
           height={width / 1.5}
-          data={post?.images as string[]}
+          data={data?.post?.images as string[]}
           onProgressChange={progress}
           renderItem={({ item }) => (
             <View
@@ -110,7 +112,7 @@ export default function PostDetails() {
 
         <Pagination.Basic
           progress={progress}
-          data={post?.images as string[]}
+          data={data?.post?.images as string[]}
           dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
           containerStyle={{ gap: 5, marginTop: 10 }}
           onPress={onPressPagination}
@@ -119,28 +121,29 @@ export default function PostDetails() {
 
       <View style={{ paddingHorizontal: 20 }}>
         <View style={{ gap: 10, marginVertical: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 700 }}>{post?.title}</Text>
-          <Text style={{ fontSize: 15 }}>{post?.description}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 700 }}>
+            {data?.post?.title}
+          </Text>
+          <Text style={{ fontSize: 15 }}>{data?.post?.description}</Text>
           <Text style={{ fontSize: 20, fontWeight: 800 }}>
-            Rs. {post?.price}
+            Rs. {data?.post?.price}
           </Text>
         </View>
 
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
             gap: 5,
             marginVertical: 10,
+            marginHorizontal: "auto",
           }}
         >
           <Image
             source={{
-              uri: post?.seller.image,
+              uri: data?.post?.seller.image,
             }}
-            width={50}
-            height={50}
-            style={{ borderRadius: 100 }}
+            width={150}
+            height={150}
+            style={{ borderRadius: 100, marginHorizontal: "auto" }}
           />
 
           <View>
@@ -150,19 +153,24 @@ export default function PostDetails() {
                 fontWeight: 700,
               }}
             >
-              {post?.seller.name}
+              {data?.post?.seller.name}
             </Text>
             <Text
               style={{
                 fontWeight: 400,
               }}
             >
-              {post?.seller.college}
+              {data?.post?.seller.college}
+            </Text>
+
+            <Text>Avg rating: {data?.sellerStats.averageRating} / 5</Text>
+            <Text>
+              Total resource sold: {data?.sellerStats.totalSoldWithRating}
             </Text>
           </View>
         </View>
 
-        {post?.seller.id !== userId && post?.isAvailable && (
+        {data?.post?.seller.id !== userId && data?.post?.isAvailable && (
           <View>
             <Pressable
               style={styles.btn}

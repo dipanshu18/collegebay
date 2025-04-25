@@ -1,31 +1,34 @@
 import { getProfile } from "@/api/queries";
 import { queryClient } from "@/app/_layout";
-import { RequestCard } from "@/components/request-card";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { ListingCard } from "@/components/listing-card";
+import { useQuery } from "@tanstack/react-query";
+import { Link } from "expo-router";
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   RefreshControl,
   ScrollView,
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function UserRequests() {
+export default function UserPurchased() {
   const [refreshing, setRefreshing] = useState(false);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
     setTimeout(async () => {
       await queryClient.invalidateQueries({
-        queryKey: ["requests"],
+        queryKey: ["posts"],
       });
       setRefreshing(false);
     }, 2000);
   }, []);
 
   const { data, isLoading, isPending } = useQuery({
-    queryKey: ["requests"],
+    queryKey: ["posts"],
     queryFn: getProfile,
   });
 
@@ -34,33 +37,31 @@ export default function UserRequests() {
   }
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{
-        paddingHorizontal: 10,
-        gap: 10,
-      }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {data?.requests && data.requests.length > 0 ? (
-        data.requests.map((item) => {
-          return <RequestCard key={item.id} type="user" request={item} />;
-        })
+    <View style={{ padding: 20 }}>
+      {data?.purchasedItems && data?.purchasedItems.length > 0 ? (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={data.purchasedItems}
+          renderItem={({ item }) => {
+            return <ListingCard post={item} />;
+          }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        />
       ) : (
         <View
           style={{
-            minHeight: "100%",
+            height: "100%",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
           <Text style={{ fontSize: 20, fontWeight: 500, textAlign: "center" }}>
-            No requests made yet
+            No purchase yet
           </Text>
         </View>
       )}
-    </ScrollView>
+    </View>
   );
 }

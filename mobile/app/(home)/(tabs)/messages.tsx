@@ -36,7 +36,17 @@ export default function Messages() {
           }
         />
       ) : (
-        <Text>No messages yet</Text>
+        <View
+          style={{
+            height: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "700" }}>
+            No messages yet
+          </Text>
+        </View>
       )}
     </View>
   );

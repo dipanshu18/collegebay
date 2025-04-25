@@ -41,7 +41,7 @@ export default function UserListingDetails() {
   const userId = getValue("uid");
   const { id } = useLocalSearchParams();
 
-  const { data: post, isLoading } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["post", id],
     queryFn: async () => await getPost(id as string),
   });
@@ -56,7 +56,7 @@ export default function UserListingDetails() {
           ref={ref}
           width={width}
           height={width / 1.5}
-          data={post?.images as string[]}
+          data={data?.post?.images as string[]}
           onProgressChange={progress}
           renderItem={({ item }) => (
             <View
@@ -83,7 +83,7 @@ export default function UserListingDetails() {
 
         <Pagination.Basic
           progress={progress}
-          data={post?.images as string[]}
+          data={data?.post?.images as string[]}
           dotStyle={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: 50 }}
           containerStyle={{ gap: 5, marginTop: 10 }}
           onPress={onPressPagination}
@@ -92,10 +92,12 @@ export default function UserListingDetails() {
 
       <View style={{ paddingHorizontal: 20 }}>
         <View style={{ gap: 10, marginVertical: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 700 }}>{post?.title}</Text>
-          <Text style={{ fontSize: 15 }}>{post?.description}</Text>
+          <Text style={{ fontSize: 20, fontWeight: 700 }}>
+            {data?.post?.title}
+          </Text>
+          <Text style={{ fontSize: 15 }}>{data?.post?.description}</Text>
           <Text style={{ fontSize: 20, fontWeight: 800 }}>
-            Rs. {post?.price}
+            Rs. {data?.post?.price}
           </Text>
         </View>
       </View>

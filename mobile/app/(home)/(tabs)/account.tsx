@@ -47,6 +47,18 @@ export default function Account() {
             <Text style={styles.text}>Requests</Text>
             <Entypo name="chevron-small-right" size={30} color="black" />
           </Pressable>
+
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+            onPress={() => router.push("/user-purchased")}
+          >
+            <Text style={styles.text}>Purchased</Text>
+            <Entypo name="chevron-small-right" size={30} color="black" />
+          </Pressable>
         </View>
       </View>
 

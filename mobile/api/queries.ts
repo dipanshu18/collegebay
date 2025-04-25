@@ -9,8 +9,8 @@ import type {
   IUserRequest,
 } from "./types";
 
-// export const BASE_URL = "http://10.0.2.2:5000/api/v1";
-export const BASE_URL = "http://192.168.0.148:5000/api/v1";
+export const BASE_URL = "http://10.0.2.2:5000/api/v1";
+// export const BASE_URL = "http://192.168.0.148:5000/api/v1";
 
 export async function getProfile() {
   const token = getValue("token");
@@ -71,7 +71,10 @@ export async function getPost(id: string) {
     });
 
     if (response.status === 200) {
-      const data = (await response.data.post) as IPost;
+      const data = (await response.data) as {
+        post: IPost;
+        sellerStats: { totalSoldWithRating: number; averageRating: number };
+      };
       return data;
     }
   } catch (error) {
@@ -127,6 +130,8 @@ export async function getChats() {
   } catch (error) {
     if (error instanceof AxiosError) {
       const errorData = await error.response?.data.msg;
+
+      if (errorData === "No chat found") return;
       Alert.alert(errorData);
     }
 
