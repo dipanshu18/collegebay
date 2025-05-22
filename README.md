@@ -2,6 +2,11 @@
 
 This is a project whose main focus is to provide an online marketplace for college students to buy and sell college-related materials. The platform is designed to make it easy for students to find what they need, sell what they don't, and connect with other students in the same college or university.
 
+## Demo
+
+https://github.com/user-attachments/assets/ec75c8a1-3de2-4d9e-8e0e-cfb13af71054
+
+
 
 ## What's inside?
 
